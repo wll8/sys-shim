@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "test": "win-api/tray/dist/tray.exe index.js"
+  },
+  "dependencies": {
+    "rpc-websockets": "^7.6.0"
+  }
+}
