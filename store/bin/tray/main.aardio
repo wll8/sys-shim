@@ -1,0 +1,63 @@
+
+import nodeJs;
+import win.util.tray;
+import web.socket.server;
+import web.socket.jsonServer;
+
+//创建 WebSocket 服务端
+var wsrv = web.socket.server();
+var rpcServer = web.socket.jsonServer(wsrv);
+
+//这里可以自定义WebSocket 服务端可以使用的 URL 路径
+wsrv.onUpgradeToWebsocket = function(hSocket){    
+    return rpcServer.start(hSocket);
+}
+
+var winform = win.form(text="tray api")
+winform.add(
+	edit={cls="richedit";left=23;top=24;right=730;bottom=380;db=1;dl=1;dr=1;dt=1;edge=1;hscroll=1;multiline=1;vscroll=1;z=1}
+)
+
+//定义允许 Node.js 调用的 aardio 函数
+rpcServer.external = {
+	tray = function(){
+		winform.tray = win.util.tray(winform) 
+	}
+	icon = function(path){
+		winform.tray.icon = path
+	}
+	tip = function(tip){
+		winform.tray.tip = tip
+	}
+	pop = function(...){
+		winform.tray.pop(...);
+	}
+	show = function(bol){
+		winform.show(bol);
+	}
+	exit = function(){
+		win.quitMessage()
+	}
+}
+
+//启动 WebSocket 服务端
+wsrv.start();
+
+winform.onTrayMessage = {
+	[0x205/*_WM_RBUTTONUP*/  ] = function(wParam){ 
+		rpcServer.publish("_WM_RBUTTONUP");
+	};
+	[0x202/*_WM_LBUTTONUP*/] = function(wParam){ 
+		rpcServer.publish("_WM_LBUTTONUP");
+	};
+}
+
+var jsFile = io.fullpath(tostring(_CMDLINE))
+var wsUrl = wsrv.getUrl()
+
+string.setenv("wsUrl", wsUrl);
+var node = nodeJs.execFile(jsFile, process.joinArguments(_CMDLINE)); 
+node.logResponse(winform.edit);
+node.assignToJobObject(..process.job.limitKill);
+
+win.loopMessage();
