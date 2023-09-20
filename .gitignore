@@ -1,3 +1,5 @@
 .build
 dist
 node_modules
+temp.txt
+dev.config.json
