@@ -1,4 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<project ver="10" name="tray" libEmbed="true" icon="..." ui="win" output="tray.exe" CompanyName="wll8" FileDescription="tray" LegalCopyright="Copyright (C) wll8 2023" ProductName="tray" InternalName="tray" FileVersion="0.0.0.32" ProductVersion="0.0.0.32" publishDir="/dist/" dstrip="false" local="false" ignored="false">
-	<file name="main.aardio" path="main.aardio" comment="main.aardio"/>
-</project>
