@@ -1,0 +1,129 @@
+import nodeJs;
+import web.socket.server;
+import web.socket.jsonServer;
+import web.json;
+import fsys.file;
+import win.util.tray;
+import win.ui;
+import wsock.tcp.simpleHttpServer;
+import web.view;
+import inet.http;
+
+import console
+
+//创建 WebSocket 服务端
+var wsrv = web.socket.server();
+wsrv.start();
+var wsUrl = wsrv.getUrl()
+var rpcServer = web.socket.jsonServer(wsrv);
+
+//这里可以自定义WebSocket 服务端可以使用的 URL 路径
+wsrv.onUpgradeToWebsocket = function(hSocket){
+    return rpcServer.start(hSocket);
+}
+
+var winform = win.form(text="main api")
+winform.add(
+	edit={cls="richedit";left=23;top=24;right=730;bottom=380;db=1;dl=1;dr=1;dt=1;edge=1;hscroll=1;multiline=1;vscroll=1;z=1}
+)
+
+var hwndObj = {}
+
+var external = {
+	view = {
+		create = function(htmlFile){
+			var winform = win.form(text="标题")
+			var hwnd = winform.hwnd
+			hwndObj[hwnd] = winform
+			var wb = web.view(hwndObj[hwnd], null);
+			//var wb = web.view(winform, null, "--auto-open-devtools-for-tabs");
+			hwndObj[hwnd].wb = wb
+			hwndObj[hwnd].wb.external = {
+				wsUrl = wsUrl;
+			}
+			hwndObj[hwnd].wb.preloadScript(`
+				// 添加 ext
+				window.ext = chrome.webview.hostObjects.external
+
+				// 移除 aardio
+				setTimeout(() => {
+					delete window.aardio
+				}, 0);
+			`)
+			hwndObj[hwnd].wb.go(htmlFile)
+			win.setActive(hwnd) // 激活窗口
+			win.setForeground( hwnd ); // 移动窗口到最前面
+			hwndObj[hwnd].wb.focus()
+			hwndObj[hwnd].show()
+			// win.setTopmost( hwnd ); // 置顶
+			// console.log(htmlFile)
+			return hwnd
+		}
+		fullscreen = function(hwnd){
+			hwndObj[hwnd].wb.fullscreen()
+		}
+		setPos = function(hwnd, x, y){
+			hwndObj[hwnd].setPos(x, y)
+		}
+		setTopmost = function(hwnd, enabled){
+			win.setTopmost(hwnd, enabled) 
+		}
+	}
+	tray = {
+		create = function(){
+			var winform = win.form()
+			var hwnd = winform.hwnd
+			hwndObj[hwnd] = winform
+			hwndObj[hwnd].onTrayMessage = {
+				[0x205/*_WM_RBUTTONUP*/  ] = function(wParam){ 
+					rpcServer.publish("tray._WM_RBUTTONUP", hwnd);
+				};
+				[0x202/*_WM_LBUTTONUP*/] = function(wParam){ 
+					rpcServer.publish("tray._WM_LBUTTONUP", hwnd);
+				};
+			}
+			hwndObj[hwnd].tray = win.util.tray(hwndObj[hwnd]) 
+			return hwnd
+		}
+		icon = function(hwnd, path){
+			var img = inet.url.is(path) ? inet.http().get(path) : path
+			hwndObj[hwnd].tray.icon = img
+		}
+		tip = function(hwnd, tip){
+			hwndObj[hwnd].tray.tip = tip
+		}
+		pop = function(hwnd, ...){
+			hwndObj[hwnd].tray.pop(...);
+		}
+	}
+	exit = function(){
+		win.quitMessage()
+	}
+}
+
+//定义允许 Node.js 调用的 aardio 函数
+rpcServer.external = external
+
+var data = {}
+
+if(_STUDIO_INVOKED) {
+	var file = fsys.file(io.fullpath("./dev.config.json"))
+	data = web.json.parse(file.readAll())
+	winform.show(true)
+} else {
+	var file = fsys.file(io.fullpath("./config.json"))
+	data = web.json.parse(file.readAll())
+}
+
+var jsFile = io.fullpath(tostring(data.main))
+
+string.setenv("wsUrl", wsUrl);
+var node = nodeJs.execFile(jsFile, process.joinArguments(_CMDLINE)); 
+node.logResponse(winform.edit);
+node.assignToJobObject(..process.job.limitKill);
+winform.onClose = function(hwnd,message,wParam,lParam){
+	for hwnd in hwndObj {
+		hwndObj[hwnd].close()
+	}
+}
+win.loopMessage();
