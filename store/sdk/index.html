@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style type="text/css">
+    </style>
+    <script type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/rpc-websockets@7.6.0/dist/index.browser-bundle.js"></script>
+  </head>
+  <script>
+    ;(async () => {
+      const wsUrl = await window.ext.wsUrl
+      const ws = window.ws = new RPCWebSocket.Client(wsUrl)
+      ws.on(`open`, () => {
+        ws.call(`tray.create`).then(hwnd => {
+          console.log(hwnd)
+          ws.call(`tray.icon`, [hwnd, `https://www.hongqiye.com/favicon.ico`])
+          ws.call(`tray.tip`, [hwnd, `tiptiptip`])
+          ws.call(`tray.pop`, [hwnd, `traytray`, `msgmsgmsg`, 1])
+          ws.on(`tray._WM_RBUTTONUP`, (hwnd) => {
+            console.log(`_WM_RBUTTONUP`, hwnd)
+          })
+          ws.on(`tray._WM_LBUTTONUP`, (hwnd) => {
+            console.log(`_WM_LBUTTONUP`, hwnd)
+          })
+        })
+      })
+      window.addEventListener('blur', function() {
+        document.body.append(`网页失去焦点`)
+      });
+      window.addEventListener('focus', function() {
+        document.body.append(`网页获得焦点`)
+      });
+
+    })()
+  </script>
+  <body>
+    <h2>sys-ui</h2>
+    <button onclick="alert(123)">alert</button>
+    <button onclick="ws.call(`exit`)">关闭</button>
+  </body>
+</html>
