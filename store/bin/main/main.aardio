@@ -104,16 +104,17 @@ var external = {
 //定义允许 Node.js 调用的 aardio 函数
 rpcServer.external = external
 
-var data = {}
-
+var cfgPath = ""
+var data = {
+	main = io.fullpath("./index.js")
+}
 if(_STUDIO_INVOKED) {
-	var file = fsys.file(io.fullpath("./dev.config.json"))
-	data = web.json.parse(file.readAll())
+	cfgPath = io.fullpath("./dev.package.json")
 	winform.show(true)
 } else {
-	var file = fsys.file(io.fullpath("./config.json"))
-	data = web.json.parse(file.readAll())
+	cfgPath = io.fullpath("./package.json")
 }
+data = io.exist(cfgPath) ? web.json.parse(fsys.file(cfgPath).readAll()) : data
 
 var jsFile = io.fullpath(tostring(data.main))
 
