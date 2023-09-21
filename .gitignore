@@ -2,4 +2,4 @@
 dist
 node_modules
 temp.txt
-dev.config.json
+dev.package.json

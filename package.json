@@ -1,6 +1,7 @@
 {
+  "main": "index.js",
   "scripts": {
-    "test": "win-api/tray/dist/tray.exe index.js"
+    "test": "npx opener win-api/main/dist/main.exe"
   },
   "dependencies": {
     "rpc-websockets": "^7.6.0"
