@@ -6,37 +6,58 @@
     </style>
     <script type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/rpc-websockets@7.6.0/dist/index.browser-bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14"></script>
   </head>
+  <body>
+    <div id="box">
+      <h2>sys-ui</h2>
+      <button @click="msgBox">msgBox</button>
+      <button @click="exit">关闭</button>
+      <button @click="exitHwnd">关闭 {{ hwnd }}</button>
+    </div>
+  </body>
   <script>
-    ;(async () => {
-      const wsUrl = await window.ext.wsUrl
-      const ws = window.ws = new RPCWebSocket.Client(wsUrl)
-      ws.on(`open`, () => {
-        ws.call(`tray.create`).then(hwnd => {
-          console.log(hwnd)
-          ws.call(`tray.icon`, [hwnd, `https://www.hongqiye.com/favicon.ico`])
-          ws.call(`tray.tip`, [hwnd, `tiptiptip`])
-          ws.call(`tray.pop`, [hwnd, `traytray`, `msgmsgmsg`, 1])
-          ws.on(`tray._WM_RBUTTONUP`, (hwnd) => {
-            console.log(`_WM_RBUTTONUP`, hwnd)
-          })
-          ws.on(`tray._WM_LBUTTONUP`, (hwnd) => {
-            console.log(`_WM_LBUTTONUP`, hwnd)
+    window.vm = new Vue({
+      el: `#box`,
+      data: {
+        hwnd: ``,
+      },
+      async created() {
+        const wsUrl = await window.ext.wsUrl
+        const ws = window.ws = new RPCWebSocket.Client(wsUrl)
+        ws.on(`open`, () => {
+          ws.call(`tray.create`).then(hwnd => {
+            this.hwnd = hwnd
+            console.log(hwnd)
+            ws.call(`tray.icon`, [hwnd, `https://www.hongqiye.com/favicon.ico`])
+            ws.call(`tray.tip`, [hwnd, `tiptiptip`])
+            ws.call(`tray.pop`, [hwnd, `traytray`, `msgmsgmsg`, 1])
+            ws.on(`tray._WM_RBUTTONUP`, (hwnd) => {
+              console.log(`_WM_RBUTTONUP`, hwnd)
+            })
+            ws.on(`tray._WM_LBUTTONUP`, (hwnd) => {
+              console.log(`_WM_LBUTTONUP`, hwnd)
+            })
           })
         })
-      })
-      window.addEventListener('blur', function() {
-        document.body.append(`网页失去焦点`)
-      });
-      window.addEventListener('focus', function() {
-        document.body.append(`网页获得焦点`)
-      });
-
-    })()
+        window.addEventListener('blur', function() {
+          document.body.append(`网页失去焦点`)
+        });
+        window.addEventListener('focus', function() {
+          document.body.append(`网页获得焦点`)
+        });
+      },
+      methods: {
+        msgBox () {
+          ws.call(`msgBox`, [`你好`, `title`]);
+        },
+        exit () {
+          ws.call(`exit`);
+        },
+        exitHwnd () {
+          ws.call(`exit`, [this.hwnd]);
+        },
+      },
+    });
   </script>
-  <body>
-    <h2>sys-ui</h2>
-    <button onclick="alert(123)">alert</button>
-    <button onclick="ws.call(`exit`)">关闭</button>
-  </body>
 </html>

@@ -96,8 +96,15 @@ var external = {
 			hwndObj[hwnd].tray.pop(...);
 		}
 	}
-	exit = function(){
-		win.quitMessage()
+	msgBox = function(...){
+		win.msgbox(...)
+	}
+	exit = function(hwnd){
+		if(hwnd) {
+			win.close(hwnd)
+		} else {
+		 	win.quitMessage()
+		}
 	}
 }
 
