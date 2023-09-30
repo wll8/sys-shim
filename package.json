@@ -1,7 +1,10 @@
 {
+  "debug": true,
+  "browserArguments": "--auto-open-devtools-for-tabs",
   "main": "index.js",
   "scripts": {
-    "test": "npx opener win-api/main/dist/main.exe"
+    "test": "npx opener win-api/main/dist/main.exe",
+    "build": "shx rm -rf res main.exe & shx ln win-api/main/dist/main.exe main.exe"
   },
   "dependencies": {
     "rpc-websockets": "^7.6.0"

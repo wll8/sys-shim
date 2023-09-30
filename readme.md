@@ -12,6 +12,18 @@
 - 依赖某类浏览器 --
   - Gluon node16.x Chrome、Firefox、Edge
 
+## 优化
+- 资源
+  - rpc-ws.js
+    - 目录
+    - cdn
+  - sys.js
+    - 内嵌
+  - node.js
+    - 目录
+    - 系统
+    - 自动安装，指定版本
+
 ## 流程
 
 由 start.exe 启动, start.exe 从文件中读取配置，例如入口文件 main.js.

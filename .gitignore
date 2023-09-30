@@ -3,3 +3,5 @@ dist
 node_modules
 temp.txt
 dev.package.json
+/res
+main.exe
