@@ -23,23 +23,24 @@
         hwnd: ``,
       },
       async created() {
+        const WebSocketClient = RPCWebSocket.Client
         const wsUrl = await window.ext.wsUrl
-        const ws = window.ws = new RPCWebSocket.Client(wsUrl)
-        ws.on(`open`, () => {
-          ws.call(`tray.create`).then(hwnd => {
-            this.hwnd = hwnd
-            console.log(hwnd)
-            ws.call(`tray.icon`, [hwnd, `https://www.hongqiye.com/favicon.ico`])
-            ws.call(`tray.tip`, [hwnd, `tiptiptip`])
-            ws.call(`tray.pop`, [hwnd, `traytray`, `msgmsgmsg`, 1])
-            ws.on(`tray._WM_RBUTTONUP`, (hwnd) => {
-              console.log(`_WM_RBUTTONUP`, hwnd)
-            })
-            ws.on(`tray._WM_LBUTTONUP`, (hwnd) => {
-              console.log(`_WM_LBUTTONUP`, hwnd)
-            })
-          })
+        const ws = window.ws = new WebSocketClient(wsUrl)
+        window.main = await new Sys(ws)
+        window.tray = await new main.Tray()
+        this.hwnd = tray.hwnd
+        await tray.icon(`https://www.hongqiye.com/favicon.ico`)
+        await tray.tip(`tiptiptip`)
+        await tray.pop(`traytray`, `msgmsgmsg`, 1)
+        tray.on(`_WM_RBUTTONUP`, () => {
+          console.log(`_WM_RBUTTONUP`, )
         })
+        tray.on(`_WM_LBUTTONUP`, () => {
+          console.log(`_WM_LBUTTONUP`, )
+        })
+        setTimeout(() => {
+          tray.off(`_WM_RBUTTONUP`)
+        }, 10000);
         window.addEventListener('blur', function() {
           document.body.append(`网页失去焦点`)
         });
@@ -49,13 +50,13 @@
       },
       methods: {
         msgBox () {
-          ws.call(`msgBox`, [`你好`, `title`]);
+          main.msgBox(`你好`, `title`)
         },
         exit () {
-          ws.call(`exit`);
+          main.exit()
         },
         exitHwnd () {
-          ws.call(`exit`, [this.hwnd]);
+          tray.exit()
         },
       },
     });
