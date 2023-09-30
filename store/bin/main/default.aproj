@@ -1,4 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project ver="10" name="main" libEmbed="true" icon="..." ui="win" output="main.exe" CompanyName="wll8" FileDescription="main" LegalCopyright="Copyright (C) wll8 2023" ProductName="main" InternalName="main" FileVersion="0.0.0.33" ProductVersion="0.0.0.33" publishDir="/dist/" dstrip="false" local="false" ignored="false">
 	<file name="main.aardio" path="main.aardio" comment="main.aardio"/>
+	<folder name="资源文件" path="res" embed="true" local="false" ignored="false">
+		<file name="sys.js" path="res\sys.js" comment="res\sys.js"/>
+	</folder>
 </project>

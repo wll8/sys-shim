@@ -3,44 +3,69 @@ import web.socket.server;
 import web.socket.jsonServer;
 import web.json;
 import fsys.file;
+import fsys.res;
 import win.util.tray;
 import win.ui;
 import wsock.tcp.simpleHttpServer;
 import web.view;
 import inet.http;
+import console;
 
-import console
+// 释放资源
+fsys.res.saveRes("/res/")
+var jsFileSys = fsys.file("/res/sys.js")
 
-//创建 WebSocket 服务端
+var cfgPath = ""
+var data = {
+	main = io.fullpath("./index.js")
+}
+
+if(_STUDIO_INVOKED) {
+	cfgPath = io.fullpath("./dev.package.json")
+} else {
+	cfgPath = io.fullpath("./package.json")
+}
+
+data = io.exist(cfgPath) ? web.json.parse(fsys.file(cfgPath).readAll()) : data
+
+
+// 创建 WebSocket 服务端
 var wsrv = web.socket.server();
 wsrv.start();
 var wsUrl = wsrv.getUrl()
 var rpcServer = web.socket.jsonServer(wsrv);
 
-//这里可以自定义WebSocket 服务端可以使用的 URL 路径
+// 这里可以自定义WebSocket 服务端可以使用的 URL 路径
 wsrv.onUpgradeToWebsocket = function(hSocket){
     return rpcServer.start(hSocket);
 }
 
 var winform = win.form(text="main api")
+
+if(data.debug) {
+	winform.show(true)
+}
 winform.add(
 	edit={cls="richedit";left=23;top=24;right=730;bottom=380;db=1;dl=1;dr=1;dt=1;edge=1;hscroll=1;multiline=1;vscroll=1;z=1}
 )
 
 var hwndObj = {}
-
+var msgMap = {
+	_WM_RBUTTONUP = 0x205;
+	_WM_LBUTTONUP = 0x202;
+}
 var external = {
 	view = {
 		create = function(htmlFile){
 			var winform = win.form(text="标题")
 			var hwnd = winform.hwnd
 			hwndObj[hwnd] = winform
-			var wb = web.view(hwndObj[hwnd], null);
-			//var wb = web.view(winform, null, "--auto-open-devtools-for-tabs");
+			var wb = web.view(hwndObj[hwnd], data.userDataDir, data.browserArguments);
 			hwndObj[hwnd].wb = wb
 			hwndObj[hwnd].wb.external = {
 				wsUrl = wsUrl;
 			}
+			hwndObj[hwnd].wb.preloadScript(jsFileSys.readAll())
 			hwndObj[hwnd].wb.preloadScript(`
 				// 添加 ext
 				window.ext = chrome.webview.hostObjects.external
@@ -55,8 +80,6 @@ var external = {
 			win.setForeground( hwnd ); // 移动窗口到最前面
 			hwndObj[hwnd].wb.focus()
 			hwndObj[hwnd].show()
-			// win.setTopmost( hwnd ); // 置顶
-			// console.log(htmlFile)
 			return hwnd
 		}
 		fullscreen = function(hwnd){
@@ -74,14 +97,7 @@ var external = {
 			var winform = win.form()
 			var hwnd = winform.hwnd
 			hwndObj[hwnd] = winform
-			hwndObj[hwnd].onTrayMessage = {
-				[0x205/*_WM_RBUTTONUP*/  ] = function(wParam){ 
-					rpcServer.publish("tray._WM_RBUTTONUP", hwnd);
-				};
-				[0x202/*_WM_LBUTTONUP*/] = function(wParam){ 
-					rpcServer.publish("tray._WM_LBUTTONUP", hwnd);
-				};
-			}
+			hwndObj[hwnd].onTrayMessage = {}
 			hwndObj[hwnd].tray = win.util.tray(hwndObj[hwnd]) 
 			return hwnd
 		}
@@ -95,38 +111,49 @@ var external = {
 		pop = function(hwnd, ...){
 			hwndObj[hwnd].tray.pop(...);
 		}
+		on = function(hwnd, key){
+			var code = msgMap[key]
+			hwndObj[hwnd].onTrayMessage[code] = function(wParam){
+				rpcServer.publish(hwnd + "." + key, wParam);
+			}
+		}
+		off = function(hwnd, key){
+			var code = msgMap[key]
+			hwndObj[hwnd].onTrayMessage[code] = null
+		}
 	}
-	msgBox = function(...){
-		win.msgbox(...)
-	}
-	exit = function(hwnd){
-		if(hwnd) {
-			win.close(hwnd)
-		} else {
-		 	win.quitMessage()
+	base = {
+		msgBox = function(...){
+			win.msgbox(...)
+		}
+		exit = function(hwnd){
+			if(hwnd) {
+				win.close(hwnd)
+			} else {
+		 		win.quitMessage()
+			}
 		}
 	}
 }
 
-//定义允许 Node.js 调用的 aardio 函数
+// 定义允许 Node.js 调用的 aardio 函数
 rpcServer.external = external
-
-var cfgPath = ""
-var data = {
-	main = io.fullpath("./index.js")
-}
-if(_STUDIO_INVOKED) {
-	cfgPath = io.fullpath("./dev.package.json")
-	winform.show(true)
-} else {
-	cfgPath = io.fullpath("./package.json")
-}
-data = io.exist(cfgPath) ? web.json.parse(fsys.file(cfgPath).readAll()) : data
 
 var jsFile = io.fullpath(tostring(data.main))
 
 string.setenv("wsUrl", wsUrl);
-var node = nodeJs.execFile(jsFile, process.joinArguments(_CMDLINE)); 
+var jsArg = process.joinArguments(_CMDLINE) || ""
+var nodeArg = " --require " + jsFileSys.path + " " + jsFile + " " + jsArg
+var execFile = function(param){
+	var nodeExePath = nodeJs.getInstallPath()
+	var prcs, err = ..process.popen(nodeExePath, param, {workDir=..io.fullpath(self.workDir)})
+	if(prcs){
+		prcs.codepage = 65001;
+		return prcs;
+	};
+	return null,err;
+}
+var node = execFile(nodeArg); 
 node.logResponse(winform.edit);
 node.assignToJobObject(..process.job.limitKill);
 winform.onClose = function(hwnd,message,wParam,lParam){
