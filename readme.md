@@ -60,6 +60,7 @@ main.js 可以创建页面、托盘、服务。
 - https://github.com/tauri-apps/tray-icon
 - https://github.com/getlantern/systray
 - https://blog.wavesxa.com/archives/golang-tuo-pan-cai-dan-ying-yong-ji-da-kai-xi-tong-mo-ren-liu-lan-qi
+- 使用字符串动态调用函数 https://bbs.aardio.com/forum.php?mod=viewthread&tid=11257
 
 ```
 // 无边框 winform

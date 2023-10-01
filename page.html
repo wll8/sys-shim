@@ -4,30 +4,33 @@
     <meta charset="utf-8" />
     <style type="text/css">
     </style>
+    <title>sys-shim page</title>
     <script type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/rpc-websockets@7.6.0/dist/index.browser-bundle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14"></script>
   </head>
   <body>
     <div id="box">
-      <h2>sys-ui</h2>
+      <h2>sys-shim</h2>
       <button @click="msgBox">msgBox</button>
-      <button @click="exit">关闭</button>
-      <button @click="exitHwnd">关闭 {{ hwnd }}</button>
+      <button @click="exit">exit</button>
+      <button @click="exitHwnd">exitHwnd {{ hwnd }}</button>
     </div>
   </body>
   <script>
+    let ws
+    let main
+    let tray
     window.vm = new Vue({
       el: `#box`,
       data: {
         hwnd: ``,
       },
       async created() {
-        const WebSocketClient = RPCWebSocket.Client
-        const wsUrl = await window.ext.wsUrl
-        const ws = window.ws = new WebSocketClient(wsUrl)
-        window.main = await new Sys(ws)
-        window.tray = await new main.Tray()
+        ws = window.ws = new RPCWebSocket.Client(await window.ext.wsUrl)
+        main = window.main = await new Sys(ws)
+        await window.ws.call(`view.setIcon`, [window.hwnd, `https://www.baidu.com/favicon.ico`])
+        tray = window.tray = await new main.Tray()
         this.hwnd = tray.hwnd
         await tray.icon(`https://www.hongqiye.com/favicon.ico`)
         await tray.tip(`tiptiptip`)
@@ -42,15 +45,15 @@
           tray.off(`_WM_RBUTTONUP`)
         }, 10000);
         window.addEventListener('blur', function() {
-          document.body.append(`网页失去焦点`)
+          document.body.append(`blur`)
         });
         window.addEventListener('focus', function() {
-          document.body.append(`网页获得焦点`)
+          document.body.append(`focus`)
         });
       },
       methods: {
         msgBox () {
-          main.msgBox(`你好`, `title`)
+          main.msgBox(`hello`, `title`)
         },
         exit () {
           main.exit()

@@ -1,7 +1,6 @@
 {
-  "debug": true,
-  "browserArguments": "--auto-open-devtools-for-tabs",
-  "main": "index.js",
+  "main": "sys.js",
+  "page": "page.html",
   "scripts": {
     "test": "npx opener win-api/main/dist/main.exe",
     "build": "shx rm -rf res main.exe & shx ln win-api/main/dist/main.exe main.exe"
