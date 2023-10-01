@@ -103,9 +103,9 @@ var external = {
 			hwndObj[hwnd].wb = wb
 			hwndObj[hwnd].wb.external = {
 				wsUrl = wsUrl;
-							}
+				hwnd = hwnd;
+			}
 			hwndObj[hwnd].wb.preloadScript(jsFileSysStr)
-			hwndObj[hwnd].wb.preloadScript('window.hwnd = ' + hwnd)
 			hwndObj[hwnd].wb.preloadScript(`
 				// 添加 ext
 				window.ext = chrome.webview.hostObjects.external
