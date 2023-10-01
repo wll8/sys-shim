@@ -167,6 +167,9 @@ var external = {
 		}
 	}
 	base = {
+		publish = function(key, ...){
+			rpcServer.publish(key, ...);
+		}
 		msgBox = function(...){
 			win.msgbox(...)
 		}

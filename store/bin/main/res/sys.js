@@ -17,7 +17,7 @@
       this.ws = ws
     }
     msgBox(...arg) {
-      return ws.call(`base.msgBox`, arg)
+      return this.ws.call(`base.msgBox`, arg)
     }
     exit(hwnd) {
       return this.ws.call(`base.exit`, [this.hwnd || hwnd])
@@ -71,7 +71,23 @@
         return ws.call(`${this.key}.setTopmost`, [this.hwnd, ...arg])
       }
     }
+    class Msg extends Base {
+      constructor(...arg) {
+        super(ws)
+        return this
+      }
+      on(key, fn) {
+        return this.ws.on(key, fn)
+      }
+      off(key) {
+        return this.ws.off(key)
+      }
+      emit(...arg) {
+        return this.ws.call(`base.publish`, arg)
+      }
+    }
     return {
+      Msg,
       Tray,
       View,
     }
@@ -89,6 +105,7 @@
           const myClass = getClass(ws)
           this.Tray = myClass.Tray
           this.View = myClass.View
+          this.Msg = myClass.Msg
           resolve(this)
         })
       })
