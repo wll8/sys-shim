@@ -21,15 +21,17 @@
     let ws
     let main
     let tray
+    let hwnd
     window.vm = new Vue({
       el: `#box`,
       data: {
         hwnd: ``,
       },
       async created() {
+        hwnd = window.hwnd = await window.ext.hwnd
         ws = window.ws = new RPCWebSocket.Client(await window.ext.wsUrl)
         main = window.main = await new Sys(ws)
-        await window.ws.call(`view.setIcon`, [window.hwnd, `https://www.baidu.com/favicon.ico`])
+        await window.ws.call(`view.setIcon`, [hwnd, `https://www.baidu.com/favicon.ico`])
         tray = window.tray = await new main.Tray()
         this.hwnd = tray.hwnd
         await tray.icon(`https://www.hongqiye.com/favicon.ico`)
