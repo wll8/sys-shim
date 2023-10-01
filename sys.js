@@ -15,7 +15,7 @@ const ws = new WebSocket(process.env.wsUrl)
 new Promise(async ()=> {
   const { View, Tray } = await new Sys(ws)
   const tray = await new Tray()
-  await tray.icon(`${__dirname}/win-api/main/favicon-48.ico`)
+  await tray.icon(`https://www.hongqiye.com/favicon.ico`)
   await tray.tip(`tiptiptip`)
   await tray.pop(`traytray`, `msgmsgmsg`, 1)
   tray.on(`_WM_RBUTTONUP`, () => {
@@ -24,6 +24,6 @@ new Promise(async ()=> {
   tray.on(`_WM_LBUTTONUP`, () => {
     console.log(`_WM_LBUTTONUP`, )
   })
-  const view = await new View(`${__dirname}/index.html`)
+  const view = await new View(`${__dirname}/page.html`)
 })
 

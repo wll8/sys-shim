@@ -1,7 +1,7 @@
-import nodeJs;
 import web.socket.server;
 import web.socket.jsonServer;
 import web.json;
+import fsys;
 import fsys.file;
 import fsys.res;
 import win.util.tray;
@@ -10,14 +10,19 @@ import wsock.tcp.simpleHttpServer;
 import web.view;
 import inet.http;
 import console;
+import io;
+
+var tempPath = fsys.getTempDir() + "/sys-shim/"
+fsys.createDir(tempPath)
 
 // 释放资源
-fsys.res.saveRes("/res/")
-var jsFileSys = fsys.file("/res/sys.js")
+fsys.res.saveRes("/res", tempPath)
+var jsFileSys = fsys.file(tempPath + "/res/sys.js")
 
 var cfgPath = ""
 var data = {
-	main = io.fullpath("./index.js")
+	main = io.fullpath("./sys.js");
+	page = io.fullpath("./page.html");
 }
 
 if(_STUDIO_INVOKED) {
@@ -40,7 +45,7 @@ wsrv.onUpgradeToWebsocket = function(hSocket){
     return rpcServer.start(hSocket);
 }
 
-var winform = win.form(text="main api")
+var winform = win.form(text="main debug")
 
 if(data.debug) {
 	winform.show(true)
@@ -54,10 +59,43 @@ var msgMap = {
 	_WM_RBUTTONUP = 0x205;
 	_WM_LBUTTONUP = 0x202;
 }
+
+function deepGet(obj, str){
+	var arr = string.split(str, ".")
+	var cur = obj
+	var endKey = ``
+	for(i=1; #arr; 1){ 
+		var key = arr[i]
+		if(#arr == i) {
+			endKey = key
+		} else {
+			cur = cur[key]
+		}
+	}
+	return cur, endKey
+}
+
+function getIcon(icon){
+	var icon = inet.url.is(icon) ? inet.http().get(icon) : icon
+	var hIcon
+	if (type(icon) == type.number) {
+		if(icon >= 0x7F00/*_IDI_APPLICATION*/) { 
+			hIcon =  ::LoadIcon(null, topointer(icon));
+		} else {
+			hIcon =  ::LoadIcon(_HINSTANSE, topointer(icon)); 
+		}
+	} elseif (type(icon) == type.string) {
+		hIcon = ..win.image.createIcon(icon, true, 16, 32);
+	} else {
+		hIcon = icon : _HAPPICON;
+	}
+	return hIcon
+}
+
 var external = {
 	view = {
 		create = function(htmlFile){
-			var winform = win.form(text="标题")
+			var winform = win.form(text = "main")
 			var hwnd = winform.hwnd
 			hwndObj[hwnd] = winform
 			var wb = web.view(hwndObj[hwnd], data.userDataDir, data.browserArguments);
@@ -66,6 +104,7 @@ var external = {
 				wsUrl = wsUrl;
 			}
 			hwndObj[hwnd].wb.preloadScript(jsFileSys.readAll())
+			hwndObj[hwnd].wb.preloadScript('window.hwnd = ' + hwnd)
 			hwndObj[hwnd].wb.preloadScript(`
 				// 添加 ext
 				window.ext = chrome.webview.hostObjects.external
@@ -76,6 +115,7 @@ var external = {
 				}, 0);
 			`)
 			hwndObj[hwnd].wb.go(htmlFile)
+			hwndObj[hwnd].text = wb.xcall("() => document.title")
 			win.setActive(hwnd) // 激活窗口
 			win.setForeground( hwnd ); // 移动窗口到最前面
 			hwndObj[hwnd].wb.focus()
@@ -84,6 +124,10 @@ var external = {
 		}
 		fullscreen = function(hwnd){
 			hwndObj[hwnd].wb.fullscreen()
+		}
+		setIcon = function(hwnd, small, big){
+			big = big : small
+			hwndObj[hwnd].setIcon(getIcon(small), getIcon(big))
 		}
 		setPos = function(hwnd, x, y){
 			hwndObj[hwnd].setPos(x, y)
@@ -102,8 +146,7 @@ var external = {
 			return hwnd
 		}
 		icon = function(hwnd, path){
-			var img = inet.url.is(path) ? inet.http().get(path) : path
-			hwndObj[hwnd].tray.icon = img
+			hwndObj[hwnd].tray.icon = getIcon(path)
 		}
 		tip = function(hwnd, tip){
 			hwndObj[hwnd].tray.tip = tip
@@ -139,26 +182,39 @@ var external = {
 // 定义允许 Node.js 调用的 aardio 函数
 rpcServer.external = external
 
-var jsFile = io.fullpath(tostring(data.main))
-
-string.setenv("wsUrl", wsUrl);
-var jsArg = process.joinArguments(_CMDLINE) || ""
-var nodeArg = " --require " + jsFileSys.path + " " + jsFile + " " + jsArg
+var jsFile = io.fullpath(data.main)
+var htmlFile = io.fullpath(data.page)
 var execFile = function(param){
+	import nodeJs;
+
+	var jsArg = process.joinArguments(_CMDLINE) || ""
+	var nodeArg = " --require " + jsFileSys.path + " " + jsFile + " " + jsArg
+	var param = nodeArg
+	string.setenv("wsUrl", wsUrl);
 	var nodeExePath = nodeJs.getInstallPath()
-	var prcs, err = ..process.popen(nodeExePath, param, {workDir=..io.fullpath(self.workDir)})
-	if(prcs){
-		prcs.codepage = 65001;
-		return prcs;
+	var node, err = ..process.popen(nodeExePath, param, {workDir=..io.fullpath(self.workDir)})
+	if(node){
+		node.codepage = 65001;
+		node.logResponse(winform.edit);
+		node.assignToJobObject(..process.job.limitKill);
 	};
 	return null,err;
 }
-var node = execFile(nodeArg); 
-node.logResponse(winform.edit);
-node.assignToJobObject(..process.job.limitKill);
-winform.onClose = function(hwnd,message,wParam,lParam){
-	for hwnd in hwndObj {
-		hwndObj[hwnd].close()
-	}
+
+if(io.exist(jsFile)) {
+	execFile()
 }
-win.loopMessage();
+
+if(io.exist(htmlFile)) {
+	external.view.create(htmlFile)
+}
+
+// 当有其中一个文件时才开启消息循环
+if(io.exist(jsFile) : io.exist(htmlFile)) {
+	winform.onClose = function(hwnd,message,wParam,lParam){
+		for hwnd in hwndObj {
+			hwndObj[hwnd].close()
+		}
+	}
+	win.loopMessage();
+}
