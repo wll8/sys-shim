@@ -24,6 +24,18 @@
     - 系统
     - 自动安装，指定版本
 
+## 使用
+### 页面与 nodejs 通信
+
+
+``` js
+const msg = await new Sys(ws).Msg()
+msg.on(`hello`, console.log)
+msg.emit(`hello`, `ace`)
+msg.off(`hello`)
+```
+
+
 ## 流程
 
 由 start.exe 启动, start.exe 从文件中读取配置，例如入口文件 main.js.
