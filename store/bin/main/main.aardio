@@ -18,6 +18,7 @@ fsys.createDir(tempPath)
 // 释放资源
 fsys.res.saveRes("/res", tempPath)
 var jsFileSys = fsys.file(tempPath + "/res/sys.js")
+var jsFileSysStr = jsFileSys.readAll()
 
 var cfgPath = ""
 var data = {
@@ -102,8 +103,8 @@ var external = {
 			hwndObj[hwnd].wb = wb
 			hwndObj[hwnd].wb.external = {
 				wsUrl = wsUrl;
-			}
-			hwndObj[hwnd].wb.preloadScript(jsFileSys.readAll())
+							}
+			hwndObj[hwnd].wb.preloadScript(jsFileSysStr)
 			hwndObj[hwnd].wb.preloadScript('window.hwnd = ' + hwnd)
 			hwndObj[hwnd].wb.preloadScript(`
 				// 添加 ext
