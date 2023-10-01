@@ -22,6 +22,7 @@
     let main
     let tray
     let hwnd
+    let msg
     window.vm = new Vue({
       el: `#box`,
       data: {
@@ -31,7 +32,8 @@
         hwnd = window.hwnd = await window.ext.hwnd
         ws = window.ws = new RPCWebSocket.Client(await window.ext.wsUrl)
         main = window.main = await new Sys(ws)
-        await window.ws.call(`view.setIcon`, [hwnd, `https://www.baidu.com/favicon.ico`])
+        await ws.call(`view.setIcon`, [hwnd, `https://www.baidu.com/favicon.ico`])
+        msg = window.msg = await new main.Msg()
         tray = window.tray = await new main.Tray()
         this.hwnd = tray.hwnd
         await tray.icon(`https://www.hongqiye.com/favicon.ico`)
@@ -43,6 +45,10 @@
         tray.on(`_WM_LBUTTONUP`, () => {
           console.log(`_WM_LBUTTONUP`, )
         })
+        msg.on(`hello`, (...arg) => {
+          console.log(`hello`, ...arg)
+        })
+        msg.emit(`hello`, `ace`)
         setTimeout(() => {
           tray.off(`_WM_RBUTTONUP`)
         }, 10000);
