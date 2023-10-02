@@ -51,7 +51,6 @@ xxxx dev
 可以从程序配置中显示声明是使用浏览器还是 webview。
 
 - WebView2
-
   - 支持 Win7,Win8,Win10,Win11+。
   - 没有 WebView2 控件的系统会自动安装。
   - winin10 1803 以及之后的系统微软早已自动推送 WebView2。版本小于 1803 的 Win10 很罕见可以忽略不计。
@@ -59,18 +58,18 @@ xxxx dev
   - 如果 WebView2 安装失败，自动回退到 WebView1，WebView1 是 Win10 1803+/Win11 自带的控件。
   - 如果 WebView2 和 WebView1 都不可用，会自动回退到浏览器方案。
 
-- 浏览器
-  - 使用系统上已安装的 Chromium 内核浏览器（例如 edge、2345、360）来渲染页面，如果未安装，会自动安装 Edge。
+- 浏览器  
+  使用系统上已安装的 Chromium 内核浏览器（例如 edge、2345、360）来渲染页面，如果未安装，会自动安装 Edge。
 
 ### 后端
 
-- api
+- api  
   默认提供常见的操作接口。例如文件、网络、系统、进程、鼠标、键盘、窗口等。
 
-- nodejs
+- nodejs  
   你也可以选择添加 nodejs 来进行文件、进行等所以生态的所有操作。
 
-- service
+- service  
   若你的程序需要后台静默运行，可以添加此控件。
 
 ### 体积内存
