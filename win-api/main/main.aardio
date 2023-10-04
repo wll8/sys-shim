@@ -205,6 +205,12 @@ var execFile = function(param){
 	return null,err;
 }
 
+// 如果什么文件都没有，则创建一个
+if(!io.exist(jsFile) && !io.exist(htmlFile)) {
+	fsys.copy(tempPath + "/res/page.html", "./page.html")
+}
+
+
 if(io.exist(jsFile)) {
 	execFile()
 }
@@ -213,12 +219,9 @@ if(io.exist(htmlFile)) {
 	external.view.create(htmlFile)
 }
 
-// 当有其中一个文件时才开启消息循环
-if(io.exist(jsFile) : io.exist(htmlFile)) {
-	winform.onClose = function(hwnd,message,wParam,lParam){
-		for hwnd in hwndObj {
-			hwndObj[hwnd].close()
-		}
+winform.onClose = function(hwnd,message,wParam,lParam){
+	for hwnd in hwndObj {
+		hwndObj[hwnd].close()
 	}
-	win.loopMessage();
 }
+win.loopMessage();
