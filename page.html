@@ -32,15 +32,32 @@
         hwnd = window.hwnd = await window.ext.hwnd
         ws = window.ws = new RPCWebSocket.Client(await window.ext.wsUrl)
         main = window.main = await new Sys(ws)
+        await ws.call(`hwndObj.callFn`, [`${hwnd}.show`])
         await ws.call(`view.setIcon`, [hwnd, `https://www.baidu.com/favicon.ico`])
         msg = window.msg = await new main.Msg()
         tray = window.tray = await new main.Tray()
         this.hwnd = tray.hwnd
         await tray.icon(`https://www.hongqiye.com/favicon.ico`)
-        await tray.tip(`tiptiptip`)
-        await tray.pop(`traytray`, `msgmsgmsg`, 1)
-        tray.on(`_WM_RBUTTONUP`, () => {
-          console.log(`_WM_RBUTTONUP`, )
+        await ws.call(`hwndObj.setVal`, [`${tray.hwnd}.tray.tip`, `tiptiptip`])
+        await ws.call(`hwndObj.callFn`, [`${tray.hwnd}.tray.pop`, `traytray`, `msgmsgmsg`, 1])
+        tray.on(`_WM_RBUTTONUP`, async (arg) => {
+          const [, {bottom, right}] = await ws.call(`win.callFn`, [`getClientRect`, hwnd])
+          const [, x, y] = await ws.call(`mouse.callFn`, [`getPos`])
+          console.log(`_WM_RBUTTONUP`, {
+            bottom,
+            right,
+            x,
+            y,
+          })
+          const [newX, newY] = [x - right, y - bottom]
+          console.log({newX, newY})
+          await ws.call(`hwndObj.callFn`, [`${hwnd}.show`])
+          await ws.call(`hwndObj.callFn`, [`${hwnd}.setPos`, newX, newY])
+          await ws.call(`win.callFn`, [`setActive`, hwnd])
+          await ws.call(`win.callFn`, [`setForeground`, hwnd])
+          await ws.call(`win.callFn`, [`setFocus`, hwnd])
+          await ws.call(`win.callFn`, [`setTopmost`, hwnd, true])
+          await ws.call(`hwndObj.callFn`, [`${hwnd}.wb.focus`])
         })
         tray.on(`_WM_LBUTTONUP`, () => {
           console.log(`_WM_LBUTTONUP`, )
@@ -49,11 +66,9 @@
           console.log(`hello`, ...arg)
         })
         msg.emit(`hello`, `ace`)
-        setTimeout(() => {
-          tray.off(`_WM_RBUTTONUP`)
-        }, 10000);
-        window.addEventListener('blur', function() {
+        window.addEventListener('blur', async () => {
           document.body.append(`blur`)
+          await ws.call(`win.callFn`, [`setTopmost`, hwnd, false])
         });
         window.addEventListener('focus', function() {
           document.body.append(`focus`)
