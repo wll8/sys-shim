@@ -11,6 +11,7 @@ import web.view;
 import inet.http;
 import console;
 import io;
+import mouse
 
 var tempPath = fsys.getTempDir() + "/sys-shim/"
 fsys.createDir(tempPath)
@@ -31,7 +32,6 @@ if(_STUDIO_INVOKED) {
 } else {
 	cfgPath = io.fullpath("./package.json")
 }
-
 data = io.exist(cfgPath) ? web.json.parse(fsys.file(cfgPath).readAll()) : data
 
 
@@ -55,7 +55,9 @@ winform.add(
 	edit={cls="richedit";left=23;top=24;right=730;bottom=380;db=1;dl=1;dr=1;dt=1;edge=1;hscroll=1;multiline=1;vscroll=1;z=1}
 )
 
-var hwndObj = {}
+var hwndObj = {
+	hwndObj: true; // 插入一个标志，表示这是一个专门放置句柄的对象
+}
 var msgMap = {
 	_WM_RBUTTONUP = 0x205;
 	_WM_LBUTTONUP = 0x202;
@@ -67,10 +69,12 @@ function deepGet(obj, str){
 	var endKey = ``
 	for(i=1; #arr; 1){ 
 		var key = arr[i]
+		//console.log("key", i, key)
+		//console.dumpJson(arr)
 		if(#arr == i) {
 			endKey = key
 		} else {
-			cur = cur[key]
+			cur = obj.hwndObj ? cur[tonumber(key)] : cur[key]
 		}
 	}
 	return cur, endKey
@@ -92,6 +96,29 @@ function getIcon(icon){
 	}
 	return hIcon
 }
+
+// 封装为可以直接 path 路径访问 aardio 的对象属性和方法的形式
+function wrapObj(obj){
+	return {
+		callFn = function(path, ...){
+			var cur, endKey = deepGet(obj, path)
+			return {call(cur[endKey], cur, ...)}
+		}
+		setVal = function(path, val){
+			var cur, endKey = deepGet(obj, path)
+			cur[endKey] = val
+			return cur[endKey]
+		}
+		getVal = function(path){
+			console.log(path)
+			var cur, endKey = deepGet(obj, path)
+			console.log(cur)
+			console.log(endKey)
+			return cur[endKey]
+		}
+	}; 
+}
+
 
 var external = {
 	view = {
@@ -117,24 +144,11 @@ var external = {
 			`)
 			hwndObj[hwnd].wb.go(htmlFile)
 			hwndObj[hwnd].text = wb.xcall("() => document.title")
-			win.setActive(hwnd) // 激活窗口
-			win.setForeground( hwnd ); // 移动窗口到最前面
-			hwndObj[hwnd].wb.focus()
-			hwndObj[hwnd].show()
 			return hwnd
-		}
-		fullscreen = function(hwnd){
-			hwndObj[hwnd].wb.fullscreen()
 		}
 		setIcon = function(hwnd, small, big){
 			big = big : small
 			hwndObj[hwnd].setIcon(getIcon(small), getIcon(big))
-		}
-		setPos = function(hwnd, x, y){
-			hwndObj[hwnd].setPos(x, y)
-		}
-		setTopmost = function(hwnd, enabled){
-			win.setTopmost(hwnd, enabled) 
 		}
 	}
 	tray = {
@@ -149,16 +163,10 @@ var external = {
 		icon = function(hwnd, path){
 			hwndObj[hwnd].tray.icon = getIcon(path)
 		}
-		tip = function(hwnd, tip){
-			hwndObj[hwnd].tray.tip = tip
-		}
-		pop = function(hwnd, ...){
-			hwndObj[hwnd].tray.pop(...);
-		}
 		on = function(hwnd, key){
 			var code = msgMap[key]
-			hwndObj[hwnd].onTrayMessage[code] = function(wParam){
-				rpcServer.publish(hwnd + "." + key, wParam);
+			hwndObj[hwnd].onTrayMessage[code] = function(...){
+				rpcServer.publish(hwnd + "." + key, {...});
 			}
 		}
 		off = function(hwnd, key){
@@ -166,6 +174,9 @@ var external = {
 			hwndObj[hwnd].onTrayMessage[code] = null
 		}
 	}
+	hwndObj = wrapObj(hwndObj);
+	win = wrapObj(win);
+	mouse = wrapObj(mouse);
 	base = {
 		publish = function(key, ...){
 			rpcServer.publish(key, ...);
@@ -221,7 +232,8 @@ if(io.exist(htmlFile)) {
 
 winform.onClose = function(hwnd,message,wParam,lParam){
 	for hwnd in hwndObj {
-		hwndObj[hwnd].close()
-	}
+		if(type(hwnd) == type.number) {
+			hwndObj[hwnd].close()}
+		}
 }
 win.loopMessage();
