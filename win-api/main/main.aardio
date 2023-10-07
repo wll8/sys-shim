@@ -55,9 +55,6 @@ winform.add(
 	edit={cls="richedit";left=23;top=24;right=730;bottom=380;db=1;dl=1;dr=1;dt=1;edge=1;hscroll=1;multiline=1;vscroll=1;z=1}
 )
 
-var hwndObj = {
-	hwndObj: true; // 插入一个标志，表示这是一个专门放置句柄的对象
-}
 var msgMap = {
 	_WM_RBUTTONUP = 0x205;
 	_WM_LBUTTONUP = 0x202;
@@ -74,7 +71,7 @@ function deepGet(obj, str){
 		if(#arr == i) {
 			endKey = key
 		} else {
-			cur = obj.hwndObj ? cur[tonumber(key)] : cur[key]
+			cur = cur[key] || cur[tonumber(key)]
 		}
 	}
 	return cur, endKey
@@ -121,19 +118,19 @@ function wrapObj(obj){
 
 
 var external = {
+	wsUrl = wsUrl;
 	view = {
 		create = function(htmlFile){
 			var winform = win.form(text = "main")
 			var hwnd = winform.hwnd
-			hwndObj[hwnd] = winform
-			var wb = web.view(hwndObj[hwnd], data.userDataDir, data.browserArguments);
-			hwndObj[hwnd].wb = wb
-			hwndObj[hwnd].wb.external = {
+			var wb = web.view(winform, data.userDataDir, data.browserArguments);
+			winform.wb = wb
+			winform.wb.external = {
 				wsUrl = wsUrl;
 				hwnd = hwnd;
 			}
-			hwndObj[hwnd].wb.preloadScript(jsFileSysStr)
-			hwndObj[hwnd].wb.preloadScript(`
+			winform.wb.preloadScript(jsFileSysStr)
+			winform.wb.preloadScript(`
 				// 添加 ext
 				window.ext = chrome.webview.hostObjects.external
 
@@ -142,39 +139,38 @@ var external = {
 					delete window.aardio
 				}, 0);
 			`)
-			hwndObj[hwnd].wb.go(htmlFile)
-			hwndObj[hwnd].text = wb.xcall("() => document.title")
+			winform.wb.go(htmlFile)
+			winform.text = wb.xcall("() => document.title")
 			return hwnd
 		}
 		setIcon = function(hwnd, small, big){
 			big = big : small
-			hwndObj[hwnd].setIcon(getIcon(small), getIcon(big))
+			win.form._forms[hwnd].setIcon(getIcon(small), getIcon(big))
 		}
 	}
 	tray = {
 		create = function(){
 			var winform = win.form()
 			var hwnd = winform.hwnd
-			hwndObj[hwnd] = winform
-			hwndObj[hwnd].onTrayMessage = {}
-			hwndObj[hwnd].tray = win.util.tray(hwndObj[hwnd]) 
+			winform.onTrayMessage = {}
+			winform.tray = win.util.tray(winform) 
 			return hwnd
 		}
 		icon = function(hwnd, path){
-			hwndObj[hwnd].tray.icon = getIcon(path)
+			win.form._forms[hwnd].tray.icon = getIcon(path)
 		}
 		on = function(hwnd, key){
 			var code = msgMap[key]
-			hwndObj[hwnd].onTrayMessage[code] = function(...){
+			win.form._forms[hwnd].onTrayMessage[code] = function(...){
 				rpcServer.publish(hwnd + "." + key, {...});
 			}
 		}
 		off = function(hwnd, key){
 			var code = msgMap[key]
-			hwndObj[hwnd].onTrayMessage[code] = null
+			win.form._forms[hwnd].onTrayMessage[code] = null
 		}
 	}
-	hwndObj = wrapObj(hwndObj);
+	forms = wrapObj(win.form._forms);
 	win = wrapObj(win);
 	mouse = wrapObj(mouse);
 	base = {
@@ -231,9 +227,8 @@ if(io.exist(htmlFile)) {
 }
 
 winform.onClose = function(hwnd,message,wParam,lParam){
-	for hwnd in hwndObj {
-		if(type(hwnd) == type.number) {
-			hwndObj[hwnd].close()}
-		}
+	for hwnd in win.form._forms {
+		win.form._forms[hwnd].close()
+	}
 }
 win.loopMessage();
