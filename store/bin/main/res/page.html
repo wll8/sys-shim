@@ -8,13 +8,15 @@
   </head>
   <script>
     ;(async () => {
-      const hwnd = window.ext.hwnd
-      const ws = new RPCWebSocket.Client(await window.ext.wsUrl)
-      const main = await new Sys(ws)
-      await ws.call(`view.setIcon`, [hwnd, `https://www.baidu.com/favicon.ico`])
+        window.hwnd = await window.ext.hwnd
+        window.ws = new RPCWebSocket.Client(await window.ext.wsUrl)
+        window.main = await new Sys(ws)
+        await ws.call(`forms.callFn`, [`${hwnd}.show`])
+        await ws.call(`view.setIcon`, [hwnd, `https://www.baidu.com/favicon.ico`])
     })()
   </script>
   <body>
-    hello~
+    <button onclick="main.msgBox(`hello`, `title`)">msgBox</button>
+    <button onclick="main.exit()">exit</button>
   </body>
 </html>
