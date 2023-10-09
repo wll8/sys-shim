@@ -66,8 +66,6 @@ function deepGet(obj, str){
 	var endKey = ``
 	for(i=1; #arr; 1){ 
 		var key = arr[i]
-		//console.log("key", i, key)
-		//console.dumpJson(arr)
 		if(#arr == i) {
 			endKey = key
 		} else {
@@ -87,7 +85,7 @@ function getIcon(icon){
 			hIcon =  ::LoadIcon(_HINSTANSE, topointer(icon)); 
 		}
 	} elseif (type(icon) == type.string) {
-		hIcon = ..win.image.createIcon(icon, true, 16, 32);
+		hIcon = win.image.createIcon(icon, true, 16, 32);
 	} else {
 		hIcon = icon : _HAPPICON;
 	}
@@ -107,10 +105,7 @@ function wrapObj(obj){
 			return cur[endKey]
 		}
 		getVal = function(path){
-			console.log(path)
 			var cur, endKey = deepGet(obj, path)
-			console.log(cur)
-			console.log(endKey)
 			return cur[endKey]
 		}
 	}; 
@@ -118,13 +113,13 @@ function wrapObj(obj){
 
 
 var external = {
-	wsUrl = wsUrl;
 	view = {
 		create = function(htmlFile){
 			var winform = win.form(text = "main")
 			var hwnd = winform.hwnd
 			var wb = web.view(winform, data.userDataDir, data.browserArguments);
 			winform.wb = wb
+			// 挂载到 window.ext 上的对象
 			winform.wb.external = {
 				wsUrl = wsUrl;
 				hwnd = hwnd;
@@ -203,11 +198,11 @@ var execFile = function(param){
 	var param = nodeArg
 	string.setenv("wsUrl", wsUrl);
 	var nodeExePath = nodeJs.getInstallPath()
-	var node, err = ..process.popen(nodeExePath, param, {workDir=..io.fullpath(self.workDir)})
+	var node, err = process.popen(nodeExePath, param, {workDir=io.fullpath(self.workDir)})
 	if(node){
 		node.codepage = 65001;
 		node.logResponse(winform.edit);
-		node.assignToJobObject(..process.job.limitKill);
+		node.assignToJobObject(process.job.limitKill);
 	};
 	return null,err;
 }
