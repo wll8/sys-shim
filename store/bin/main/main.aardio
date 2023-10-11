@@ -97,7 +97,8 @@ function wrapObj(obj){
 	return {
 		callFn = function(path, ...){
 			var cur, endKey = deepGet(obj, path)
-			return {call(cur[endKey], cur, ...)}
+			var fn = cur[endKey] || cur[tonumber(endKey)]
+			return {call(fn, cur, ...)}
 		}
 		setVal = function(path, val){
 			var cur, endKey = deepGet(obj, path)
@@ -105,8 +106,10 @@ function wrapObj(obj){
 			return cur[endKey]
 		}
 		getVal = function(path){
+			if(path == null) {return obj; }
 			var cur, endKey = deepGet(obj, path)
-			return cur[endKey]
+			var val = cur[endKey] || cur[tonumber(endKey)]
+			return val
 		}
 	}; 
 }
