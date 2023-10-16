@@ -7,6 +7,7 @@
     "build": "node build.js"
   },
   "dependencies": {
+    "proxy-deep": "^3.1.1",
     "rpc-websockets": "^7.6.0",
     "shx": "^0.3.4",
     "webpack": "^5.89.0",
