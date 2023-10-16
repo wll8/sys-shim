@@ -4,10 +4,12 @@
   "main": "sys.js",
   "page": "page.html",
   "scripts": {
-    "test": "npx opener win-api/main/dist/main.exe",
-    "build": "shx rm -rf res main.exe & shx ln win-api/main/dist/main.exe main.exe"
+    "build": "node build.js"
   },
   "dependencies": {
-    "rpc-websockets": "^7.6.0"
+    "rpc-websockets": "^7.6.0",
+    "shx": "^0.3.4",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
   }
 }
