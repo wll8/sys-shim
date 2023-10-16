@@ -150,8 +150,7 @@ var external = {
 					delete window.aardio
 				}, 0);
 			`)
-			var str = string.load(tempPath + "/res/browser/main.js")
-			winform.wb.preloadScript(str)
+			winform.wb.preloadScript(string.load(tempPath + "/res/browser/main.js"))
 			winform.wb.preloadScript(optionRes.preloadScript)
 			winform.wb.go(htmlFile)
 			winform.text = wb.xcall("() => document.title")
