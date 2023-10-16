@@ -8,12 +8,13 @@
   <script>
     new Sys().then(async main => {
       window.main = main
-      window.hwnd = await window.ext.hwnd
       window.ws = window.main.ws
+      window.win = window.main.win
+      main.form.show()
     })
   </script>
   <body>
-    <button onclick="main.msgBox(`hello`, `title`)">msgBox</button>
-    <button onclick="main.exit()">exit</button>
+    <button onclick="win.msgbox(`hello`, `title`)">msgbox</button>
+    <button onclick="win.quitMessage()">exit</button>
   </body>
 </html>

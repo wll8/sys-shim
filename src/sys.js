@@ -1,3 +1,5 @@
+import DeepProxy from "proxy-deep"
+
 class Base {
   constructor(ws) {
     this.ws = ws
@@ -5,7 +7,36 @@ class Base {
   exit(hwnd) {
     return this.ws.call(`base.exit`, [this.hwnd || hwnd])
   }
+  /**
+   * 创建一个模拟的 js 对象来调用 exe 中的对象
+   * @param {*} namespaces exe 暴露的对象, 例如 win
+   * @returns 
+   */
+  mockObj(namespaces) {
+    const ws = this.ws
+    const obj = new DeepProxy({}, {
+      get(target, path, receiver) {
+        const fullPath = [...this.path, path].filter(item => typeof(item) === `string`).join(`.`)
+        if(typeof(target) === `function` && fullPath.endsWith(`.then`)) {
+          const prePath = fullPath.replace(/\.then$/, ``)
+          return ws.call(`${namespaces}.getVal`, [prePath])
+        } else {
+          return this.nest(() => {})
+        }
+      },
+      set(target, path, receiver) {
+        const keyPath = [...this.path, path].filter(item => typeof(item) === `string`).join(`.`)
+        return ws.call(`${namespaces}.setVal`, [keyPath, receiver])
+      },
+      apply(target, thisArg, argList) {
+        const keyPath = [...this.path].filter(item => typeof(item) === `string`).join(`.`)
+        return ws.call(`${namespaces}.callFn`, [keyPath, ...argList])
+      }
+    })
+    return obj
+  }
 }
+
 function getClass(ws) {
   class Tray extends Base {
     constructor(...arg) {
@@ -14,6 +45,7 @@ function getClass(ws) {
       return new Promise(async (resolve) => {
         const hwnd = await ws.call(`${this.key}.create`, arg)
         this.hwnd = hwnd
+        this.form = this.win.form._forms[hwnd]
         resolve(this)
       })
     }
@@ -32,6 +64,7 @@ function getClass(ws) {
       return new Promise(async (resolve) => {
         const hwnd = await ws.call(`${this.key}.create`, arg)
         this.hwnd = hwnd
+        this.form = this.win.form._forms[hwnd]
         resolve(this)
       })
     }
@@ -71,6 +104,18 @@ class Sys extends Base {
         this.Tray = myClass.Tray
         this.View = myClass.View
         this.Msg = myClass.Msg
+        ;[
+          `win`,
+        ].forEach(key => {
+          this[key] = this.mockObj(key)
+        })
+        try {
+          // webview 句柄
+          const hwnd = await global.ext.hwnd
+          this.form = this.win.form._forms[hwnd]
+        } catch (error) {
+          // ...
+        }
         resolve(this)
       })
     })

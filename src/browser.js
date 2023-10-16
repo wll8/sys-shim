@@ -1,7 +1,7 @@
 import * as RPCWebSocket from 'rpc-websockets/dist/index.browser-bundle.js'
 import Sys from './sys.js'
 class Sys2 extends Sys {
-  constructor(wsUrl = window.ext.wsUrl) {
+  constructor(wsUrl = global.ext.wsUrl) {
     return new Promise(async (resolve) => {
       const ws = new RPCWebSocket.Client(await wsUrl)
       super(ws)
@@ -9,4 +9,4 @@ class Sys2 extends Sys {
     })
   }
 }
-window.Sys = Sys2
+global.Sys = Sys2
