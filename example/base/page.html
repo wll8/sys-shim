@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>sys-shim page</title>
+    <script type="text/javascript"></script>
+  </head>
+  <script>
+    new Sys().then(async main => {
+      window.main = main
+      window.hwnd = await window.ext.hwnd
+      window.ws = window.main.ws
+    })
+  </script>
+  <body>
+    <button onclick="main.msgBox(`hello`, `title`)">msgBox</button>
+    <button onclick="main.exit()">exit</button>
+  </body>
+</html>

@@ -1,7 +1,7 @@
 .build
 dist
 node_modules
-temp.txt
 dev.package.json
-/res
-main.exe
+dev.sys.js
+dev.page.html
+win-api/res
