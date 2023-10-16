@@ -5,19 +5,16 @@
     define([], factory);
   } else if (typeof exports === 'object') {
     // CommonJS / Node.js 环境下的模块导入
-    global.Sys = module.exports =  factory();
+    module.exports =  factory();
   } else {
     // 浏览器全局变量导入
-    root.Sys = factory();
+    factory();
   }
 }(typeof self !== 'undefined' ? self : this, function () {
   // 模块代码
   class Base {
     constructor(ws) {
       this.ws = ws
-    }
-    msgBox(...arg) {
-      return this.ws.call(`base.msgBox`, arg)
     }
     exit(hwnd) {
       return this.ws.call(`base.exit`, [this.hwnd || hwnd])
@@ -33,15 +30,6 @@
           this.hwnd = hwnd
           resolve(this)
         })
-      }
-      icon(...arg) {
-        return ws.call(`${this.key}.icon`, [this.hwnd, ...arg])
-      }
-      tip(...arg) {
-        return ws.call(`${this.key}.tip`, [this.hwnd, ...arg])
-      }
-      pop(...arg) {
-        return ws.call(`${this.key}.pop`, [this.hwnd, ...arg])
       }
       on(key, fn) {
         ws.call(`${this.key}.on`, [this.hwnd, key])
@@ -60,15 +48,6 @@
           this.hwnd = hwnd
           resolve(this)
         })
-      }
-      fullscreen(...arg) {
-        return ws.call(`${this.key}.fullscreen`, [this.hwnd, ...arg])
-      }
-      setPos(...arg) {
-        return ws.call(`${this.key}.setPos`, [this.hwnd, ...arg])
-      }
-      setTopmost(...arg) {
-        return ws.call(`${this.key}.setTopmost`, [this.hwnd, ...arg])
       }
     }
     class Msg extends Base {
@@ -101,7 +80,7 @@
           return Sys.instance;
         }
         Sys.instance = this;
-        ws.on(`open`, () => {
+        ws.on(`open`, async () => {
           const myClass = getClass(ws)
           this.Tray = myClass.Tray
           this.View = myClass.View
