@@ -1,5 +1,5 @@
 import * as RPCWebSocket from 'rpc-websockets/dist/index.browser-bundle.js'
-import * as Sys from './sys.js'
+import Sys from './sys.js'
 class Sys2 extends Sys {
   constructor(wsUrl = window.ext.wsUrl) {
     return new Promise(async (resolve) => {
