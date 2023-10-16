@@ -3,6 +3,11 @@
 	<file name="main.aardio" path="main.aardio" comment="main.aardio"/>
 	<folder name="资源文件" path="res" embed="true" local="false" ignored="false">
 		<file name="page.html" path="res\page.html" comment="res\page.html"/>
-		<file name="sys.js" path="res\sys.js" comment="res\sys.js"/>
+		<folder name="browser" path="res\browser" comment="res\browser">
+			<file name="main.js" path="res\browser\main.js" comment="res\browser\main.js"/>
+		</folder>
+		<folder name="node" path="res\node" comment="res\node">
+			<file name="main.js" path="res\node\main.js" comment="res\node\main.js"/>
+		</folder>
 	</folder>
 </project>

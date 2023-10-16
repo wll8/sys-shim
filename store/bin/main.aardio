@@ -13,13 +13,19 @@ import console;
 import io;
 import mouse
 
+old = win.form._metaProperty.setIcon
+win.form._metaProperty.setIcon = function (small, big){
+	big = big : small
+	small, big = getIcon(small), getIcon(big)
+	call(old, owner, big, small)
+}
+
+
 var tempPath = fsys.getTempDir() + "/sys-shim/"
 fsys.createDir(tempPath)
 
 // 释放资源
 fsys.res.saveRes("/res", tempPath)
-var jsFileSys = fsys.file(tempPath + "/res/sys.js")
-var jsFileSysStr = jsFileSys.readAll()
 
 var cfgPath = ""
 var data = {
@@ -117,8 +123,16 @@ function wrapObj(obj){
 
 var external = {
 	view = {
-		create = function(htmlFile){
-			var winform = win.form(text = "main")
+		create = function(htmlFile, option){
+			var optionRes = table.assignDeep({
+				form = {
+					text = "main";
+				};
+				preloadScript = ``;
+				userDataDir = ``;
+				browserArguments = ``;
+			}, option)
+			var winform = win.form(optionRes.form)
 			var hwnd = winform.hwnd
 			var wb = web.view(winform, data.userDataDir, data.browserArguments);
 			winform.wb = wb
@@ -127,7 +141,6 @@ var external = {
 				wsUrl = wsUrl;
 				hwnd = hwnd;
 			}
-			winform.wb.preloadScript(jsFileSysStr)
 			winform.wb.preloadScript(`
 				// 添加 ext
 				window.ext = chrome.webview.hostObjects.external
@@ -137,13 +150,12 @@ var external = {
 					delete window.aardio
 				}, 0);
 			`)
+			var str = string.load(tempPath + "/res/browser/main.js")
+			winform.wb.preloadScript(str)
+			winform.wb.preloadScript(optionRes.preloadScript)
 			winform.wb.go(htmlFile)
 			winform.text = wb.xcall("() => document.title")
 			return hwnd
-		}
-		setIcon = function(hwnd, small, big){
-			big = big : small
-			win.form._forms[hwnd].setIcon(getIcon(small), getIcon(big))
 		}
 	}
 	tray = {
@@ -153,9 +165,6 @@ var external = {
 			winform.onTrayMessage = {}
 			winform.tray = win.util.tray(winform) 
 			return hwnd
-		}
-		icon = function(hwnd, path){
-			win.form._forms[hwnd].tray.icon = getIcon(path)
 		}
 		on = function(hwnd, key){
 			var code = msgMap[key]
@@ -175,9 +184,6 @@ var external = {
 		publish = function(key, ...){
 			rpcServer.publish(key, ...);
 		}
-		msgBox = function(...){
-			win.msgbox(...)
-		}
 		exit = function(hwnd){
 			if(hwnd) {
 				win.close(hwnd)
@@ -186,7 +192,16 @@ var external = {
 			}
 		}
 	}
+	run = function(code, ...){
+		loadcodex(code, {
+			getIcon = getIcon;
+			arg = {...}
+		})
+	}
+	
+	
 }
+
 
 // 定义允许 Node.js 调用的 aardio 函数
 rpcServer.external = external
@@ -197,7 +212,7 @@ var execFile = function(param){
 	import nodeJs;
 
 	var jsArg = process.joinArguments(_CMDLINE) || ""
-	var nodeArg = " --require " + jsFileSys.path + " " + jsFile + " " + jsArg
+	var nodeArg = " --require " + tempPath + "/res/node/main.js" + " " + jsFile + " " + jsArg
 	var param = nodeArg
 	string.setenv("wsUrl", wsUrl);
 	var nodeExePath = nodeJs.getInstallPath()
