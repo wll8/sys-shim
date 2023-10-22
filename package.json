@@ -1,8 +1,4 @@
 {
-  "debug": false,
-  "browserArguments": "--auto-open-devtools-for-tabs",
-  "main": "sys.js",
-  "page": "page.html",
   "scripts": {
     "build": "node build.js"
   },

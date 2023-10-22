@@ -75,7 +75,42 @@ main.js 可以创建页面、托盘、服务。
 - 使用字符串动态调用函数 https://bbs.aardio.com/forum.php?mod=viewthread&tid=11257
 - 如何让主窗体不在任务栏显示 https://bbs.aardio.com/forum.php?mod=viewthread&tid=9059&page=1#pid48596
 
+## 配置示例
+
+在同目录下的 package.json 中可进行以下配置:
+
+- main
+  nodejs 文件入口。
+
+- page
+  webview 文件入口。
+
+- browserArguments
+  webview 的启动参数。
+
+- preloadScript
+  webview 的预加载 js。
+
+- userDataDir
+  webview 用户目录。
+
+- socket
+  - ip
+  - port
+
+- form
+  winform 的默认参数。
+
 ## 实现
+
+### 逻辑
+
+
+
+
+
+### 其他
+
 - 一级方法和属性，使用 A 语言调用 B 语言的方法，读取和设置属性
 - 多级方法和属性，使用 A 语言编写 B 语言
   - 运行时？
