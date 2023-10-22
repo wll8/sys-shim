@@ -31,6 +31,16 @@ var cfgPath = ""
 var data = {
 	main = io.fullpath("./sys.js");
 	page = io.fullpath("./page.html");
+	socket = {
+		ip = "0.0.0.0";
+		port = null;
+	};
+	form = {
+		text = "main";
+	};
+	preloadScript = ``;
+	userDataDir = null;
+	browserArguments = ``;
 }
 
 if(_STUDIO_INVOKED) {
@@ -38,12 +48,14 @@ if(_STUDIO_INVOKED) {
 } else {
 	cfgPath = io.fullpath("./package.json")
 }
-data = io.exist(cfgPath) ? web.json.parse(fsys.file(cfgPath).readAll()) : data
-
+data = table.assignDeep(
+	table.clone(data),
+	io.exist(cfgPath) ? web.json.parse(fsys.file(cfgPath).readAll()) : {}
+)
 
 // 创建 WebSocket 服务端
 var wsrv = web.socket.server();
-wsrv.start();
+wsrv.start(data.socket.ip, data.socket.port);
 var wsUrl = wsrv.getUrl()
 var rpcServer = web.socket.jsonServer(wsrv);
 
@@ -125,12 +137,10 @@ var external = {
 	view = {
 		create = function(htmlFile, option){
 			var optionRes = table.assignDeep({
-				form = {
+				form = table.assignDeep(table.clone(data.form), {
 					text = "main";
-				};
-				preloadScript = ``;
-				userDataDir = ``;
-				browserArguments = ``;
+				});
+				preloadScript = data.preloadScript;
 			}, option)
 			var winform = win.form(optionRes.form)
 			var hwnd = winform.hwnd
@@ -192,10 +202,11 @@ var external = {
 		}
 	}
 	run = function(code, ...){
-		loadcodex(code, {
+		// 把暴露给代码的变量都统一放在 g 里面
+		g = {
 			getIcon = getIcon;
-			arg = {...}
-		})
+		}
+		loadcodex(code, ...)
 	}
 	
 	
