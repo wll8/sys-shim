@@ -61,9 +61,13 @@ main.js 可以创建页面、托盘、服务。
   - https://blog.51cto.com/u_15127641/4094253
   - http://blog.silence.pink/p/windows-context-menu/
   - https://learn.microsoft.com/zh-cn/windows/win32/shell/context-menu
+  - https://www.codeproject.com/Articles/22012/Explorer-Shell-Context-Menu
+  - https://stackoverflow.com/questions/10668456/how-to-show-windows-explorer-context-right-click-menu
 
 ## 参考
 
+- 判断页面可见状态 webview 中不可用 https://developer.mozilla.org/zh-CN/docs/Web/API/Page_Visibility_API
+- 如何使用 JS“取消悬停”具有活动 :hover 的元素 https://www.quora.com/How-to-unhover-an-element-with-an-active-hover-with-JS
 - 很棒的 Electron.js 替代品 https://github.com/sudhakar3697/awesome-electron-alternatives
 - https://www.jianshu.com/p/4dd28767ba8c
 - 托盘图标处理 https://github.com/aardio/Ghips
