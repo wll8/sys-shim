@@ -12,6 +12,12 @@ import inet.http;
 import console;
 import io;
 import mouse
+import process;
+import process.popen
+import inet.httpFile;
+import web.form;
+import web.multipartFormData;
+import nodeJs;
 
 old = win.form._metaProperty.setIcon
 win.form._metaProperty.setIcon = function (small, big){
@@ -21,7 +27,7 @@ win.form._metaProperty.setIcon = function (small, big){
 }
 
 
-var tempPath = fsys.getTempDir() + "/sys-shim/"
+var tempPath = fsys.longpath(fsys.getTempDir() + "/sys-shim/")
 fsys.createDir(tempPath)
 
 // 释放资源
@@ -50,7 +56,7 @@ if(_STUDIO_INVOKED) {
 }
 data = table.assignDeep(
 	table.clone(data),
-	io.exist(cfgPath) ? web.json.parse(fsys.file(cfgPath).readAll()) : {}
+	io.exist(cfgPath) ? web.json.parse(string.load(cfgPath)) : {}
 )
 
 // 创建 WebSocket 服务端
@@ -61,7 +67,7 @@ var rpcServer = web.socket.jsonServer(wsrv);
 
 // 这里可以自定义WebSocket 服务端可以使用的 URL 路径
 wsrv.onUpgradeToWebsocket = function(hSocket){
-    return rpcServer.start(hSocket);
+	return rpcServer.start(hSocket);
 }
 
 var winform = win.form(text="main debug")
@@ -82,7 +88,7 @@ function deepGet(obj, str){
 	var arr = string.split(str, ".")
 	var cur = obj
 	var endKey = ``
-	for(i=1; #arr; 1){ 
+	for(i=1; #arr; 1){
 		var key = arr[i]
 		if(#arr == i) {
 			endKey = key
@@ -97,10 +103,10 @@ function getIcon(icon){
 	var icon = inet.url.is(icon) ? inet.http().get(icon) : icon
 	var hIcon
 	if (type(icon) == type.number) {
-		if(icon >= 0x7F00/*_IDI_APPLICATION*/) { 
+		if(icon >= 0x7F00/*_IDI_APPLICATION*/) {
 			hIcon =  ::LoadIcon(null, topointer(icon));
 		} else {
-			hIcon =  ::LoadIcon(_HINSTANSE, topointer(icon)); 
+			hIcon =  ::LoadIcon(_HINSTANSE, topointer(icon));
 		}
 	} elseif (type(icon) == type.string) {
 		hIcon = win.image.createIcon(icon, true, 16, 32);
@@ -129,7 +135,7 @@ function wrapObj(obj){
 			var val = cur[endKey] || cur[tonumber(endKey)]
 			return val
 		}
-	}; 
+	};
 }
 
 
@@ -172,7 +178,7 @@ var external = {
 			var winform = win.form()
 			var hwnd = winform.hwnd
 			winform.onTrayMessage = {}
-			winform.tray = win.util.tray(winform) 
+			winform.tray = win.util.tray(winform)
 			return hwnd
 		}
 		on = function(hwnd, key){
@@ -186,9 +192,7 @@ var external = {
 			win.form._forms[hwnd].onTrayMessage[code] = null
 		}
 	}
-	forms = wrapObj(win.form._forms);
 	win = wrapObj(win);
-	mouse = wrapObj(mouse);
 	base = {
 		publish = function(key, ...){
 			rpcServer.publish(key, ...);
@@ -204,14 +208,24 @@ var external = {
 	run = function(code, ...){
 		// 把暴露给代码的变量都统一放在 g 里面
 		g = {
+			rpcServer = rpcServer;
 			getIcon = getIcon;
 		}
-		loadcodex(code, ...)
+		var arg = ...
+		var res = null
+		var err = false
+		try {
+			res = loadcode(code)(arg)
+		}
+		catch (e) {
+			err = tostring(e);
+		}
+		return {
+			err;
+			res;
+		}
 	}
-	
-	
 }
-
 
 // 定义允许 Node.js 调用的 aardio 函数
 rpcServer.external = external
@@ -219,8 +233,6 @@ rpcServer.external = external
 var jsFile = io.fullpath(data.main)
 var htmlFile = io.fullpath(data.page)
 var execFile = function(param){
-	import nodeJs;
-
 	var jsArg = process.joinArguments(_CMDLINE) || ""
 	var nodeArg = " --require " + tempPath + "/res/node/main.js" + " " + jsFile + " " + jsArg
 	var param = nodeArg
