@@ -78,6 +78,7 @@ main.js 可以创建页面、托盘、服务。
 - https://blog.wavesxa.com/archives/golang-tuo-pan-cai-dan-ying-yong-ji-da-kai-xi-tong-mo-ren-liu-lan-qi
 - 使用字符串动态调用函数 https://bbs.aardio.com/forum.php?mod=viewthread&tid=11257
 - 如何让主窗体不在任务栏显示 https://bbs.aardio.com/forum.php?mod=viewthread&tid=9059&page=1#pid48596
+- 注册机 https://blog.jvbaopeng.com/blog/194.html
 
 ## 配置示例
 
