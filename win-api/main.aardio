@@ -5,6 +5,7 @@ import fsys;
 import fsys.res;
 import win.util.tray;
 import win.ui;
+import wsock;
 import wsock.tcp.simpleHttpServer;
 import web.view;
 import inet.http;
@@ -16,22 +17,33 @@ import process.popen
 import inet.httpFile;
 import web.form;
 import web.multipartFormData;
+import win.guid;
+import fn;
 
 // 放置全局变量
-G = {}
-G.killAll = function(){
-	process.popen("taskkill /F /T /PID " + tostring(process.getId()))
+global.G = {
+	httpUrl = null;
+	wsUrl = null;
+	token = tostring(win.guid.create());
+	killAll = function(){
+		process.popen("taskkill /F /T /PID " + tostring(process.getId()))
+	};
+	getIcon = fn.getIcon;
+	msgMap = {
+    	_WM_RBUTTONUP = 0x205;
+    	_WM_LBUTTONUP = 0x202;
+	},
+	tempPath = fsys.longpath(io.appData() + "/sys-shim/"),
 }
-
 
 var old = win.form._metaProperty.setIcon
 win.form._metaProperty.setIcon = function(small, big) {
     big = big: small
-    small, big = getIcon(small), getIcon(big)
+    small, big = fn.getIcon(small), fn.getIcon(big)
     call(old, owner, big, small)
 }
 
-var tempPath = fsys.longpath(fsys.getTempDir() + "/sys-shim/")
+var tempPath = global.G.tempPath
 fsys.createDir(tempPath)
 
 // 释放资源
@@ -41,19 +53,26 @@ var cfgPath = ""
 var baseData = {
     main = io.fullpath("./sys.js");
     page = io.fullpath("./page.html");
+    pageExit = true;
     pageShow = false;
     socket = {
         ip = "0.0.0.0";
-        port = null;
+        port = wsock.getFreePort(),
+    };
+    http = {
+        ip = "0.0.0.0";
+        port = fn.webviewPort(global.G.tempPath).port,
     };
     form = {
 		text = "main";
     };
     preloadScript = ``;
-    userDataDir = null;
+    userDataDir = fn.webviewPort(global.G.tempPath).path,
     browserArguments = ``;
+    token = true,
+    originRegExp = ``,
+    originRegExpMode= `ig`,
 }
-
 if (_STUDIO_INVOKED) {
     cfgPath = io.fullpath("./dev.package.json")
 }
@@ -63,89 +82,38 @@ else {
 var data = table.assignDeep(
     table.clone(baseData), io.exist(cfgPath) ? web.json.parse(string.load(cfgPath)) : {}
 )
+global.G.config = data
 
 // 创建 WebSocket 服务端
 var wsrv = web.socket.server();
 wsrv.start(data.socket.ip, data.socket.port);
-var wsUrl = wsrv.getUrl()
-var rpcServer = web.socket.jsonServer(wsrv);
+global.G.wsUrl = wsrv.getUrl()
+global.G.rpcServer = web.socket.jsonServer(wsrv);
 
 // 这里可以自定义WebSocket 服务端可以使用的 URL 路径
-wsrv.onUpgradeToWebsocket = function(hSocket) {
-    return rpcServer.start(hSocket);
+wsrv.onUpgradeToWebsocket = function(hSocket, request, response, protocol, origin) {
+
+	var you = inet.url.split(origin)
+	you.token = request.get.token
+	you.origin = tostring(origin)
+
+	var me = inet.url.split(global.G.httpUrl)
+	me.token = data.token
+	
+	if(fn.matchWs(you, me)) {
+   		return global.G.rpcServer.start(hSocket);
+	} else {
+		return response.close()
+	}
 }
 
-var onlyMsg = win.form({})
-G.onlyMsg = onlyMsg
-
-var msgMap = {
-    _WM_RBUTTONUP = 0x205;
-    _WM_LBUTTONUP = 0x202;
-}
-
-function deepGet(obj, str) {
-    var arr = string.split(str, ".")
-    var cur = obj
-    var endKey = ``
-    for (i = 1; #arr; 1) {
-        var key = arr[i]
-        if (#arr == i) {
-            endKey = key
-        }
-        else {
-            cur = cur[key] || cur[tonumber(key)]
-        }
-    }
-    return cur, endKey
-}
-
-function getIcon(icon) {
-    var icon = inet.url.is(icon) ? inet.http().get(icon) : icon
-    var hIcon
-    if (type(icon) == type.number) {
-        if (icon >= 0x7F00 /*_IDI_APPLICATION*/ ) {
-            hIcon = ::LoadIcon(null, topointer(icon));
-        }
-        else {
-            hIcon = ::LoadIcon(_HINSTANSE, topointer(icon));
-        }
-    }
-    elseif(type(icon) == type.string) {
-        hIcon = win.image.createIcon(icon, true, 16, 32);
-    }
-    else {
-        hIcon = icon: _HAPPICON;
-    }
-    return hIcon
-}
-
-// 封装为可以直接 path 路径访问 aardio 的对象属性和方法的形式
-function wrapObj(obj) {
-    return {
-        callFn = function(path, ... ) {
-            var cur, endKey = deepGet(obj, path)
-            var fn = cur[endKey] || cur[tonumber(endKey)]
-            return {
-                call(fn, cur, ... )
-            }
-        }
-        setVal = function(path, val) {
-            var cur, endKey = deepGet(obj, path)
-            cur[endKey] = val
-            return cur[endKey]
-        }
-        getVal = function(path) {
-            if (path == null) {
-                return obj;
-            }
-            var cur, endKey = deepGet(obj, path)
-            var val = cur[endKey] || cur[tonumber(endKey)]
-            return val
-        }
-    };
-}
+global.G.onlyMsg = win.form({})
 
 function initBaseData() {
+	// 手动指定 token 时
+	if(fn.toBool(data.token) && type(data.token) = "string") {
+		global.G.token = data.token
+	}
 	// 父窗口转换
 	if(type(data.form.parent) = "table") {
 		data.form.parent = win.form(data.form.parent).hwnd
@@ -169,14 +137,22 @@ function initBaseData() {
 		if (io.exist(localpath)) {
 			var root = fsys.getParentDir(localpath)
 			var name = fsys.getFileName(localpath)
+			
+			namespace wsock.tcp.simpleHttpServer{
+				startIp = data.http.ip;
+    			startPort = data.http.port;
+			}
 			wsock.tcp.simpleHttpServer.documentRoot = root
 			var url = wsock.tcp.simpleHttpServer.startUrl(name)
 			data.page = url + hash
+			global.G.httpUrl = data.page
 		}
 		// 如果 js 有但 html 没有则让 html 值为空
 		if (io.exist(data.main) && !io.exist(localpath)) {
     		data.page = null
 		}
+	} else {
+		global.G.httpUrl = data.page
 	}
 	
 }
@@ -198,7 +174,8 @@ var external = {
             winform.wb = wb
             // 挂载到 window.ext 上的对象
             winform.wb.external = {
-                wsUrl = wsUrl;
+                token = global.G.token;
+                wsUrl = global.G.wsUrl;
                 hwnd = hwnd;
             }
             winform.wb.preloadScript(`
@@ -226,28 +203,25 @@ var external = {
             return hwnd
         }
         on = function(hwnd, key) {
-            var code = msgMap[key]
+            var code = global.G.msgMap[key]
             win.form._forms[hwnd].onTrayMessage[code] = function( ... ) {
-                rpcServer.publish(hwnd + "." + key, {
+                global.G.rpcServer.publish(hwnd + "." + key, {
                     ...
                 });
             }
         }
         off = function(hwnd, key) {
-            var code = msgMap[key]
+            var code = global.G.msgMap[key]
             win.form._forms[hwnd].onTrayMessage[code] = null
         }
     }
-    win = wrapObj(win);
+    win = fn.wrapObj(win);
     base = {
         publish = function(key, ... ) {
-            rpcServer.publish(key, ... );
+            global.G.rpcServer.publish(key, ... );
         }
     }
     run = function(code, ... ) {
-        // 把暴露给代码的变量都统一放在 g 里面
-        G.rpcServer = rpcServer
-        G.getIcon = getIcon
         var arg = ...
 		var res = null
         var err = false
@@ -265,13 +239,16 @@ var external = {
 }
 
 // 定义允许 Node.js 调用的 aardio 函数
-rpcServer.external = external
+global.G.rpcServer.external = external
 
 var execFile = function(param) {
     var jsArg = process.joinArguments(_CMDLINE) || ""
     var nodeArg = " --require " + tempPath + "/res/node/main.js" + " " + data.main + " " + jsArg
     var param = nodeArg
-    string.setenv("wsUrl", wsUrl);
+    string.setenv("ext", web.json.stringify({
+    	wsUrl = global.G.wsUrl,
+    	token = global.G.token,
+    }));
 	import nodeJs;
     var nodeExePath = nodeJs.getInstallPath()
     var node, err = process.popen(nodeExePath, param, {
@@ -280,10 +257,10 @@ var execFile = function(param) {
     if (node) {
         node.assignToJobObject(process.job.limitKill);
 		if (data.debug) {
-			io.open()
+			console.open()
         	node.codepage = 65001;
         	// 使用异步的方式输出控制台信息
-			var timer = onlyMsg.setInterval(function(){
+			var timer = global.G.onlyMsg.setInterval(function(){
 				var s = string.concat(node.peek(0));
 				var e = string.concat(node.peekErr(0));
 				if(s) console.writeText( string.crlf( s ) );
@@ -313,10 +290,15 @@ if (data.page) {
     })
     var winform = win.form._forms[hwnd]
     if(data.pageShow) winform.show()
+    if(data.pageExit) {
+    	winform.onClose = function() {
+      		global.G.killAll()
+    	}
+    }
 }
 
-onlyMsg.onClose = function(hwnd, message, wParam, lParam) {
-	G.killAll()
+global.G.onlyMsg.onClose = function(hwnd, message, wParam, lParam) {
+	global.G.killAll()
     for hwnd in win.form._forms {
         win.form._forms[hwnd].close()
     }
