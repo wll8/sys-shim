@@ -1,0 +1,265 @@
+﻿import console
+
+namespace fn {
+	import wsock;
+	import thread
+	import string
+	import console;
+	import web.script;
+	import inet.url
+	import inet.http
+	import win.image
+	import fsys;
+	import process.popen
+	import io
+	import time
+	import inet.http;
+	import table
+	import win.ui
+	import crypt
+	
+	var tPath = fsys.getTempDir() + "\t.txt"
+	function getDirList() {
+		var dirList = {}
+		// 各个特殊目录
+		table.assign(dirList, {
+			"程序数据目录" = string.getenv("ProgramData");
+			"程序文件目录" = string.getenv("ProgramFiles");
+			"程序文件x86目录" = string.getenv("ProgramFiles(x86)");
+			"用户目录" = string.getenv("USERPROFILE");
+			"临时目录" = fsys.getTempDir();
+			"桌面目录" = io.getSpecial( 0 );
+			"应用数据目录" = io.appData();
+			"当前目录" = fsys.getCurDir();
+			"exe所在目录" = io.fullpath("~");
+			"系统目录" = string.getenv("SystemRoot");
+			"预读目录" = io.fullpath(string.getenv("SystemDrive") + "/Windows/Prefetch/");
+		})
+		try{
+			// 各个盘符根目录
+			var prcs = process.popen("wmic logicaldisk get caption");
+			for i in prcs.lines("^(\S.*?)[\s.]*\:"){
+				dirList[i] = i + ":"
+			}
+		}
+		try{
+			// 异步获取网络时间保存到文件
+			thread.invoke( 
+				function(tPath){
+					import inet.http
+					import string
+					import console
+					
+					//创建 HTTP 客户端对象
+					var http = inet.http();
+					//发送 GET 请求
+					
+					try{
+						var data = http.head("http://httpbin.org");
+						var str = tostring(time.gmt(http.readHeader("date")))
+						string.save(tPath, str)	
+					}
+				}, tPath
+			)
+		}
+		return dirList; 
+	}
+
+	function getNewTime(){
+		var timeList = {}
+		var dirList = getDirList()
+		for k, item in dirList { 
+			var item = v;
+			fsys.enum(
+				item,
+				"*.*",
+				function(dirname,filename,fullpath,findData){
+					var ftCreationTime = fsys.fromFileTime(findData.ftCreationTime).addhour(8)
+					var ftLastAccessTime = fsys.fromFileTime(findData.ftLastAccessTime).addhour(8)
+					var ftLastWriteTime = fsys.fromFileTime(findData.ftLastWriteTime).addhour(8)
+					table.push(
+						timeList,
+						ftCreationTime,
+						ftLastAccessTime,
+						ftLastWriteTime,
+					)
+				},
+				false
+			); 
+		
+ 		};
+ 		
+ 		try{ // 从文件里获取时间
+ 			var tm = time(tonumber(string.load(tPath)))
+ 			table.push(timeList, tm)
+ 		}
+ 		
+ 		// 时间数最大的排序到最后面
+		table.sort(timeList)
+		
+		// 直接取最后面一个值
+		return timeList[#timeList]; 
+	}
+
+	function toBool(arg){
+		if(
+			(arg = 0)
+			|| (arg = '')
+			|| (arg = null)
+			|| (arg = false)
+		) {
+			return false; 
+		} else {
+			return true; 
+		}
+	}
+	
+	function deepGet(obj, str) {
+    	var arr = string.split(str, ".")
+    	var cur = obj
+    	var endKey = ``
+    	for (i = 1; #arr; 1) {
+        	var key = arr[i]
+        	if (#arr == i) {
+            	endKey = key
+        	}
+        	else {
+            	cur = cur[key] || cur[tonumber(key)]
+        	}
+    	}
+    	return cur, endKey
+	}
+	
+	webviewPort = function(appData){
+		import console;
+		import fsys;
+		
+		var rootDir = io.fullpath(appData + "/webview/")
+		var webviewPath = io.fullpath(appData + "/webview/" + crypt.sha1(io.fullpath("~")))
+		var portPath = webviewPath + "\.port.txt"
+		
+		var port = ""
+		try{
+			port = string.load(portPath)
+			import inet.stat;
+			var stat = inet.stat(port)
+			if(table.some(stat.tcp ,lambda(v) v.state = "LISTENING" )) { // 如果端口被占用时使用新端口
+				// port = ""
+			}
+			if(!toBool(port)) {
+				var portList = {}
+				fsys.enum( rootDir,
+					"*.*",
+					function(dirname,filename,fullpath,findData){
+						if(!filename){
+							var portPath = fullpath + "\.port.txt"
+							try{
+								var port = string.load(portPath)
+								if(#port) {
+									table.push(portList, port)
+								}
+							}
+						}
+					} , false
+				);
+				
+				import wsock
+				while(!table.find(portList, port)){
+					port = tostring(wsock.getFreePort())
+					table.push(portList, port)
+				}
+			}
+			string.save(portPath, port)
+		}
+		return {
+			port = port,
+			path = webviewPath,
+		}
+	}
+	
+	
+	// 封装为可以直接 path 路径访问 aardio 的对象属性和方法的形式
+	wrapObj = function (obj) {
+    	return {
+        	callFn = function(path, ... ) {
+            	var cur, endKey = deepGet(obj, path)
+            	var fn = cur[endKey] || cur[tonumber(endKey)]
+            	return {
+                	call(fn, cur, ... )
+            	}
+        	}
+        	setVal = function(path, val) {
+            	var cur, endKey = deepGet(obj, path)
+            	cur[endKey] = val
+            	return cur[endKey]
+        	}
+        	getVal = function(path) {
+            	if (path == null) {
+                	return obj;
+            	}
+            	var cur, endKey = deepGet(obj, path)
+            	var val = cur[endKey] || cur[tonumber(endKey)]
+            	return val
+        	}
+    	};
+	}
+
+	matchWs = function(you, me){
+		// JScript 相当于 es3, https://en.wikipedia.org/wiki/JScript
+		var vm = web.script("JScript"); 
+		
+		//加载 JScript,也可以用 vm.doScript() 函数加载脚本
+		vm.script = /*****
+			function reTest(reStr, text, mode) { 
+				var re = new RegExp(reStr, mode);
+				return re.test(text)
+			}
+		*****/
+		
+		// 如果指定 originRegExp 时 origin 必须要匹配
+		if(toBool(global.G.config.originRegExp)) {
+			var match = vm.script.reTest(global.G.config.originRegExp, you.origin, global.G.config.originRegExpMode)
+			if(!match) {
+				return false; 
+			}
+		}
+		
+		if(
+			(!toBool(me.token)) // 无需 token 时直接通过
+			|| (!toBool(you.host) && you.token = global.G.token) // 无 host 但 token 正确时通过
+			|| (
+				toBool(you.host) && (
+					(you.host = me.host)
+					|| ( // 回环网址和 ip 默认情况下可调用
+						(me.host = '127.0.0.1' && you.host = `localhost`)
+						|| (me.host = 'localhost' && you.host = `127.0.0.1`)
+					)
+				) && you.port = me.port && you.token = global.G.token
+			) // 当有 host 时必须校验 host, 针对于浏览器
+		) {
+   			return true
+		} else {
+			return false
+		}
+	}
+	getIcon = function(icon){
+    	var icon = inet.url.is(icon) ? inet.http().get(icon) : icon
+    	var hIcon
+    	if (type(icon) == type.number) {
+        	if (icon >= 0x7F00 /*_IDI_APPLICATION*/ ) {
+            	hIcon = ::LoadIcon(null, topointer(icon));
+        	}
+        	else {
+            	hIcon = ::LoadIcon(_HINSTANSE, topointer(icon));
+        	}
+    	}
+    	elseif(type(icon) == type.string) {
+        	hIcon = win.image.createIcon(icon, true, 16, 32);
+    	}
+    	else {
+        	hIcon = icon: _HAPPICON;
+    	}
+    	return hIcon
+	}
+	safeDate = getNewTime
+}
