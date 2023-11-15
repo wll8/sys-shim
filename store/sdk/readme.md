@@ -64,6 +64,14 @@ main.js 可以创建页面、托盘、服务。
   - https://www.codeproject.com/Articles/22012/Explorer-Shell-Context-Menu
   - https://stackoverflow.com/questions/10668456/how-to-show-windows-explorer-context-right-click-menu
 
+## UI 库
+- https://www.reddit.com/r/webdev/comments/t8oqsl/what_are_some_tools_js_libraries_that_can_be_used/
+- https://github.com/jdan/98.css
+- https://botoxparty.github.io/XP.css/
+- https://khang-nd.github.io/7.css/
+- https://github.com/Visnalize/win7-ui
+- https://github.com/os-js/OS.js/
+
 ## 参考
 
 - 判断页面可见状态 webview 中不可用 https://developer.mozilla.org/zh-CN/docs/Web/API/Page_Visibility_API
@@ -79,6 +87,22 @@ main.js 可以创建页面、托盘、服务。
 - 使用字符串动态调用函数 https://bbs.aardio.com/forum.php?mod=viewthread&tid=11257
 - 如何让主窗体不在任务栏显示 https://bbs.aardio.com/forum.php?mod=viewthread&tid=9059&page=1#pid48596
 - 注册机 https://blog.jvbaopeng.com/blog/194.html
+- 随机端口与 web 页面数据存储逻辑的冲突
+  - https://yagmurcetintas.com/journal/introduction-to-browser-storage-mechanisms-local-storage-session-storage-cookies-and-more
+  - 确保端口可用：启动前检测
+  - 动态调整端口：使用某一范围内的端口并设置这些端口跨域
+  - 为用户提供端口填写
+  - 避免多程序使用同一端口
+  - 像 tauri 一样实现虚拟域名
+  - 拦截请求的域名
+  - 本地自定义 dns
+  - 通过 hosts 文件，但这个文件只能区分域名不能区分端口
+    - 通过 host 头来区分子域名，并转发到不同端口
+  - 虚拟域名 https://www.hacksparrow.com/webdev/express/vhost.html
+  - 本地实现 dns 解析服务器：PowerDNS
+  - webview 提供为指定域名定义存储位置的 api
+  - webview 拦截 LocalStorage IndexedDB cookies WebSQL
+  - 在 WebView2 应用程序中使用本地内容 https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/working-with-local-content?tabs=dotnetcsharp
 
 ## 配置示例
 
