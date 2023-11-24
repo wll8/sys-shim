@@ -2,6 +2,7 @@
 <project ver="10" name="main" libEmbed="true" icon="..." ui="win" output="main.exe" CompanyName="wll8" FileDescription="main" LegalCopyright="Copyright (C) wll8 2023" ProductName="main" InternalName="main" FileVersion="0.0.0.1" ProductVersion="0.0.0.1" publishDir="/dist/" dstrip="true" local="false" ignored="false">
 	<file name="main.aardio" path="main.aardio" comment="main.aardio"/>
 	<folder name="资源文件" path="res" embed="true" local="false" ignored="false">
+		<file name="loading.html" path="res\loading.html" comment="res\loading.html"/>
 		<file name="page.html" path="res\page.html" comment="res\page.html"/>
 		<folder name="browser" path="res\browser" comment="res\browser">
 			<file name="main.js" path="res\browser\main.js" comment="res\browser\main.js"/>
