@@ -1,0 +1,7 @@
+const cp = require(`child_process`)
+cp.execSync(`npx shx rm -rf %temp%/sys-shim`, {stdio: `inherit`})
+cp.execSync(`npx webpack --entry ./src/node.js --output-path ./win-api/res/node --mode production --target node`, {stdio: `inherit`})
+cp.execSync(`npx webpack --entry ./src/browser.js --output-path ./win-api/res/browser --mode production --target web`, {stdio: `inherit`})
+cp.execSync(`npx shx cp ./example/base/page.html ./win-api/res/page.html`, {stdio: `inherit`})
+cp.execSync(`npx shx cp ./example/base/loading.html ./win-api/res/loading.html`, {stdio: `inherit`})
+cp.execSync(`npx shx rm -rf ./win-api/res/**/*.LICENSE.txt`, {stdio: `inherit`})

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>loading...</title>
+    <style>
+      body,
+      html {
+        height: 100%;
+        overflow: hidden;
+      }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      @property --progress {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 0%;
+      }
+
+      .g-progress {
+                    margin: auto;
+          width: 240px;
+          height: 10px;
+                    border-radius: 25px;
+          background: linear-gradient(90deg, #0f0, #0ff var(--progress), transparent 0);
+          border: 1px solid #eee;
+          transition: .3s --progress;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <div id="progress" class="g-progress progress-bar-striped" style="--progress: 0%"></div>
+    </div>
+    <script>
+      function random(min, max) {
+        return Math.round(Math.random() * (max - min)) + min;
+      }
+      let p = random(1, 90)/100
+      new Promise((resove) => {
+        let x = 1
+        let timer = setInterval(() => {
+          x = x + 1
+          let v = +((-1/(p*x+1)+1) * 100).toFixed(2)
+          document.querySelector("#progress").style=`--progress: ${v}%`
+          console.log(`cur`, v)
+        }, 100)
+      })
+    </script>
+  </body>
+</html>
