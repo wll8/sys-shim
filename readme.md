@@ -1,10 +1,22 @@
+<div align="center">
+    <a href="https://github.com/wll8/sys-shim/blob/pre/doc.md">
+        文档
+    </a>
+  &nbsp;|&nbsp;
+    <a href="https://github.com/wll8/sys-shim/releases/tag/example">
+        示例
+    </a>
+</div>
+
+<br />
+
 简单的使用前端语言即可快速开发桌面程序，占用内存和程序体积都很不足 1M。
 
 ## 为什么
 
 我想开发一个简单的桌面程序，只使用前端语言开发，暂只考虑在 windows 上运行，我希望开发体验像在浏览器中一样，然后程序的样子像是本地应用一样，调用本地文件、系统命令、后台运行、托盘菜单这些都没有问题。
 
-我[调研了一些常见的方案](#常见方案)，发现他们都不适合我，所以我开发了适合自己的 [xxxx](#我的选择) 。
+我[调研了一些常见的方案](#方案对比)，发现他们都不适合我，所以我开发了适合自己的 [xxxx](#我的选择) 。
 
 ## 如何使用
 
@@ -37,7 +49,7 @@ xxxx dev
 | Sciter      | Sciter          | QuickJS    | 5       | ?       | https://quark.sciter.com/                             | 与普通浏览器和 nodejs 可能有差异     |               |
 | gluon       | 浏览器          | nodejs     | 1       | 80      | https://github.com/gluon-framework/gluon              | 生态小，例如没有找到托盘图标实现方式 |               |
 | neutralino  | 浏览器          | API        | 2M      | 60      | https://github.com/neutralinojs/neutralinojs          | 没有 nodejs 生态                     |               |
-| xxxx    | WebView2/浏览器 | api/nodejs | 1-50    | 1-50    | ?                                                     | ?                                    | 仅支持 window |
+| xxxx    | WebView2/浏览器 | api/nodejs | 1    | 1    | https://github.com/wll8/sys-shim                                                     | ?                                    | 仅支持 window |
 
 - 更多相关框架请参考: https://github.com/sudhakar3697/awesome-electron-alternatives
 - 三方对比: https://github.com/Elanis/web-to-desktop-framework-comparison
@@ -65,10 +77,10 @@ xxxx dev
   默认提供常见的操作接口。例如文件、网络、系统、进程、鼠标、键盘、窗口等。
 
 - nodejs  
-  你也可以选择添加 nodejs 来进行文件、进行等所以生态的所有操作。
+  你也可以选择添加 nodejs 来进行文件、进程等所有生态的所有操作。
 
 - service  
-  若你的程序需要后台静默运行，可以添加此控件。
+  若你的程序需要后台静默运行、自启动等，可以添加此控件。
 
 ### 体积内存
 
