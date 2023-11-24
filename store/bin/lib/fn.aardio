@@ -134,9 +134,8 @@ namespace fn {
 		import console;
 		import fsys;
 		
-		var rootDir = io.fullpath(appData + "/webview/")
-		var webviewPath = io.fullpath(appData + "/webview/" + crypt.sha1(io.fullpath("~")))
-		var portPath = webviewPath + "\.port.txt"
+		var webviewPath = io.fullpath(appData + "/webview/")
+		var portPath = io.fullpath(appData + "/.port.txt")
 		
 		var port = ""
 		try{
@@ -148,7 +147,7 @@ namespace fn {
 			}
 			if(!toBool(port)) {
 				var portList = {}
-				fsys.enum( rootDir,
+				fsys.enum( appData,
 					"*.*",
 					function(dirname,filename,fullpath,findData){
 						if(!filename){

@@ -19,23 +19,26 @@ import web.form;
 import web.multipartFormData;
 import win.guid;
 import fn;
+import fsys.remove;
 
 // 放置全局变量
 global.G = {
 	httpUrl = null;
+	clearAppData = false;
 	wsUrl = null;
 	token = tostring(win.guid.create());
 	killAll = function(){
-		process.popen("taskkill /F /T /PID " + tostring(process.getId()))
+		var str = `cmd start /c rd /s /q "` + io.fullpath(global.G.appDataPath + (global.G.clearAppData ? "" : "/res")) + `" & taskkill /F /T /PID ` + tostring(process.getId())
+		process.popen(str)
 	};
 	getIcon = fn.getIcon;
 	msgMap = {
     	_WM_RBUTTONUP = 0x205;
     	_WM_LBUTTONUP = 0x202;
 	},
-	tempPath = fsys.longpath(io.appData() + "/sys-shim/"),
+	appDataPath = fsys.longpath(io.appData() + "/sys-shim/" + crypt.sha1(io.fullpath("~"))),
 }
-
+		
 var old = win.form._metaProperty.setIcon
 win.form._metaProperty.setIcon = function(small, big) {
     big = big: small
@@ -43,16 +46,15 @@ win.form._metaProperty.setIcon = function(small, big) {
     call(old, owner, big, small)
 }
 
-var tempPath = global.G.tempPath
-fsys.createDir(tempPath)
+fsys.createDir(global.G.appDataPath)
 
-// 释放资源
-fsys.res.saveRes("/res", tempPath)
+fsys.res.saveRes("/res", global.G.appDataPath)
 
 var cfgPath = ""
 var baseData = {
     main = io.fullpath("./sys.js");
     page = io.fullpath("./page.html");
+    loading = io.fullpath(global.G.appDataPath + "/res/loading.html");
     pageExit = true;
     pageShow = false;
     socket = {
@@ -61,13 +63,13 @@ var baseData = {
     };
     http = {
         ip = "0.0.0.0";
-        port = fn.webviewPort(global.G.tempPath).port,
+        port = fn.webviewPort(global.G.appDataPath).port,
     };
     form = {
 		text = "main";
     };
     preloadScript = ``;
-    userDataDir = fn.webviewPort(global.G.tempPath).path,
+    userDataDir = fn.webviewPort(global.G.appDataPath).path,
     browserArguments = ``;
     token = true,
     originRegExp = ``,
@@ -107,7 +109,26 @@ wsrv.onUpgradeToWebsocket = function(hSocket, request, response, protocol, origi
 	}
 }
 
-global.G.onlyMsg = win.form({})
+global.G.onlyMsg = win.form({
+	parent=...;
+	border="none";
+	exmode="toolwindow";
+	mode="popup";
+	topmost=1;
+	right=600;
+	bottom=600;
+	bkBottom=0;
+	bkLeft=0;
+	bkRight=0;
+	bkTop=0;
+})
+global.G.onlyMsg.show(false)
+global.G.onlyMsg.transparent(true);
+global.G.onlyMsg.modifyStyleEx(,0x20/*_WS_EX_TRANSPARENT*/ | 0x80000/*_WS_EX_LAYERED*/ );
+global.G.wb = web.view(global.G.onlyMsg);
+global.G.wb.defaultBackgroundColor = 0;
+global.G.wb.html = string.load(data.loading)
+global.G.onlyMsg.show()
 
 function initBaseData() {
 	// 手动指定 token 时
@@ -129,7 +150,7 @@ function initBaseData() {
 		data.page = io.fullpath(localpath) + hash
 		// 如果 js 和 html 都没有，则创建 html
 		if (!io.exist(data.main) && !io.exist(localpath)) {
-    		fsys.copy(tempPath + "/res/page.html", "./page.html")
+    		fsys.copy(global.G.appDataPath + "/res/page.html", "./page.html")
     		data.page = io.fullpath(baseData.page)
     		localpath = data.page
 		}
@@ -187,7 +208,7 @@ var external = {
 					delete window.aardio
 				}, 0);
 			`)
-            winform.wb.preloadScript(string.load(tempPath + "/res/browser/main.js"))
+            winform.wb.preloadScript(string.load(global.G.appDataPath + "/res/browser/main.js"))
             winform.wb.preloadScript(optionRes.preloadScript)
             winform.wb.go(htmlFile)
             winform.text = wb.xcall("() => document.title")
@@ -243,7 +264,7 @@ global.G.rpcServer.external = external
 
 var execFile = function(param) {
     var jsArg = process.joinArguments(_CMDLINE) || ""
-    var nodeArg = " --require " + tempPath + "/res/node/main.js" + " " + data.main + " " + jsArg
+    var nodeArg = " --require " + global.G.appDataPath + "/res/node/main.js" + " " + data.main + " " + jsArg
     var param = nodeArg
     string.setenv("ext", web.json.stringify({
     	wsUrl = global.G.wsUrl,
@@ -288,6 +309,8 @@ if (data.page) {
         userDataDir = data.userDataDir;
         browserArguments = data.browserArguments;
     })
+    global.G.onlyMsg.show(false)
+    win.close(global.G.wb.hwndChrome)
     var winform = win.form._forms[hwnd]
     if(data.pageShow) winform.show()
     if(data.pageExit) {
@@ -303,4 +326,5 @@ global.G.onlyMsg.onClose = function(hwnd, message, wParam, lParam) {
         win.form._forms[hwnd].close()
     }
 }
+
 win.loopMessage();
