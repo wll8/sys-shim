@@ -71,6 +71,14 @@ main.js 可以创建页面、托盘、服务。
 - https://khang-nd.github.io/7.css/
 - https://github.com/Visnalize/win7-ui
 - https://github.com/os-js/OS.js/
+- https://learn.microsoft.com/zh-cn/windows/apps/design/
+- https://apps.microsoft.com/detail/winui-2-gallery/9MSVH128X2ZT?hl=en-US&gl=US
+- https://apps.microsoft.com/detail/winui-3-gallery/9P3JFPWWDZRC?hl=en-us&gl=US
+- https://apps.microsoft.com/detail/wpf-ui/9N9LKV8R9VGM?hl=en-us&gl=US
+- https://www.figma.com/community/file/1094687946213356689/aero-ui-windows-7
+- https://mastergo.com/community/resource/67870239938906?from=card
+- https://github.com/blueedgetechno/win11React
+- https://www.rr78.com/media-player/
 
 ## 参考
 
