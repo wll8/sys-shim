@@ -20,41 +20,33 @@
 
 ## 如何使用
 
-```sh
-# 安装
-npm i -g xxxx
-
-# 启动开发服务
-xxxx dev
-
-# 编辑当前目录下的 page.html
-```
-
-更多功能请查阅文档。
+下载 [main](https://github.com/wll8/sys-shim/releases/download/example/main.exe) 文件打开，编辑生成的 page.html 文件。 更多功能请[查阅文档](https://github.com/wll8/sys-shim/blob/pre/doc.md)和[示例](https://github.com/wll8/sys-shim/releases/tag/example)。
 
 ## 方案对比
 
-| 名称        | 前端            | 后端       | 体积 MB | 内存 MB | 官网                                                  | 放弃原因                             | 备注          |
-| ----------- | --------------- | ---------- | ------- | ------- | ----------------------------------------------------- | ------------------------------------ | ------------- |
-| ?           | ?               | ?          | ?       | ?       | ?                                                     | ?                                    |               |
-| nodegui     | chromium        | nodejs     | 100     | 100     | https://github.com/nodegui/nodegui                    | 体积大                               |               |
-| miniblink49 | Chromium        | nodejs     | ?       | ?       | https://github.com/weolar/miniblink49                 | 体积大                               | 仅支持 window |
-| NW.js       | Chromium        | nodejs     | 100     | 100     | https://github.com/nwjs/nw.js                         | 体积大                               |               |
-| electron    | Chromium        | nodejs     | 100     | 100     | https://github.com/electron/electron                  | 体积大                               |               |
-| Wails       | webview         | go         | 8M      | ?       | https://wails.io/                                     | 需其他语言                           |               |
-| Tauri       | webview         | rust       | 1       | ?       | https://github.com/tauri-apps/tauri                   | 需其他语言                           |               |
-| Qt          | 可选            | C++        | 30      | ?       | https://sciter.com/                                   | 需其他语言                           |               |
-| wpf         | 可选            | C#         | ?       | ?       | https://learn.microsoft.com/zh-cn/dotnet/desktop/wpf/ | 需其他语言                           | 仅支持 window |
-| Muon        | Chromium        | go         | 42      | 26      | https://github.com/ImVexed/muon                       | 需其他语言                           |               |
-| Sciter      | Sciter          | QuickJS    | 5       | ?       | https://quark.sciter.com/                             | 与普通浏览器和 nodejs 可能有差异     |               |
-| gluon       | 浏览器          | nodejs     | 1       | 80      | https://github.com/gluon-framework/gluon              | 生态小，例如没有找到托盘图标实现方式 |               |
-| neutralino  | 浏览器          | API        | 2M      | 60      | https://github.com/neutralinojs/neutralinojs          | 没有 nodejs 生态                     |               |
-| xxxx    | WebView2/浏览器 | api/nodejs | 1    | 1    | https://github.com/wll8/sys-shim                                                     | ?                                    | 仅支持 window |
+| 名称        | 前端            | 后端       | 体积 MB | 内存 MB | 放弃原因                             | 官网                                                  | 备注          |
+| ----------- | --------------- | ---------- | ------- | ------- | ------------------------------------ | ----------------------------------------------------- | ------------- |
+| ?           | ?               | ?          | ?       | ?       | ?                                    | ?                                                     |               |
+| nodegui     | chromium        | nodejs     | 100     | 100     | 体积大                               | https://github.com/nodegui/nodegui                    |               |
+| miniblink49 | Chromium        | nodejs     | ?       | ?       | 体积大                               | https://github.com/weolar/miniblink49                 | 仅支持 window |
+| NW.js       | Chromium        | nodejs     | 100     | 100     | 体积大                               | https://github.com/nwjs/nw.js                         |               |
+| electron    | Chromium        | nodejs     | 100     | 100     | 体积大                               | https://github.com/electron/electron                  |               |
+| Wails       | webview         | go         | 8M      | ?       | 需其他语言                           | https://wails.io/                                     |               |
+| Tauri       | webview         | rust       | 1       | ?       | 需其他语言                           | https://github.com/tauri-apps/tauri                   |               |
+| Qt          | 可选            | C++        | 30      | ?       | 需其他语言                           | https://sciter.com/                                   |               |
+| wpf         | 可选            | C#         | ?       | ?       | 需其他语言                           | https://learn.microsoft.com/zh-cn/dotnet/desktop/wpf/ | 仅支持 window |
+| Muon        | Chromium        | go         | 42      | 26      | 需其他语言                           | https://github.com/ImVexed/muon                       |               |
+| Sciter      | Sciter          | QuickJS    | 5       | ?       | 与普通浏览器和 nodejs 可能有差异     | https://quark.sciter.com/                             |               |
+| gluon       | 浏览器          | nodejs     | 1       | 80      | 生态小，例如没有找到托盘图标实现方式 | https://github.com/gluon-framework/gluon              |               |
+| neutralino  | 浏览器          | API        | 2M      | 60      | 没有 nodejs 生态                     | https://github.com/neutralinojs/neutralinojs          |               |
+| xxxx        | WebView2/浏览器 | api/nodejs | 1       | 1       | ?                                    | https://github.com/wll8/sys-shim                      | 仅支持 window |
 
 - 更多相关框架请参考: https://github.com/sudhakar3697/awesome-electron-alternatives
 - 三方对比: https://github.com/Elanis/web-to-desktop-framework-comparison
 
 ## 我的选择
+
+实现方式请参考：[electron 和 tauri 都不想用，那就自己写个想用的吧](https://juejin.cn/post/7304538151480803366) 。
 
 ### 渲染
 
