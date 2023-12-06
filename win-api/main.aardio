@@ -127,8 +127,10 @@ global.G.onlyMsg.transparent(true);
 global.G.onlyMsg.modifyStyleEx(,0x20/*_WS_EX_TRANSPARENT*/ | 0x80000/*_WS_EX_LAYERED*/ );
 global.G.wb = web.view(global.G.onlyMsg);
 global.G.wb.defaultBackgroundColor = 0;
-global.G.wb.html = string.load(data.loading)
-global.G.onlyMsg.show()
+if(data.loading != false) { 
+	global.G.wb.html = string.load(data.loading)
+	global.G.onlyMsg.show()
+}
 
 function initBaseData() {
 	// 手动指定 token 时
@@ -318,6 +320,8 @@ if (data.page) {
       		global.G.killAll()
     	}
     }
+} else {
+    global.G.onlyMsg.show(false)
 }
 
 global.G.onlyMsg.onClose = function(hwnd, message, wParam, lParam) {

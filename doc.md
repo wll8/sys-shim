@@ -19,9 +19,9 @@
 
 ### loading
 
-类型: string
+类型: string | false
 
-指定用于展示启动动画的 html 文件。
+指定用于展示启动动画的 html 文件。如果不需要，请配置为 false。
 
 ### pageExit
 
