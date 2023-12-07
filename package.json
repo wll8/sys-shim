@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "node build.js"
+    "build": "node build.js",
+    "build:dev": "node build.js development"
   },
   "dependencies": {
     "proxy-deep": "^3.1.1",
