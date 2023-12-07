@@ -4,7 +4,7 @@ let ws = undefined
 
 class Base {
   constructor() {
-    ;[`win`].forEach((key) => {
+    ;[`win`, `fsys`].forEach((key) => {
       this[key] = mockObj(key)
     })
   }
