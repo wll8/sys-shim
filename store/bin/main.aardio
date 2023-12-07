@@ -246,6 +246,16 @@ var external = {
             global.G.rpcServer.publish(key, ... );
         }
     }
+    test = function(){
+        f = function(){
+        	return 1,2,3
+        }
+        
+    	return {
+    	    111,
+    		f()
+    	}; 
+    };
     run = function(code, ... ) {
         var arg = ...
 		var res = null
