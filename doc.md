@@ -371,3 +371,30 @@ tray.on(`_WM_RBUTTONUP`, async () => {
 
 实际上，所有 api 都是可以通过 ws.run 来封装的。所以你可以通过 ws.run 来封装自己的 api，例如窗口、托盘操作、消息传递等。
 
+## 开发
+
+任何程序，不管是浏览器还是 nodejs 都可以通过 main.exe 提供的 websocket api 来调用系统功能。
+
+例如，可以在开发阶段，可以在 package.json 中指定 api 的连接方式：
+
+``` json
+{
+  "debug": true,
+  "socket": {
+    "port": 7788
+  },
+  "token": false,
+  "pageShow": true
+}
+```
+
+然后在自己的程序中连接 ws://localhost:7788 即可与 main.exe 进行交互。在数据目录例如 `C:/Users/用户名/AppData/Local/sys-shim/程序码/RES`中，有 browser/mian.js 和 node/main.js 文件，它们是实现 new Sys() 的代码。
+
+所以你可以自己的程序中，例如 node 程序，引用 main.js 文件来调用 main.exe 。
+
+``` js
+require(`数据目录/res/node/main.js`)
+new Sys(`ws://localhost:7788`).then(async main => {
+  await main.win.msgbox(`hello`)
+})
+```
