@@ -89,7 +89,7 @@ global.G.config = data
 // 创建 WebSocket 服务端
 var wsrv = web.socket.server();
 wsrv.start(data.socket.ip, data.socket.port);
-global.G.wsUrl = wsrv.getUrl()
+global.G.wsUrl = wsrv.getUrl(, true)
 global.G.rpcServer = web.socket.jsonServer(wsrv);
 
 // 这里可以自定义WebSocket 服务端可以使用的 URL 路径
