@@ -373,7 +373,23 @@ tray.on(`_WM_RBUTTONUP`, async () => {
 
 ## 开发
 
-任何程序，不管是浏览器还是 nodejs 都可以通过 main.exe 提供的 websocket api 来调用系统功能。
+node v18.19.0
+
+``` bat
+rem 安装依赖
+yarn
+
+rem 生成库文件 sys.js
+yarn sys
+
+rem 获取 main.exe，可以通过编译或下载得到
+yarn main:build
+
+rem 调试 api
+yarn dev
+```
+
+另外，任何程序，不管是浏览器还是 nodejs 都可以通过 main.exe 提供的 websocket api 来调用系统功能。
 
 例如，可以在开发阶段，可以在 package.json 中指定 api 的连接方式：
 
