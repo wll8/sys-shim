@@ -1,4 +1,4 @@
-const cp = require(`child_process`)
+import cp from 'child_process'
 const [buildType = `production`] = process.argv.splice(2)
 cp.execSync(`npx shx rm -rf %temp%/sys-shim`, {stdio: `inherit`})
 cp.execSync(`npx shx rm -rf ./win-api/res/`, {stdio: `inherit`})

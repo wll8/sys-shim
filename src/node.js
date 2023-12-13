@@ -1,15 +1,15 @@
-const RPCWebSocket = require(`rpc-websockets`)
+import * as RPCWebSocket from 'rpc-websockets'
 import SysRef from './sys.js'
 
-global.ext = global.ext || JSON.parse(global.process.env.ext || `{}`)
+globalThis.ext = globalThis.ext || JSON.parse(globalThis.process.env.ext || `{}`)
 class Sys extends SysRef {
   constructor(wsUrl) {
     return new Promise(async (resolve) => {
-      wsUrl = wsUrl || `${await global.ext.wsUrl}?token=${await global.ext.token }`
+      wsUrl = wsUrl || `${await globalThis.ext.wsUrl}?token=${await globalThis.ext.token }`
       const ws = new RPCWebSocket.Client(await wsUrl)
       const that = await super(ws)
       resolve(that)
     })
   }
 }
-global.Sys = Sys
+globalThis.Sys = Sys
