@@ -3,6 +3,7 @@
   "socket": {
     "port": 7788
   },
+  "browserArguments": "--disable-web-security",
   "pageShow": true,
   "page": "http://localhost:5173/",
   "name": "sys-shim",
@@ -11,7 +12,8 @@
   "type": "module",
   "scripts": {
     "dev": "run-p main:run vite:run",
-    "main:run": "win-api/dist/main.exe",
+    "main:run": "yarn main:run-shim",
+    "main:run-shim": "win-api/dist/main.exe",
     "main:build": "npx download-cli https://github.com/wll8/sys-shim/releases/download/example/main.exe -o win-api/dist",
     "vite:run": "vite",
     "vite": "vite",
