@@ -1,14 +1,94 @@
 /// <reference path="../types/global.d.ts" />
 /// <reference path="../types/typings.d.ts" />
 
+const sleep = time => new Promise(resolve => setTimeout(resolve,time))
 export default {
   data() {
     const main = window.main
     const ws = main.ws
     const vm = this
-    return {
+    return { 
       res: ``,
       list: [
+        {
+          name: `读取本地文件为 buffer`,
+          fn: async function () {
+            let [, read] = await ws.call(
+              `run`,
+              [
+                `
+                var data = string.loadBuffer("D:/git2/sys-ui/win-api/favicon-48.ico")
+                return data
+                `,
+              ],
+            )
+            let [writeErr, write] = await ws.call(
+              `run`,
+              [
+                `
+                var data = ...
+                var buffer = raw.buffer(data)
+                string.save("D:/git2/sys-ui/win-api/dist/out-1.ico", buffer)
+                return buffer
+                `,
+                read
+              ],
+            )
+            console.log(111, {write, read, writeErr})
+          },
+        },
+        {
+          name: `参数传输错误`,
+          fn: async function () {
+            console.warn(`详情参考 https://github.com/wll8/sys-shim/issues/3`)
+            const arg = `x`.repeat(9e5)
+            const res = await ws.call(
+              `run`,
+              [
+                `
+                console.log(1)
+                return ...
+                `,
+                arg
+              ],
+            )
+            console.log(111, res)
+          },
+        },
+        {
+          name: `js 读取线上文件为 buffer`,
+          fn: async function () {
+            const response = await fetch(`http://baidu.com/favicon.ico`)
+            const reader = response.body.getReader();
+            while (true) {
+              const { done, value } = await reader.read();
+              console.log(`value`, value)
+              if(value) {
+                const json = {
+                  type: `Buffer`,
+                  data: [...new Int8Array(value.buffer)],
+                }
+                console.log(`json`, json)
+                let [writeErr, write] = await ws.call(
+                  `run`,
+                  [
+                    `
+                    var buffer = raw.buffer(...)
+                    string.save("D:/git2/sys-ui/win-api/dist/out-2.ico", buffer)
+                    return buffer
+                    `,
+                    json
+                  ],
+                )
+                console.log(111, {write, writeErr})
+              }
+              if (done) {
+                break;
+              }
+            }
+
+          },
+        },
         {
           name: `创建目录`,
           async fn() {
