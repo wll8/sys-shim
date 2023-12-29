@@ -81,7 +81,7 @@ main.js 可以创建页面、托盘、服务。
 - https://www.rr78.com/media-player/
 
 ## 参考
-
+- 是否是通过资源管理器打开 https://bbs.aardio.com/forum.php?mod=viewthread&tid=11723
 - 判断页面可见状态 webview 中不可用 https://developer.mozilla.org/zh-CN/docs/Web/API/Page_Visibility_API
 - 如何使用 JS“取消悬停”具有活动 :hover 的元素 https://www.quora.com/How-to-unhover-an-element-with-an-active-hover-with-JS
 - 很棒的 Electron.js 替代品 https://github.com/sudhakar3697/awesome-electron-alternatives
