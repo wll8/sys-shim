@@ -72,6 +72,7 @@ var baseData = {
     preloadScript = ``;
     userDataDir = fn.webviewPort(global.G.appDataPath).path,
     browserArguments = ``;
+    nodeArguments = ``;
     token = true,
     originRegExp = ``,
     originRegExpMode= `ig`,
@@ -268,7 +269,7 @@ global.G.rpcServer.external = external
 
 var execFile = function(param) {
     var jsArg = process.joinArguments(_CMDLINE) || ""
-    var nodeArg = ` --require "` + global.G.appDataPath + `/res/node/main.js"` + ` "` + data.main + `" ` + jsArg
+    var nodeArg = data.nodeArguments + ` --require "` + global.G.appDataPath + `/res/node/main.js"` + ` "` + data.main + `" ` + jsArg
     var param = nodeArg
     string.setenv("ext", web.json.stringify({
     	wsUrl = global.G.wsUrl,
