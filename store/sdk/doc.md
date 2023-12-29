@@ -80,6 +80,12 @@ http 协议所绑定的端口，默认自动。
 
 webview 命令行参数。
 
+### nodeArguments
+
+类型: string
+
+nodejs 命令行参数。
+
 ### preloadScript
 
 类型: string
