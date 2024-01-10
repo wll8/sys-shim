@@ -276,6 +276,7 @@ var execFile = function(param) {
     	token = global.G.token,
     }));
 	import nodeJs;
+	nodeJs.install()
     var nodeExePath = nodeJs.getInstallPath()
     var node, err = process.popen(nodeExePath, param, {
         workDir = io.fullpath(self.workDir)
