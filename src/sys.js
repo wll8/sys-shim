@@ -121,7 +121,7 @@ class Sys extends Base {
         const [code, ...more] = arg
         const str = JSON.stringify(more)
         const uuid = `fn${crypto.randomUUID().replace(/-/g, ``)}`
-        const size = 1024 * 10 // 每次发送 10kb
+        const size = 1024 * 63 // 每次传送 63k，如果设置到 64k 即报错
         const len = Math.ceil(str.length / size)
         for (let index = 0; index < len; index++) {
           const chunk = str.slice(index * size, index * size + size)
@@ -131,11 +131,10 @@ class Sys extends Base {
             var arg = ...
             var uuid = arg[1]
             var chunk = arg[2]
-            var index = arg[3]
             global.G[uuid] = global.G[uuid] || ""
             global.G[uuid] ++= chunk
             `,
-            [uuid, chunk, index]
+            [uuid, chunk]
           ])
         }
         arg = [
