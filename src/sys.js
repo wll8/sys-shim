@@ -110,6 +110,51 @@ class Sys extends Base {
     ws = _ws
     super()
     this.ws = _ws
+    /**
+     * hack
+     * 以分步传输的形式避免传参过大的错误
+     * https://github.com/wll8/sys-shim/issues/3
+     */
+    const call = ws.call
+    ws.call = async (action, arg) => {
+      if(action === `run`) {
+        const [code, ...more] = arg
+        const str = JSON.stringify(more)
+        const uuid = `fn${crypto.randomUUID().replace(/-/g, ``)}`
+        const size = 1024 * 10 // 每次发送 10kb
+        const len = Math.ceil(str.length / size)
+        for (let index = 0; index < len; index++) {
+          const chunk = str.slice(index * size, index * size + size)
+          await call.bind(ws)(`run`, [
+            `
+            import util
+            var arg = ...
+            var uuid = arg[1]
+            var chunk = arg[2]
+            var index = arg[3]
+            global.G[uuid] = global.G[uuid] || ""
+            global.G[uuid] ++= chunk
+            `,
+            [uuid, chunk, index]
+          ])
+        }
+        arg = [
+          `
+            var arg = global.G["${uuid}"] ? web.json.parse(global.G["${uuid}"]) : null;
+            global.G["${uuid}"] = null
+            var ${uuid} = function(...){
+              ${code}
+            }
+            // 参考 lib/util/_.aardio apply 的实现
+            var ret = {call(${uuid}, owner, table.unpack(arg, table.range(arg)))}
+            if( !ret[1] ) error(ret[2], 2)
+            table.remove(ret)
+            return table.unpack( ret,table.range(ret) );
+          `
+        ]
+      }
+      return call.bind(ws)(action, arg)
+    }
     return new Promise(async (resolve, reject) => {
       if (typeof Sys.instance === `object`) {
         return Sys.instance
