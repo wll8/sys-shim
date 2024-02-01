@@ -248,19 +248,16 @@ var external = {
         }
     }
     run = function(code, ... ) {
-        var arg = ...
+        var arg = {...}
 		var res = null
         var err = false
         try {
-            res = loadcode(code)(arg)
+            res = {loadcode(code)(table.unpack(arg))}
         }
         catch (e) {
             err = tostring(e);
         }
-        return {
-            err;
-            res;
-        }
+        return {err, table.unpack(res)}
     }
 }
 
