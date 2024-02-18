@@ -11,6 +11,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "axios": "^1.6.7",
     "normalize.css": "^8.0.1",
     "pinia": "^2.1.7",
     "sass": "^1.71.0",
