@@ -2,7 +2,7 @@
 
 <template>
   <div class="home">
-    <div class="header">
+    <div class="header m-1">
       home
     </div>
   </div>
