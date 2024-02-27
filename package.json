@@ -3,13 +3,14 @@
   "socket": {
     "port": 7788
   },
-  "browserArguments": "--disable-web-security",
+  "main": "dev.sys.js",
+  "browserArguments": "--disable-web-security --kiosk-printing --allow-running-insecure-content --no-displaying-insecure-content --ignore-certificate-errors",
+  "nodeArguments": "--trace-deprecation",
   "pageShow": true,
   "page": "http://localhost:5173/",
   "name": "sys-shim",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "run-p main:run vite:run",
     "main:run": "yarn main:run-shim",
@@ -18,7 +19,7 @@
     "vite:run": "vite",
     "vite": "vite",
     "preview": "vite preview",
-    "sys": "node build.js",
+    "sys": "node -r esm build.js",
     "sys:dev": "node build.js development"
   },
   "dependencies": {
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.0",
     "download-cli": "^1.1.1",
+    "esm": "^3.2.25",
     "shx": "^0.3.4",
     "vite": "^5.0.0",
     "vue": "^3.3.8",

@@ -1,7 +1,5 @@
 .build
 dist
 node_modules
-dev.package.json
-dev.sys.js
-dev.page.html
+dev.*
 win-api/res
