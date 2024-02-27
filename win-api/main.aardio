@@ -52,7 +52,7 @@ fsys.createDir(global.G.appDataPath)
 fsys.res.saveRes("/res", global.G.appDataPath)
 
 var cfgPath = ""
-var baseData = {
+var baseData = { // 默认值
     main = io.fullpath("./sys.js");
     page = io.fullpath("./page.html");
     loading = io.fullpath(global.G.appDataPath + "/res/loading.html");
@@ -69,7 +69,7 @@ var baseData = {
     form = {
 		text = "main";
     };
-    preloadScript = ``;
+    preloadScript = io.fullpath("./preload.js");
     userDataDir = fn.webviewPort(global.G.appDataPath).path,
     browserArguments = ``;
     nodeArguments = ``;
@@ -144,7 +144,9 @@ function initBaseData() {
 		data.form.parent = win.form(data.form.parent).hwnd
 	}
 	
-	// js 暂不支持本地
+	data.preloadScript = fn.loadStr(data.preloadScript)
+	
+	// js 暂不支持网络 url
 	data.main = io.fullpath(data.main)
 	// html 本地处理逻辑
 	if(inet.url.is(data.page) == false) {
@@ -203,6 +205,7 @@ var external = {
                 wsUrl = global.G.wsUrl;
                 hwnd = hwnd;
             }
+            // 页面每次刷新都会运行
             winform.wb.preloadScript(`
 				// 添加 ext
 				window.ext = chrome.webview.hostObjects.external
