@@ -139,7 +139,6 @@ class Sys extends Base {
           const chunk = str.slice(index * size, index * size + size)
           await call.bind(ws)(`run`, [
             `
-            import util
             var arg = ...
             var uuid = arg[1]
             var chunk = arg[2]
