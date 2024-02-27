@@ -8,7 +8,7 @@
 
 类型: string
 
-默认为空，可以指定本地文件 js，由 main.exe 自动加载 nodejs 执行。
+默认为空，可以指定本地文件 js，由 main.exe 自动加载 nodejs 执行，如果当前目录存在 sys.js 文件可自动读取。
 
 ### page
 
@@ -16,6 +16,16 @@
 类型: string
 
 为空时自动使用 page.html，可以指定本地 html 文件或线上 url。
+
+### preloadScript
+
+页面加载前执行的 js 文件路径。同目录下 preload.js 文件会被主动调用。
+
+注，此时页面 dom 还未形成，可通过以下方法监听 dom 加载完成：
+
+``` js
+document.addEventListener('DOMContentLoaded', async function() {});
+```
 
 ### loading
 
