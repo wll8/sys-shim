@@ -130,6 +130,21 @@ namespace fn {
     	return cur, endKey
 	}
 	
+	// 如果给的值是路径时，加载路径中的内容，否则返回原字符串
+	loadStr = function(str){
+		if(!toBool(str)) { // 空值
+			return ""; 
+		}
+		if(inet.url.is(str)) { // 网络路径
+			// todo 从网络下载文件到应用程序数据目录
+			return ""
+		}
+		if(io.exist(io.fullpath(str))) { // 本地路径
+			return string.load(io.fullpath(str)); 
+		}
+		return ""; 
+	}
+	
 	webviewPort = function(appData){
 		import console;
 		import fsys;
