@@ -96,13 +96,25 @@ class Msg extends Base {
     return this
   }
   on(key, fn) {
-    return ws.on(key, fn)
+    return ws.on(key, (arg) => {
+      fn(...arg)
+    })
   }
   off(key) {
     return ws.off(key)
   }
+  /**
+   * hack
+   * 以分步传输的形式避免传参过大的错误
+   * https://github.com/wll8/sys-shim/issues/3
+   */
   emit(...arg) {
-    return ws.call(`base.publish`, arg)
+    return ws.call(`run`, [
+      `
+      global.G.rpcServer.publish(...);
+      `,
+      ...arg,
+    ])
   }
 }
 class Sys extends Base {
