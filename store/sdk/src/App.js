@@ -38,18 +38,34 @@ export default {
           },
         },
         {
-          name: `参数传输错误`,
+          name: `大体积参数`,
           fn: async function () {
-            console.warn(`详情参考 https://github.com/wll8/sys-shim/issues/3`)
-            const arg = `x`.repeat(9e5)
+            const arg = `👨‍👩‍👦‍👦`.repeat(9e5)
             const res = await ws.call(
               `run`,
               [
                 `
-                console.log(1)
                 return ...
                 `,
                 arg
+              ],
+            )
+            console.log(111, res)
+          },
+        },
+        {
+          name: `大体积代码`,
+          fn: async function () {
+            const x = `中文`.repeat(9e5)
+            const res = await ws.call(
+              `run`,
+              [
+                ` 
+                  return table.concat({...}, {"${x}", 9, 9, 9})
+                `,
+                1,
+                2,
+                3,
               ],
             )
             console.log(111, res)

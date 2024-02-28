@@ -180,20 +180,15 @@ class Sys extends Base {
     const call = ws.call
     ws.call = async (action, arg) => {
       if(action === `run`) {
-        const [code, ...more] = arg
-        const strArg = JSON.stringify(more)
+        const strArg = JSON.stringify(arg)
         const uuid = `fn${crypto.randomUUID().replace(/-/g, ``)}`
-        const limit = 1024 * 63
-        // 如果代码体积超出限制时，抛出错误
-        const codeLen = getStringByteLength(code)
-        const argLen = Math.ceil(getStringByteLength(strArg) / limit)
-        // 如果代码和参数体积和小于限制时，直接运行
-        if(argLen + codeLen < limit && argLen <= 1) {
-          return call.bind(ws)(action, arg)
-        }
+        // chrome 分片大小
+        const chromeWsSize = 131000 / 2
+        // 预留空间，例如 rpc 协议包装
+        const reserved = 1000
+        const limit = Math.floor(chromeWsSize) - reserved
         const chunkList = sliceStringByBytes(strArg, limit)
         const chunkListSize = chunkList.length
-        console.log({chunkListSize})
         // 否则分段发送
         for (let index = 0; index < chunkListSize; index++) {
           const chunk = chunkList[index]
@@ -213,13 +208,10 @@ class Sys extends Base {
           `
             var arg = global.G["${uuid}"] ? web.json.parse(global.G["${uuid}"]) : null;
             global.G["${uuid}"] = null
-            var ${uuid} = function(...){
-              ${code}
-            }
-            var ret = {call(${uuid}, owner, table.unpack(arg, table.range(arg)))}
-            if( !ret[1] ) error(ret[2], 2)
-            table.remove(ret)
-            return table.unpack( ret,table.range(ret) );
+
+            var code = table.unpack(arg)
+            table.remove(arg)
+            return loadcode(code)(table.unpack(arg))
           `
         ]
       }
