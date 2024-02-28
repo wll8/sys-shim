@@ -1,9 +1,52 @@
-import DeepProxy from 'proxy-deep'
-const encoder = typeof TextEncoder === 'undefined' ? new (require('util').TextEncoder)('utf-8') : new TextEncoder();
-const decoder = typeof TextDecoder === 'undefined' ? new (require('util').TextDecoder)('utf-8') : new TextDecoder();
-
-
+import proxy from './proxy.js'
+let lib = {
+  encoder: undefined,
+  decoder: undefined,
+}
 let ws = undefined
+
+/**
+ * 获取 uuid
+ * @returns 
+ */
+function getUuid () {
+  if (typeof crypto === 'object') {
+    if (typeof crypto.randomUUID === 'function') {
+      return crypto.randomUUID();
+    }
+    if (typeof crypto.getRandomValues === 'function' && typeof Uint8Array === 'function') {
+      const callback = (c) => {
+        const num = Number(c);
+        return (num ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (num / 4)))).toString(16);
+      };
+      return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, callback);
+    }
+  }
+  let timestamp = new Date().getTime();
+  let perforNow = (typeof performance !== 'undefined' && performance.now && performance.now() * 1000) || 0;
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    let random = Math.random() * 16;
+    if (timestamp > 0) {
+      random = (timestamp + random) % 16 | 0;
+      timestamp = Math.floor(timestamp / 16);
+    } else {
+      random = (perforNow + random) % 16 | 0;
+      perforNow = Math.floor(perforNow / 16);
+    }
+    return (c === 'x' ? random : (random & 0x3) | 0x8).toString(16);
+  });
+};
+
+/**
+ * 转换路径数组为字符串
+ * 例如： ["a", "2", "b"] 为 a[2]["b"]
+ * 注意： 在 js 中，proxy a[2]["b"] 时等到的 2 依然是字符串，所以只能通过正则处理
+ * // todo 有知道访问路径的具体类型的方式吗？
+ */
+function pathToStr (key) {
+  let [root, ...path] = key
+  return `${root}${path.map(item => /^\d+$/.test(item) ? `[${item}]` : `["${item}"]`).join(``)}`
+}
 
 /**
  * 获取字符串的字节长度
@@ -11,7 +54,7 @@ let ws = undefined
  * @returns 
  */
 function getStringByteLength(str) {
-  return encoder.encode(str).length;
+  return lib.encoder.encode(str).length;
 }
 
 function isUTF8MultiByteStart(byte) {
@@ -25,7 +68,7 @@ function isUTF8MultiByteContinuation(byte) {
 }
 
 function sliceStringByBytes(str, sliceLength) {
-  const uint8Array = encoder.encode(str);
+  const uint8Array = lib.encoder.encode(str);
   let slices = [];
   let start = 0;
 
@@ -45,7 +88,7 @@ function sliceStringByBytes(str, sliceLength) {
     }
 
     const slice = uint8Array.subarray(start, end);
-    slices.push(decoder.decode(slice));
+    slices.push(lib.decoder.decode(slice));
     start = end; // 设置下次分片的起始位置
   }
 
@@ -54,63 +97,44 @@ function sliceStringByBytes(str, sliceLength) {
 
 class Base {
   constructor() {
-    ;[`win`, `fsys`].forEach((key) => {
-      this[key] = mockObj(key)
+    this.native = proxy(``, {
+      deep: {
+        async set(key, val) {
+          let [root, ...path] = key
+          await ws.call(`${root}.setVal`, [...path, val])
+          let code = `
+            var val = ...
+            ${pathToStr(key)} = val
+            return ${pathToStr(key)}
+          `
+          let res = await ws.call(`run`, [code, val])
+          return res
+        },
+        async get(key) {
+          let code = `
+            return ${pathToStr(key)}
+          `
+          let res = await ws.call(`run`, [code])
+          return res
+        },
+        async call(key, ...arg) {
+          let code = `
+            var arg = {...}
+            return ${pathToStr(key)}(...)
+          `
+          let res = await ws.call(`run`, [code, ...arg])
+          return res
+        }
+      }
     })
+    this.win = this.native.win
+    this.fsys = this.native.fsys
   }
   get form() {
-    return this.win.form._forms[this.hwnd]
+    return this.native.win.form._forms[this.hwnd]
   }
 }
 
-/**
- * 创建一个模拟的 js 对象来调用 exe 中的对象
- * @param {*} namespaces exe 暴露的对象, 例如 win
- * @returns
- */
-function mockObj(namespaces) {
-  const obj = new DeepProxy(
-    {},
-    {
-      get(target, path, receiver) {
-        const fullPath = [...this.path, path]
-          .filter((item) => typeof item === `string`)
-          .join(`.`)
-        if (typeof target === `function` && fullPath.endsWith(`.then`)) {
-          const prePath = fullPath.replace(/\.then$/, ``)
-          return ws.call(`${namespaces}.getVal`, [prePath])
-        } else {
-          return this.nest(() => {})
-        }
-      },
-      set(target, path, receiver) {
-        const keyPath = [...this.path, path]
-          .filter((item) => typeof item === `string`)
-          .join(`.`)
-        return ws.call(`${namespaces}.setVal`, [keyPath, receiver])
-      },
-      apply(target, thisArg, argList) {
-        const keyPath = [...this.path]
-          .filter((item) => typeof item === `string`)
-          .join(`.`)
-        if (keyPath === `form`) {
-          return new Promise(async (resolve) => {
-            const raw = await ws.call(`${namespaces}.callFn`, [
-              keyPath,
-              ...argList,
-            ])
-            const [ok, { hwnd }] = raw
-            const form = obj.form._forms[hwnd]
-            resolve([ok, form])
-          })
-        } else {
-          return ws.call(`${namespaces}.callFn`, [keyPath, ...argList])
-        }
-      },
-    }
-  )
-  return obj
-}
 class Tray extends Base {
   constructor(...arg) {
     super()
@@ -168,7 +192,8 @@ class Msg extends Base {
   }
 }
 class Sys extends Base {
-  constructor(_ws) {
+  constructor(_ws, _lib) {
+    lib = _lib
     ws = _ws
     super()
     this.ws = _ws
@@ -181,7 +206,7 @@ class Sys extends Base {
     ws.call = async (action, arg) => {
       if(action === `run`) {
         const strArg = JSON.stringify(arg)
-        const uuid = `fn${crypto.randomUUID().replace(/-/g, ``)}`
+        const uuid = `fn${getUuid().replace(/-/g, ``)}`
         // chrome 分片大小
         const chromeWsSize = 131000 / 2
         // 预留空间，例如 rpc 协议包装
@@ -210,8 +235,8 @@ class Sys extends Base {
             global.G["${uuid}"] = null
 
             var code = table.unpack(arg)
-            table.remove(arg)
-            return loadcode(code)(table.unpack(arg))
+            var fnArg = {table.unpack(arg, 2, -1)}
+            return loadcode(code)(table.unpack(fnArg))
           `
         ]
       }

@@ -11,6 +11,12 @@ export default {
       res: ``,
       list: [
         {
+          name: `调用原生方法`,
+          fn: async function () {
+            vm.res = await main.native.win.msgbox(1234, null, 3)
+          },
+        },
+        {
           name: `读取本地文件为 buffer`,
           fn: async function () {
             let [, read] = await ws.call(
