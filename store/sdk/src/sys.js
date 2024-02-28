@@ -1,6 +1,56 @@
 import DeepProxy from 'proxy-deep'
+const encoder = typeof TextEncoder === 'undefined' ? new (require('util').TextEncoder)('utf-8') : new TextEncoder();
+const decoder = typeof TextDecoder === 'undefined' ? new (require('util').TextDecoder)('utf-8') : new TextDecoder();
+
 
 let ws = undefined
+
+/**
+ * 获取字符串的字节长度
+ * @param {*} str 
+ * @returns 
+ */
+function getStringByteLength(str) {
+  return encoder.encode(str).length;
+}
+
+function isUTF8MultiByteStart(byte) {
+  // 如果字节的高位为11，则是多字节字符的起始字节
+  return (byte & 0xC0) === 0xC0;
+}
+
+function isUTF8MultiByteContinuation(byte) {
+  // 如果字节的高位为10，则是多字节字符的延续字节
+  return (byte & 0xC0) === 0x80;
+}
+
+function sliceStringByBytes(str, sliceLength) {
+  const uint8Array = encoder.encode(str);
+  let slices = [];
+  let start = 0;
+
+  while (start < uint8Array.length) {
+    let end = start + sliceLength;
+    if (end > uint8Array.length) {
+      end = uint8Array.length;
+    } else {
+      // 确保不在多字节字符中间断开
+      while (end > start && isUTF8MultiByteContinuation(uint8Array[end - 1])) {
+        end--;
+      }
+      // 如果我们在多字节字符的起始处中止，则再次前移
+      if (end > start && isUTF8MultiByteStart(uint8Array[end - 1])) {
+        end--;
+      }
+    }
+
+    const slice = uint8Array.subarray(start, end);
+    slices.push(decoder.decode(slice));
+    start = end; // 设置下次分片的起始位置
+  }
+
+  return slices;
+}
 
 class Base {
   constructor() {
@@ -131,12 +181,22 @@ class Sys extends Base {
     ws.call = async (action, arg) => {
       if(action === `run`) {
         const [code, ...more] = arg
-        const str = JSON.stringify(more)
+        const strArg = JSON.stringify(more)
         const uuid = `fn${crypto.randomUUID().replace(/-/g, ``)}`
-        const size = 1024 * 63 // 每次传送 63k，如果设置到 64k 即报错
-        const len = Math.ceil(str.length / size)
-        for (let index = 0; index < len; index++) {
-          const chunk = str.slice(index * size, index * size + size)
+        const limit = 1024 * 63
+        // 如果代码体积超出限制时，抛出错误
+        const codeLen = getStringByteLength(code)
+        const argLen = Math.ceil(getStringByteLength(strArg) / limit)
+        // 如果代码和参数体积和小于限制时，直接运行
+        if(argLen + codeLen < limit && argLen <= 1) {
+          return call.bind(ws)(action, arg)
+        }
+        const chunkList = sliceStringByBytes(strArg, limit)
+        const chunkListSize = chunkList.length
+        console.log({chunkListSize})
+        // 否则分段发送
+        for (let index = 0; index < chunkListSize; index++) {
+          const chunk = chunkList[index]
           await call.bind(ws)(`run`, [
             `
             var arg = ...
@@ -148,6 +208,7 @@ class Sys extends Base {
             [uuid, chunk]
           ])
         }
+        // 函数拦截参考 lib/util/_.aardio apply 的实现
         arg = [
           `
             var arg = global.G["${uuid}"] ? web.json.parse(global.G["${uuid}"]) : null;
@@ -155,7 +216,6 @@ class Sys extends Base {
             var ${uuid} = function(...){
               ${code}
             }
-            // 参考 lib/util/_.aardio apply 的实现
             var ret = {call(${uuid}, owner, table.unpack(arg, table.range(arg)))}
             if( !ret[1] ) error(ret[2], 2)
             table.remove(ret)
