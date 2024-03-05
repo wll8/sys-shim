@@ -1,4 +1,5 @@
 import proxy from './proxy.js'
+import Neutralino from './api/neutralino/index.js'
 let lib = {
   encoder: undefined,
   decoder: undefined,
@@ -129,6 +130,12 @@ class Base {
     })
     this.win = this.native.win
     this.fsys = this.native.fsys
+  }
+  api = {
+    neutralino: async () => {
+      const res = await new Neutralino(this)
+      return res
+    }
   }
   get form() {
     return this.native.win.form._forms[this.hwnd]

@@ -7,6 +7,9 @@ export default defineConfig({
   css: {
     devSourcemap: true // this one
   },
+  server: {
+    host: `0.0.0.0`,
+  },
   define: {
     // By default, Vite doesn't include shims for NodeJS/
     // necessary for segment analytics lib to work

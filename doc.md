@@ -430,3 +430,7 @@ new Sys(`ws://localhost:7788`).then(async main => {
   await main.win.msgbox(`hello`)
 })
 ```
+
+## todo
+
+- 可控制 loading 页面什么时候关闭，例如虽然 page 页面显示了，但并未满足可用状态，手动判断满足后，才关闭 loading，才显示 page
