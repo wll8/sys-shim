@@ -1,8 +1,13 @@
 import DeepProxy from 'proxy-deep'
 
 const KEYS_MAP = new Map();
+
+function nullishCoalescing(left, right) {
+  return (left !== null && left !== undefined) ? left : right;
+}
+
 function get([key]) {
-  return KEYS_MAP.get(key) ?? key
+  return nullishCoalescing(KEYS_MAP.get(key), key)
 }
 
 /**
@@ -62,7 +67,7 @@ function mockObj(raw, cfg = {}) {
   }
   function msg(type, ...arg) {
     if (msg.state === 'padding') {
-      msg.queue = msg.queue ?? [];
+      msg.queue = nullishCoalescing(msg.queue, []);
       return new Promise((res, rej) => {
         msg.queue.push({ args: [type, ...arg], res, rej })
       });
@@ -77,7 +82,7 @@ function mockObj(raw, cfg = {}) {
       let result = val(...arg)
       res(result);
       msg.state = 'done'
-      if (msg.queue?.length) {
+      if (msg.queue.length) {
         let data = msg.queue.shift()
         msg(...data.args).then(res => data.res(res)).catch(err => data.rej(err))
       }

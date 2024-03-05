@@ -6,6 +6,7 @@ export default {
   data() {
     const main = window.main
     const ws = main.ws
+    window.ws = ws
     const vm = this
     return { 
       res: ``,
