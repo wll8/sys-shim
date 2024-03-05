@@ -67,6 +67,7 @@ function mockObj(raw, cfg = {}) {
   }
   function msg(type, ...arg) {
     if (msg.state === 'padding') {
+      console
       msg.queue = nullishCoalescing(msg.queue, []);
       return new Promise((res, rej) => {
         msg.queue.push({ args: [type, ...arg], res, rej })
@@ -89,8 +90,8 @@ function mockObj(raw, cfg = {}) {
     })
   }
 
-  const porxy = new DeepProxy(
-    () => {},
+  const proxy = new DeepProxy(
+    () => { },
     {
       get(target, path, receiver) {
         const paths = getPaths(this.path);
@@ -121,7 +122,7 @@ function mockObj(raw, cfg = {}) {
       },
     }
   )
-  return porxy
+  return proxy
 }
 
 function deepGet(object, keys = []) { // 深层获取对象值
