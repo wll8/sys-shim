@@ -12,7 +12,6 @@
 
 ### page
 
-
 类型: string
 
 为空时自动使用 page.html，可以指定本地 html 文件或线上 url。
@@ -23,8 +22,8 @@
 
 注，此时页面 dom 还未形成，可通过以下方法监听 dom 加载完成：
 
-``` js
-document.addEventListener('DOMContentLoaded', async function() {});
+```js
+document.addEventListener("DOMContentLoaded", async function () {});
 ```
 
 ### loading
@@ -60,7 +59,6 @@ websocket 协议所绑定的网卡，默认自动。
 类型: string
 
 websocket 协议所绑定的端口，默认自动。
-
 
 ### http
 
@@ -126,13 +124,11 @@ webview 预加载的 js。
 
 主窗口配置信息。
 
-
 #### form.parent
 
 类型: object
 
 设置主窗口的上层窗口，例如实现无任务栏窗口，内容同 form。
-
 
 #### form.right
 
@@ -161,7 +157,6 @@ webview 预加载的 js。
 可选值：1。
 
 最大化。
-
 
 #### form.title
 
@@ -199,10 +194,10 @@ webview 预加载的 js。
 
 Sys 默认自动读取 `global.ext.wsUrl` 和 `global.ext.token` 进行初始化，你也可以传入自己的 wsUrl 进行初始化。
 
-``` js
-new Sys().then(obj => {
+```js
+new Sys().then((obj) => {
   // 初始化后得到的对象 obj
-})
+});
 ```
 
 初始化完成后，会得到对象 obj，属性为：
@@ -247,60 +242,65 @@ new Sys().then(obj => {
 
 调用 main.exe 暴露的方法。
 
-参数：方法名, [方法参数1, 方法参数2..]
+参数：方法名, [方法参数 1, 方法参数 2..]
 
 示例：通过 run 方法运行原生代码。
 
-``` js
-
+```js
 // 退出所有进程
 {
-ws.call(`run`, [`G.killAll()`])
+  ws.call(`run`, [`G.killAll()`]);
 }
 
 {
-// 创建目录
-const dir = `C:/my/`
-await ws.call(`run`, [
-`
+  // 创建目录
+  const dir = `C:/my/`;
+  await ws.call(`run`, [
+    `
 var arg = ...
 fsys.createDir(arg)
-`, dir])
+`,
+    dir,
+  ]);
 }
 
 {
-// 下载文件
-const url = "https://download.microsoft.com/download/7/4/A/74A33AB3-B6F3-435D-8E3E-0A9FD574347F/services-on-server-install-worksheet.xlsx"
-vm.res = await ws.call(`run`, [
-`
+  // 下载文件
+  const url =
+    "https://download.microsoft.com/download/7/4/A/74A33AB3-B6F3-435D-8E3E-0A9FD574347F/services-on-server-install-worksheet.xlsx";
+  vm.res = await ws.call(`run`, [
+    `
 var arg = ...
 var remoteFile = inet.httpFile(arg ,"C:/my/")
 return remoteFile.download()
-`, url])
+`,
+    url,
+  ]);
 }
 
 {
-// 打开记事本
-vm.res = await ws.call(`run`, [
-`
+  // 打开记事本
+  vm.res = await ws.call(`run`, [
+    `
 process.execute("notepad")
-`])
+`,
+  ]);
 }
-
 
 {
-// 运行命令行
-vm.res = await ws.call(`run`, [
-`
+  // 运行命令行
+  vm.res = await ws.call(`run`, [
+    `
 process.popen("cmd /k rd /s /q C:\\my")
-`, url])
+`,
+    url,
+  ]);
 }
-
 ```
 
 示例：通过 ws 发送和订阅消息。
 
-``` js
+```js
 
 // 发送消息
 ws.call(`base.publish`, [key, msg1, msg2...])
@@ -317,16 +317,15 @@ ws.off(key)
 应用内通信。
 
 ```js
-
-const msg = Msg()
+const msg = Msg();
 // 监听信息
-msg.on(`hello`, console.log)
+msg.on(`hello`, console.log);
 
 // 发送信息
-msg.emit(`hello`, `ace`)
+msg.emit(`hello`, `ace`);
 
 // 取消监听
-msg.off(`hello`)
+msg.off(`hello`);
 ```
 
 ### View
@@ -338,8 +337,8 @@ const view = await new main.View(`http://baidu.com`, {
   form: {
     text: `win Form`,
   },
-})
-view.form.show() // 显示窗口
+});
+view.form.show(); // 显示窗口
 ```
 
 ### Tray
@@ -349,7 +348,7 @@ view.form.show() // 显示窗口
 示例实现创建并更改托盘图标，点击托盘图标隐藏显示窗口。
 
 ```js
-let tray = await new window.main.Tray()
+let tray = await new window.main.Tray();
 ws.call(`run`, [
   `
   var arg = ...
@@ -359,28 +358,27 @@ ws.call(`run`, [
     icon: `https://www.hongqiye.com/favicon.ico`, // 设置托盘图标
     hwnd: await tray.form.hwnd.then, // 托盘句柄
   },
-])
-tray.form.tray.tip = `tiptiptip` // 设置托盘 tip
-tray.form.tray.pop(`traytray`, `msgmsgmsg`, 1) // 设置托盘 pop
+]);
+tray.form.tray.tip = `tiptiptip`; // 设置托盘 tip
+tray.form.tray.pop(`traytray`, `msgmsgmsg`, 1); // 设置托盘 pop
 
 // 监听托盘左键菜单
 tray.on(`_WM_LBUTTONUP`, async () => {
-
   // 判断窗口是否隐藏
-  const [, isVisible] = await win.isVisible(view.hwnd)
+  const [, isVisible] = await win.isVisible(view.hwnd);
   if (!isVisible) {
     // 前置窗口
-    await win.showForeground(view.hwnd)
+    await win.showForeground(view.hwnd);
   } else {
     // 隐藏窗口
-    await view.form.show(false)
+    await view.form.show(false);
   }
-})
+});
 
 // 监听托盘右键菜单
 tray.on(`_WM_RBUTTONUP`, async () => {
-  ws.call(`run`, [`G.killAll()`])
-})
+  ws.call(`run`, [`G.killAll()`]);
+});
 ```
 
 ## 封装 api
@@ -391,7 +389,7 @@ tray.on(`_WM_RBUTTONUP`, async () => {
 
 node v18.19.0
 
-``` bat
+```bat
 rem 安装依赖
 yarn
 
@@ -409,7 +407,7 @@ yarn dev
 
 例如，可以在开发阶段，可以在 package.json 中指定 api 的连接方式：
 
-``` json
+```json
 {
   "debug": true,
   "socket": {
@@ -420,21 +418,20 @@ yarn dev
 }
 ```
 
-然后在自己的程序中连接 ws://localhost:7788 即可与 main.exe 进行交互。在数据目录例如 `C:/Users/用户名/AppData/Local/sys-shim/程序码/RES`中，有 browser/mian.js 和 node/main.js 文件，它们是实现 new Sys() 的代码。
+然后在自己的程序中连接 ws://localhost:7788 即可与 main.exe 进行交互。在数据目录例如 `C:/Users/用户名/AppData/Local/sys-shim/程序码/RES`中，有 browser/main.js 和 node/main.js 文件，它们是实现 new Sys() 的代码。
 
 所以你可以自己的程序中，例如 node 程序，引用 main.js 文件来调用 main.exe 。
 
-``` js
-require(`数据目录/res/node/main.js`)
-new Sys(`ws://localhost:7788`).then(async main => {
-  await main.win.msgbox(`hello`)
-})
+```js
+require(`数据目录/res/node/main.js`);
+new Sys(`ws://localhost:7788`).then(async (main) => {
+  await main.win.msgbox(`hello`);
+});
 ```
 
 ## todo
 
 - 可控制 loading 页面什么时候关闭，例如虽然 page 页面显示了，但并未满足可用状态，手动判断满足后，才关闭 loading，才显示 page
-
 
 ## neutralinojs api 封装
 
