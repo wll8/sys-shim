@@ -434,3 +434,51 @@ new Sys(`ws://localhost:7788`).then(async main => {
 ## todo
 
 - 可控制 loading 页面什么时候关闭，例如虽然 page 页面显示了，但并未满足可用状态，手动判断满足后，才关闭 loading，才显示 page
+
+
+## neutralinojs api 封装
+
+- Neutralino.app
+  - [x] app.exit -- 注：退出码暂未实现
+  - [x] app.killProcess
+  - [ ] app.restartProcess
+  - [x] app.getConfig
+  - [ ] app.broadcast
+  - [ ] app.readProcessInput
+  - [ ] app.writeProcessOutput
+  - [ ] app.writeProcessError
+- Neutralino.clipboard
+  - [ ] clipboard.writeText
+  - [ ] clipboard.readText
+- Neutralino.computer
+
+- Neutralino.debug
+
+- Neutralino.events
+
+- Neutralino.extensions
+
+- Neutralino.filesystem
+
+- Neutralino.init
+
+- Neutralino.os
+  - [x] os.execCommand
+  - [ ] os.spawnProcess
+  - [ ] os.updateSpawnedProcess
+  - [ ] os.getSpawnedProcesses
+  - [x] os.getEnv
+  - [x] os.getEnvs
+  - [ ] os.showOpenDialog
+  - [ ] os.showSaveDialog
+  - [ ] os.showFolderDialog
+  - [ ] os.showNotification
+  - [ ] os.showMessageBox
+  - [ ] os.setTray
+  - [ ] os.getPath
+  - [ ] os.open
+- Neutralino.storage
+
+- Neutralino.updater
+
+- Neutralino.window
