@@ -264,7 +264,15 @@ export default {
             const data = await Neutralino.filesystem.readFile("test.txt")
             console.log(data)
           }
-        }
+        },
+        {
+          name: "filesystem.readBinaryFile",
+          async fn(){
+            const data = await Neutralino.filesystem.readBinaryFile("test.txt")
+            let view = new Uint8Array(data);
+            console.log('Binary content: ', view);
+          }
+        },
       
       ]
     }
