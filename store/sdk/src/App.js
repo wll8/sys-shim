@@ -215,6 +215,57 @@ export default {
             main.win.quitMessage();
           },
         },
+        /* test the writeText method of Api.clipboard */
+        {
+          name: `writeText`,
+          async fn() {
+            await Neutralino.clipboard.writeText('write test')
+          },
+        },
+        {
+          name: "readText",
+          async fn() {
+            const text = await Neutralino.clipboard.readText()
+            console.log(text)
+          },
+        },
+        {
+          name: "filesystem.createDirectory",
+          async fn() {
+            const value =  await Neutralino.filesystem.createDirectory("./newDirectory")
+            // const value =  await Neutralino.filesystem.createDirectory("./newDirectory/a/b")
+            console.log(value)
+          }
+        },
+        {
+          name: "filesystem.remove",
+          async fn(){
+            const value = await Neutralino.filesystem.remove("./newDirectory")
+            console.log(value)
+          }
+        },
+        {
+          name: "filesystem.writeFile",
+          async fn(){
+           await Neutralino.filesystem.writeFile("test.txt", '123')
+           
+          }
+        },
+        {
+          name: "filesystem.appendFile",
+          async fn(){
+            const data = await Neutralino.filesystem.appendFile("test.txt", '456')
+            console.log(data)
+          }
+        },
+        {
+          name: "filesystem.readFile",
+          async fn(){
+            const data = await Neutralino.filesystem.readFile("test.txt")
+            console.log(data)
+          }
+        }
+      
       ]
     }
   },
