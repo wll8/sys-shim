@@ -273,6 +273,17 @@ export default {
             console.log('Binary content: ', view);
           }
         },
+        {
+          name: "filesystem.writeBinaryFile",
+          async fn(){
+            let rawBin = new ArrayBuffer(1);
+            let view = new Uint8Array(rawBin);
+            view[0] = 64; // 将 ASCII '@' 保存到二进制文件中
+            await Neutralino.filesystem.writeBinaryFile("test.txt", rawBin)
+            const readRes = await Neutralino.filesystem.readFile("test.txt")
+            console.log(`readRes`, readRes)
+          }
+        },
       
       ]
     }
