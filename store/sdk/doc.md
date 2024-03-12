@@ -393,16 +393,16 @@ node v18.19.0
 
 ``` bat
 rem 安装依赖
-yarn
+pnpm i
 
 rem 生成库文件 sys.js
-yarn sys
+pnpm sys
 
 rem 获取 main.exe，可以通过编译或下载得到
-yarn main:build
+pnpm main:build
 
 rem 调试 api
-yarn dev
+pnpm dev
 ```
 
 另外，任何程序，不管是浏览器还是 nodejs 都可以通过 main.exe 提供的 websocket api 来调用系统功能。
