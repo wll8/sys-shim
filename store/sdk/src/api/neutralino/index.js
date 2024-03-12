@@ -74,17 +74,36 @@ class Api {
   }
   os = {
     // win.versionEx
-    execCommand: async (command, options) => {
+    execCommand: async (command, options = {
+      background: undefined,
+      stdIn: undefined, // todo
+      cwd: undefined,
+    }) => {
       const [err, res] = await main.ws.call(`run`, [`
         var cmd, options = ...
+        console.log(11)
+        var back = process.workDir
+        if(options.cwd) {
+          process.workDir = options.cwd
+        }
         var proc = process.popen(cmd)
-        return {
-          stdOut = proc.read(-1),
-          stdErr = proc.readErr(-1),
-          exitCode = proc,
-          pid = proc.process.id,
-          exitCode = proc.getExitCode(),
-          proc = proc,
+        process.workDir = back
+        if(options.background) {
+          return {
+            stdOut = '',
+            stdErr = '',
+            pid = proc.process.id,
+            exitCode = -1,
+            proc = proc,
+          }
+        } else {
+          return {
+            stdOut = proc.read(-1),
+            stdErr = proc.readErr(-1),
+            pid = proc.process.id,
+            exitCode = proc.getExitCode(),
+            proc = proc,
+          }
         }
       `, command, options])
       return res
@@ -99,6 +118,26 @@ class Api {
         acc[key] = val.join(``)
         return acc
       }, {})
+    },
+    showOpenDialog: async (title, options = {
+      defaultPath: undefined,
+      filters: []
+    }) => {
+      const filters = (options.filters || []).map(item => `${item.name}|${item.extensions.map(item => `*.${item}`).join(`;`)}`).join(`|`)
+      return (await this.base.native.fsys.dlg.open(filters, title, options.defaultPath))[1];
+    },
+    showSaveDialog: async (title, options = {
+      defaultPath: undefined,
+      forceOverwrite: undefined,
+      filters: []
+    }) => {
+      const filters = (options.filters || []).map(item => `${item.name}|${item.extensions.map(item => `*.${item}`).join(`;`)}`).join(`|`)
+      return (await this.base.native.fsys.dlg[options.forceOverwrite ? `save` : `saveOp`](filters, title, options.defaultPath))[1];
+    },
+    showFolderDialog: async (title, options = {
+      defaultPath: undefined,
+    }) => {
+      return (await this.base.native.fsys.dlg.dir(options.defaultPath, undefined, title))[1];
     },
   }
   computer = {
