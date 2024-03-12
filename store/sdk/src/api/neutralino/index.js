@@ -76,8 +76,7 @@ class Api {
     // win.versionEx
     execCommand: async (command, options) => {
       const [err, res] = await main.ws.call(`run`, [`
-        var cmd = ...
-        var options = table.unpack({...}, 2)
+        var cmd, options = ...
         var proc = process.popen(cmd)
         return {
           stdOut = proc.read(-1),
