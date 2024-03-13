@@ -1,17 +1,17 @@
 import { defineConfig } from 'vite'
-import { join } from "path";
+import { join } from "path"
 import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
     alias: {
-      '@': join(__dirname, "src"),
-    }
+      '@': join(__dirname, `src`),
+    },
   },
   plugins: [vue()],
   css: {
-    devSourcemap: true // this one
+    devSourcemap: true, // this one
   },
   server: {
     host: `0.0.0.0`,
