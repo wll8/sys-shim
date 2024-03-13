@@ -12,6 +12,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
+    "fix": "eslint ./ --fix --format unix",
     "dev": "run-p main:run vite:run",
     "main:run": "yarn main:run-shim",
     "main:run-shim": "win-api/dist/main.exe a b c d=1 /e 3",
@@ -28,6 +29,7 @@
     "rpc-websockets": "^7.6.0"
   },
   "devDependencies": {
+    "eslint": "8.57.0",
     "@vitejs/plugin-vue": "^4.5.0",
     "download-cli": "^1.1.1",
     "esm": "^3.2.25",

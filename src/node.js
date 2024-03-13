@@ -5,8 +5,8 @@ import SysRef from '@/sys.js'
 globalThis.ext = globalThis.ext || JSON.parse(globalThis.process.env.ext || `{}`)
 
 const lib = {
-  encoder: new (util.TextEncoder)('utf-8'),
-  decoder: new (util.TextDecoder)('utf-8'),
+  encoder: new (util.TextEncoder)(`utf-8`),
+  decoder: new (util.TextDecoder)(`utf-8`),
 }
 
 class Sys extends SysRef {

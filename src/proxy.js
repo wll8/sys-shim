@@ -1,9 +1,9 @@
 import DeepProxy from 'proxy-deep'
 
-const KEYS_MAP = new Map();
+const KEYS_MAP = new Map()
 
 function nullishCoalescing(left, right) {
-  return (left !== null && left !== undefined) ? left : right;
+  return (left !== null && left !== undefined) ? left : right
 }
 
 function get([key]) {
@@ -43,7 +43,7 @@ function mockObj(raw, cfg = {}) {
           err = error
         }
         return [err, res]
-      }
+      },
     },
     keys: [`then`, `catch`, `finally`], // 特殊处理 Key
     ...cfg,
@@ -51,13 +51,13 @@ function mockObj(raw, cfg = {}) {
   const { keys, deep } = cfg
   keys.forEach(key => {
     let _val = Symbol(key)
-    KEYS_MAP.set(key, _val);
-    KEYS_MAP.set(_val, key);
+    KEYS_MAP.set(key, _val)
+    KEYS_MAP.set(_val, key)
   })
 
   function getPaths(paths = []) {
     return [...paths]
-      .filter((item) => ['string', 'symbol'].includes(typeof item))
+      .filter((item) => [`string`, `symbol`].includes(typeof item))
       .map(item => {
         if (keys.map(key => get([key])).includes(item)) {
           return get([item])
@@ -66,11 +66,11 @@ function mockObj(raw, cfg = {}) {
       })
   }
   function msg(type, ...arg) {
-    if (msg.state === 'padding') {
-      msg.queue = nullishCoalescing(msg.queue, []);
+    if (msg.state === `padding`) {
+      msg.queue = nullishCoalescing(msg.queue, [])
       return new Promise((res, rej) => {
         msg.queue.push({ args: [type, ...arg], res, rej })
-      });
+      })
     }
     return new Promise((res, rej) => {
       const val = {
@@ -78,10 +78,10 @@ function mockObj(raw, cfg = {}) {
         set: deep.set,
         call: deep.call,
       }[type]
-      msg.state = 'padding'
+      msg.state = `padding`
       let result = val(...arg)
-      res(result);
-      msg.state = 'done'
+      res(result)
+      msg.state = `done`
       if (msg.queue.length) {
         let data = msg.queue.shift()
         msg(...data.args).then(res => data.res(res)).catch(err => data.rej(err))
@@ -93,7 +93,7 @@ function mockObj(raw, cfg = {}) {
     () => {},
     {
       get(target, path, receiver) {
-        const paths = getPaths(this.path);
+        const paths = getPaths(this.path)
         if (cfg.keys.includes(path)) {
           let promise = new Promise(async (res, rej) => {
             try {
@@ -110,16 +110,16 @@ function mockObj(raw, cfg = {}) {
         }
       },
       set(target, path, value) {
-        const paths = getPaths([...this.path, path]);
+        const paths = getPaths([...this.path, path])
         const res = msg(`set`, paths, value)
         return res
       },
       apply(target, thisArg, argList) {
-        const paths = getPaths(this.path);
+        const paths = getPaths(this.path)
         const res = msg(`call`, paths, ...argList)
         return res
       },
-    }
+    },
   )
   return porxy
 }

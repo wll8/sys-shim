@@ -1,5 +1,5 @@
-/// <reference path="../types/global.d.ts" />
-/// <reference path="../types/typings.d.ts" />
+// / <reference path="../types/global.d.ts" />
+// / <reference path="../types/typings.d.ts" />
 
 const sleep = time => new Promise(resolve => setTimeout(resolve,time))
 export default {
@@ -8,7 +8,7 @@ export default {
     const ws = main.ws
     window.ws = ws
     const vm = this
-    return { 
+    return {
       res: ``,
       list: [
         {
@@ -38,7 +38,7 @@ export default {
                 string.save("D:/git2/sys-ui/win-api/dist/out-1.ico", buffer)
                 return buffer
                 `,
-                read
+                read,
               ],
             )
             console.log(111, {write, read, writeErr})
@@ -54,7 +54,7 @@ export default {
                 `
                 return ...
                 `,
-                arg
+                arg,
               ],
             )
             console.log(111, res)
@@ -82,9 +82,10 @@ export default {
           name: `js 读取线上文件为 buffer`,
           fn: async function () {
             const response = await fetch(`http://baidu.com/favicon.ico`)
-            const reader = response.body.getReader();
+            const reader = response.body.getReader()
+            // eslint-disable-next-line no-constant-condition
             while (true) {
-              const { done, value } = await reader.read();
+              const { done, value } = await reader.read()
               console.log(`value`, value)
               if(value) {
                 const json = {
@@ -100,13 +101,13 @@ export default {
                     string.save("D:/git2/sys-ui/win-api/dist/out-2.ico", buffer)
                     return buffer
                     `,
-                    json
+                    json,
                   ],
                 )
                 console.log(111, {write, writeErr})
               }
               if (done) {
-                break;
+                break
               }
             }
 
@@ -115,22 +116,22 @@ export default {
         {
           name: `创建目录`,
           async fn() {
-            const dir = "C:/my/";
+            const dir = `C:/my/`
             vm.res = await ws.call(`run`, [
               `
                         var arg = ...
                         fsys.createDir(arg)
                         `,
               dir,
-            ]);
-            console.log(`vm.res`, vm.res);
+            ])
+            console.log(`vm.res`, vm.res)
           },
         },
         {
           name: `下载文件`,
           async fn() {
             const url =
-              "https://download.microsoft.com/download/7/4/A/74A33AB3-B6F3-435D-8E3E-0A9FD574347F/services-on-server-install-worksheet.xlsx";
+              `https://download.microsoft.com/download/7/4/A/74A33AB3-B6F3-435D-8E3E-0A9FD574347F/services-on-server-install-worksheet.xlsx`
             vm.res = await ws.call(`run`, [
               `
                         var arg = ...
@@ -138,20 +139,20 @@ export default {
                         return remoteFile.download()
                         `,
               url,
-            ]);
+            ])
           },
         },
         {
           name: `定位文件`,
           async fn() {
-            const url = "C:/my/services-on-server-install-worksheet.xlsx";
+            const url = `C:/my/services-on-server-install-worksheet.xlsx`
             vm.res = await ws.call(`run`, [
               `
                         var arg = ...
                         process.exploreSelect(arg);
                         `,
               url,
-            ]);
+            ])
           },
         },
         {
@@ -169,7 +170,7 @@ export default {
                         );
                         return data
                         `,
-            ]);
+            ])
           },
         },
         {
@@ -179,7 +180,7 @@ export default {
               `
                         process.execute("C:/my/services-on-server-install-worksheet.xlsx")
                         `,
-            ]);
+            ])
           },
         },
         {
@@ -189,7 +190,7 @@ export default {
               `
                         process.execute("notepad")
                         `,
-            ]);
+            ])
           },
         },
         {
@@ -200,100 +201,100 @@ export default {
                         import process.popen
                         process.popen("cmd /k rd /s /q C:\\my")
                         `,
-            ]);
+            ])
           },
         },
         {
           name: `弹窗`,
           async fn() {
-            main.win.msgbox(`hello`);
+            main.win.msgbox(`hello`)
           },
         },
         {
           name: `退出`,
           async fn() {
-            main.win.quitMessage();
+            main.win.quitMessage()
           },
         },
         /* test the writeText method of Api.clipboard */
         {
           name: `writeText`,
           async fn() {
-            await Neutralino.clipboard.writeText('write test')
+            await Neutralino.clipboard.writeText(`write test`)
           },
         },
         {
-          name: "readText",
+          name: `readText`,
           async fn() {
             const text = await Neutralino.clipboard.readText()
             console.log(text)
           },
         },
         {
-          name: "filesystem.createDirectory",
+          name: `filesystem.createDirectory`,
           async fn() {
-            const value =  await Neutralino.filesystem.createDirectory("./newDirectory")
+            const value =  await Neutralino.filesystem.createDirectory(`./newDirectory`)
             // const value =  await Neutralino.filesystem.createDirectory("./newDirectory/a/b")
             console.log(value)
-          }
+          },
         },
         {
-          name: "filesystem.remove",
+          name: `filesystem.remove`,
           async fn(){
-            const value = await Neutralino.filesystem.remove("./newDirectory")
+            const value = await Neutralino.filesystem.remove(`./newDirectory`)
             console.log(value)
-          }
+          },
         },
         {
-          name: "filesystem.writeFile",
+          name: `filesystem.writeFile`,
           async fn(){
-           await Neutralino.filesystem.writeFile("test.txt", '123')
-           
-          }
+           await Neutralino.filesystem.writeFile(`test.txt`, `123`)
+
+          },
         },
         {
-          name: "filesystem.appendFile",
+          name: `filesystem.appendFile`,
           async fn(){
-            const data = await Neutralino.filesystem.appendFile("test.txt", '456')
+            const data = await Neutralino.filesystem.appendFile(`test.txt`, `456`)
             console.log(data)
-          }
+          },
         },
         {
-          name: "filesystem.readFile",
+          name: `filesystem.readFile`,
           async fn(){
-            const data = await Neutralino.filesystem.readFile("test.txt")
+            const data = await Neutralino.filesystem.readFile(`test.txt`)
             console.log(data)
-          }
+          },
         },
         {
-          name: "filesystem.readBinaryFile",
+          name: `filesystem.readBinaryFile`,
           async fn(){
-            const data = await Neutralino.filesystem.readBinaryFile("test.txt")
-            let view = new Uint8Array(data);
-            console.log('Binary content: ', view);
-          }
+            const data = await Neutralino.filesystem.readBinaryFile(`test.txt`)
+            let view = new Uint8Array(data)
+            console.log(`Binary content: `, view)
+          },
         },
         {
-          name: "filesystem.writeBinaryFile",
+          name: `filesystem.writeBinaryFile`,
           async fn(){
-            let rawBin = new ArrayBuffer(1);
-            let view = new Uint8Array(rawBin);
-            view[0] = 64; // 将 ASCII '@' 保存到二进制文件中
-            await Neutralino.filesystem.writeBinaryFile("test.txt", rawBin)
-            const readRes = await Neutralino.filesystem.readFile("test.txt")
+            let rawBin = new ArrayBuffer(1)
+            let view = new Uint8Array(rawBin)
+            view[0] = 64 // 将 ASCII '@' 保存到二进制文件中
+            await Neutralino.filesystem.writeBinaryFile(`test.txt`, rawBin)
+            const readRes = await Neutralino.filesystem.readFile(`test.txt`)
             console.log(`readRes`, readRes)
-          }
+          },
         },
-      
-      ]
+
+      ],
     }
   },
   watch: {
     res(newVal, oldVal) {
       if (typeof newVal === `object`) {
-        let [a, b] = newVal;
-        this.res = [`是否执行失败: ${a}`, `返回值: ${b}`].join(`\n`);
+        let [a, b] = newVal
+        this.res = [`是否执行失败: ${a}`, `返回值: ${b}`].join(`\n`)
       }
-    }
+    },
   },
 }
