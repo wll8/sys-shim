@@ -448,8 +448,8 @@ new Sys(`ws://localhost:7788`).then(async main => {
   - [ ] app.writeProcessOutput
   - [ ] app.writeProcessError
 - Neutralino.clipboard
-  - [ ] clipboard.writeText
-  - [ ] clipboard.readText
+  - [x] clipboard.writeText
+  - [x] clipboard.readText
 - Neutralino.computer
 
 - Neutralino.debug
@@ -464,16 +464,16 @@ new Sys(`ws://localhost:7788`).then(async main => {
 
 - Neutralino.os
   - [x] os.execCommand
-  - [ ] os.spawnProcess
+  - [x] os.spawnProcess
   - [ ] os.updateSpawnedProcess
   - [ ] os.getSpawnedProcesses
   - [x] os.getEnv
   - [x] os.getEnvs
-  - [ ] os.showOpenDialog
-  - [ ] os.showSaveDialog
-  - [ ] os.showFolderDialog
+  - [x] os.showOpenDialog
+  - [x] os.showSaveDialog
+  - [x] os.showFolderDialog
   - [ ] os.showNotification
-  - [ ] os.showMessageBox
+  - [x] os.showMessageBox
   - [ ] os.setTray
   - [ ] os.getPath
   - [ ] os.open
