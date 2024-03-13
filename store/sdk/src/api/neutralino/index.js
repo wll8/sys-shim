@@ -139,6 +139,44 @@ class Api {
     }) => {
       return (await this.base.native.fsys.dlg.dir(options.defaultPath, undefined, title))[1];
     },
+    /**
+     * @see https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebox
+     */
+    showMessageBox: async (title, content, choice = `OK`, icon = `INFO`) => {
+      const map = {
+        choice: {
+          OK: 0x00000000,
+          OK_CANCEL: 0x00000001,
+          YES_NO: 0x00000004,
+          YES_NO_CANCEL: 0x00000003,
+          RETRY_CANCEL: 0x00000005,
+          ABORT_RETRY_IGNORE: 0x00000002,
+        },
+        icon: {
+          INFO: 0x00000040,
+          WARNING: 0x00000030,
+          ERROR: 0x00000010,
+          QUESTION: 0x00000020,
+        },
+        // 返回值
+        value: {
+          ABORT: 3,
+          CANCEL: 2,
+          CONTINUE: 11,
+          IGNORE: 5,
+          NO: 7,
+          OK: 1,
+          RETRY: 4,
+          TRYAGAIN: 10,
+          YES: 6,
+        },
+      }
+      // 返回 number
+      const val = (await this.base.native.win.msgbox(content, title, map.choice[choice] | map.icon[icon] ))[1]
+      // 根据 number 获取 key
+      const key = Object.entries(map.value).find(([, v]) => v === val)[0]
+      return key
+    },
   }
   computer = {
     getOSInfo: async () => {
