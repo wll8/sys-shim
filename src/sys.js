@@ -1,5 +1,5 @@
-import proxy from './proxy.js'
-import Neutralino from './api/neutralino/index.js'
+import proxy from '@/proxy.js'
+import Neutralino from '@/api/neutralino/index.js'
 let lib = {
   encoder: undefined,
   decoder: undefined,
