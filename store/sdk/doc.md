@@ -475,8 +475,8 @@ new Sys(`ws://localhost:7788`).then(async main => {
   - [ ] os.showNotification
   - [x] os.showMessageBox
   - [ ] os.setTray
-  - [ ] os.getPath
-  - [ ] os.open
+  - [x] os.getPath
+  - [x] os.open
 - Neutralino.storage
 
 - Neutralino.updater
