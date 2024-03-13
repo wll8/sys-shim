@@ -1,6 +1,6 @@
 import * as RPCWebSocket from 'rpc-websockets'
 import util from 'util'
-import SysRef from './sys.js'
+import SysRef from '@/sys.js'
 
 globalThis.ext = globalThis.ext || JSON.parse(globalThis.process.env.ext || `{}`)
 

@@ -1,3 +1,7 @@
+import Clipboard from "@/api/neutralino/core/clipboard.js"
+import Filesystem from "@/api/neutralino/core/filesystem.js"
+
+
 async function init() {
   console.log(`this`, this)
   Object.assign(globalThis, {
