@@ -177,6 +177,31 @@ class Api {
       const key = Object.entries(map.value).find(([, v]) => v === val)[0]
       return key
     },
+    /**
+     * @see https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shgetknownfolderpath
+     */
+    getPath: async (name) => {
+      const map = {
+        name: {
+          config: `3EB685DB-65F9-4CF6-A03A-E3EF65729F3D`,
+          data: `3EB685DB-65F9-4CF6-A03A-E3EF65729F3D`,
+          cache: `F1B32785-6FBA-4FCF-9D55-7B8E7F157091`,
+          documents: `FDD39AD0-238F-46AF-ADB4-6C85480369C7`,
+          pictures: `33E28130-4E1E-4676-835A-98395C3BC3BB`,
+          music: `4BD8D571-6D19-48D3-BE97-422220080E43`,
+          video: `18989B1D-99B5-455B-841C-AB7C74E4DDFC`,
+          downloads: `374DE290-123F-4565-9164-39C4925E467B`,
+          savedGames1: `4C5C32FF-BB9D-43b0-B5B4-2D72E54EAAA4`,
+          savedGames2: `4C5C32FF-BB9D-43b0-B5B4-2D72E54EAAA4`,
+        },
+      }
+      const [err, val] = await this.base.native.fsys.knownFolder(map.name[name])
+      return val
+    },
+    open: async (url) => {
+      const [err, val] = await this.base.native.process.openUrl(url)
+      return val
+    },
   }
   computer = {
     getOSInfo: async () => {
