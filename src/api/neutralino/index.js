@@ -87,7 +87,7 @@ class Api {
         stdIn: undefined, // todo
         cwd: undefined,
       }) => {
-        const [err, res] = await window.main.ws.call(`run`, [`
+        const [err, res] = await globalThis.main.ws.call(`run`, [`
           var cmd, options = ...
           console.log(11)
           var back = process.workDir
