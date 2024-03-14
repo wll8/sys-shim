@@ -285,6 +285,13 @@ export default {
             console.log(`readRes`, readRes)
           },
         },
+        {
+          name: `os.open`,
+          async fn(){
+            const res = await Neutralino.os.open(`https://baidu.com`)
+            console.log(`res`, res)
+          },
+        },
 
       ],
     }
