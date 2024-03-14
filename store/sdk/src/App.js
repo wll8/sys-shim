@@ -4,9 +4,9 @@
 const sleep = time => new Promise(resolve => setTimeout(resolve,time))
 export default {
   data() {
-    const main = window.main
+    const main = globalThis.main
     const ws = main.ws
-    window.ws = ws
+    globalThis.ws = ws
     const vm = this
     return {
       res: ``,

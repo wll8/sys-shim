@@ -7,7 +7,7 @@
   </head>
   <script>
     new Sys().then(async main => {
-      window.main = main
+      globalThis.main = main
       main.form.show()
     })
   </script>
