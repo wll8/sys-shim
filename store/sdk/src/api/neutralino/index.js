@@ -1,3 +1,6 @@
+import Clipboard from "@/api/neutralino/core/clipboard.js"
+import Filesystem from "@/api/neutralino/core/filesystem.js"
+
 async function init() {
   console.log(`this`, this)
   Object.assign(globalThis, {
@@ -39,6 +42,12 @@ async function init() {
 class Api {
   constructor(base) {
     this.base = base
+
+    // injected clipboard
+    this.clipboard = new Clipboard(base)
+    this.filesystem = new Filesystem(base)
+
+    // return
     return new Promise(async (resolve) => {
       await init.apply(this)
       resolve(this)
