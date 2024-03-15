@@ -18,6 +18,9 @@ module.exports = {
   rules: {
     "no-var": `error`,
     "spaced-comment": `error`,
+    "eol-last": [`error`, `always`],
+    "linebreak-style":[`error`, `unix`],
+    "no-multiple-empty-lines":[`error`, { "max": 2, "maxEOF": 0 }],
     "no-trailing-spaces": `error`,
     "comma-dangle": [`error`, `always-multiline`],
     "semi": [
