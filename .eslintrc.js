@@ -14,6 +14,7 @@ module.exports = {
   ignorePatterns: [`dist`, `win-api/res`],
   globals: {
     Neutralino: `writeable`,
+    chrome: `writeable`,
   },
   rules: {
     "no-var": `error`,

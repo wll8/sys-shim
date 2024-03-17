@@ -2,7 +2,12 @@ import * as RPCWebSocket from 'rpc-websockets'
 import util from 'util'
 import SysRef from '@/sys.js'
 
-globalThis.ext = globalThis.ext || JSON.parse(globalThis.process.env.ext || `{}`)
+try {
+  globalThis.ext = globalThis.ext || JSON.parse(globalThis.process.env._ext)
+  delete globalThis.process.env._ext
+} catch (error) {
+  // ...
+}
 
 const lib = {
   encoder: new (util.TextEncoder)(`utf-8`),
@@ -12,8 +17,8 @@ const lib = {
 class Sys extends SysRef {
   constructor(wsUrl) {
     return new Promise(async (resolve) => {
-      wsUrl = wsUrl || `${await globalThis.ext.wsUrl}?token=${await globalThis.ext.token }`
-      const ws = new RPCWebSocket.Client(await wsUrl)
+      wsUrl = wsUrl || `${globalThis.ext.wsUrl}?token=${globalThis.ext.token }`
+      const ws = new RPCWebSocket.Client(wsUrl)
       const that = await super(ws, lib)
       resolve(that)
     })
