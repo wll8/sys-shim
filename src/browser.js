@@ -2,7 +2,7 @@ import * as RPCWebSocket from 'rpc-websockets/dist/index.browser-bundle.js'
 import SysRef from '@/sys.js'
 
 // 当在 webview 中打开时, 有 ext 对象
-globalThis.ext = new Promise(async () => JSON.parse(await (globalThis.ext || `{}`)))
+globalThis.ext = new Promise(async (resolve) => resolve(JSON.parse(await (globalThis.ext || `{}`))))
 
 const lib = {
   encoder: new globalThis.TextEncoder(),
