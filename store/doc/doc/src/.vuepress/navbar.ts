@@ -17,4 +17,8 @@ export default navbar([
     text: "路线图",
     link: "/docs/roadmap"
   },
+  {
+    text: "贡献",
+    link: "/docs/join/"
+  },
 ]);
