@@ -1,14 +1,14 @@
 import * as RPCWebSocket from 'rpc-websockets/dist/index.browser-bundle.js'
 import SysRef from '@/sys.js'
 
-new Promise(async (resolve) => {
+globalThis.ext = globalThis.ext || new Promise(async (resolve) => {
   try {
-    globalThis.ext = globalThis.ext || JSON.parse(await globalThis._ext)
+    globalThis.ext = JSON.parse(await globalThis._ext)
     delete globalThis._ext
   } catch (error) {
     // ...
   }
-  resolve()
+  resolve(globalThis.ext)
 })
 
 const lib = {
@@ -19,6 +19,7 @@ const lib = {
 class Sys extends SysRef {
   constructor(wsUrl) {
     return new Promise(async (resolve) => {
+      globalThis.ext = await globalThis.ext
       wsUrl = wsUrl || `${globalThis.ext.wsUrl}?token=${globalThis.ext.token }`
       const ws = new RPCWebSocket.Client(wsUrl)
       const that = await super(ws, lib)
