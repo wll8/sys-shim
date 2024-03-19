@@ -10,7 +10,6 @@ class Api {
   }) {
     const [err, res] = await globalThis.main.ws.call(`run`, [`
       var cmd, options = ...
-      console.log(11)
       var back = process.workDir
       if(options.cwd) {
         process.workDir = options.cwd
