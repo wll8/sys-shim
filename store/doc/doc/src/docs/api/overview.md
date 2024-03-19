@@ -156,3 +156,25 @@ await main.native.win.msgbox(`hello`)
 - [ ] fsys.path.short(路径) 
 - [ ] fsys.path.validName(路径) 
 
+
+### sys
+  - [ ] sys.getComputerName()
+  - [x] sys.getStartTime()
+  - [ ] sys.getUserName()
+  - [ ] sys.hibernate()
+  - [ ] sys.lock()
+  - [ ] sys.logoff()
+  - [ ] sys.restart()
+  - [ ] sys.setComputerName(计算机名)
+  - [ ] sys.shutdown()
+  - [ ] sys.sleep()
+### sys.cpu
+
+  - [ ] sys.cpu.getBrand() 
+  - [ ] sys.cpu.getFrequence() 
+  - [ ] sys.cpu.getFrequence(true) 
+  - [ ] sys.cpu.getInfo 
+  - [ ] sys.cpu.getInfo() 
+  - [ ] sys.cpu.getInfoByWmi() 
+  - [ ] sys.cpu.getMaxExtFunction() 
+  - [ ] sys.cpu.getVender() 

@@ -28,7 +28,7 @@ await main.native.sys.getStartTime()
 ## sys.restart()
  重启
 
-## sys.setComputerName("计算机名")
+## sys.setComputerName(计算机名)
  修改计算机名,重启后生效
 
 ## sys.shutdown()
