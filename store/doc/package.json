@@ -1,0 +1,12 @@
+{
+  "pageShow": true,
+  "name": "sys-shim-doc",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "node run.js",
+    "main:build": "npx download-cli https://github.com/wll8/sys-shim/releases/download/example/main.exe -o ./"
+  },
+  "dependencies": {
+    "@wll8/process-manager": "^1.0.2"
+  }
+}

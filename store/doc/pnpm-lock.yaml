@@ -1,0 +1,16 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@wll8/process-manager':
+    specifier: ^1.0.2
+    version: 1.0.2
+
+packages:
+
+  /@wll8/process-manager@1.0.2:
+    resolution: {integrity: sha512-k5qOnzPFObhgumenY3RulWGhs1UBAzLv0oucVufQrMvUN9ovysQyGXq0O6KZhR7NFPfIXyloSXEyJOfGdZYeFQ==}
+    dev: false
