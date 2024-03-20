@@ -7,6 +7,7 @@ const preload = `
 if(globalThis.Sys) {
   new globalThis.Sys().then(async main => {
     globalThis.main = main
+    globalThis.native = main.native
     globalThis.Neutralino = await main.api.neutralino()
   })
 } else {

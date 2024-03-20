@@ -8,12 +8,18 @@
 文档属性文档：[https://learn.microsoft.com/zh-cn/windows/win32/fileio/file-attribute-constants](https://learn.microsoft.com/zh-cn/windows/win32/fileio/file-attribute-constants)
 
 ```js
+path = `D:/test/${Date.now()}.txt`
+await native.string.save(path, `hello`)
+
+;[, res1] = await native.fsys.isHidden(path)
+
 // 为文件添加隐藏属性
-await main.native.fsys.attrib(`F:/company-code/tmp/test4/test4-1.txt`, undefined, 0x2)
-/**
- * 返回
-[false, 34]
- */
+await native.fsys.attrib(path, undefined, 0x2)
+;[, res2] = await native.fsys.isHidden(path)
+
+console.log({res1, res2})
+
+// {res1: 0, res2: 2}
 ```
 
 ## fsys.copy
@@ -34,16 +40,15 @@ await main.native.fsys.attrib(`F:/company-code/tmp/test4/test4-1.txt`, undefined
 如果目标路径的父目录可能不存在，请先用 io.createDir 创建该目录
 
 ```js
-await main.native.fsys.copy(`F:/company-code/tmp/test4/test4-1.txt`, `F:/company-code/tmp/test5/`)
-/**
- * 返回
-[false, true]
- */
-await main.native.fsys.copy(`F:/company-code/tmp/test4/test4-1.txt`, `F:/company-code/tmp/test5/test5-1.txt`)
-/**
- * 返回
-[false, true]
- */
+path = `D:/test/${Date.now()}.txt`
+await native.string.save(path, `hello`)
+
+await native.fsys.copy(path, `${path}.copy.txt`)
+;[, res1] = await native.string.load(`${path}.copy.txt`)
+
+console.log({res1})
+
+// {res1: 'hello'}
 ```
 
 ## fsys.createDir(目录路径) 
@@ -52,16 +57,15 @@ await main.native.fsys.copy(`F:/company-code/tmp/test4/test4-1.txt`, `F:/company
 可创建多层目录, 参数二可选 
 
 ```js
-await main.native.fsys.createDir(`F:/company-code/tmp/test`)
-/**
- * 返回
-[false, 'F:\\company-code\\tmp\\test']
- */
-await main.native.fsys.createDir(`F:/company-code/tmp/test/test1/test1-1`)
-/**
- * 返回
- [false, 'F:\\company-code\\tmp\\test\\test1\\test1-1']
- */
+path = `D:/test/${Date.now()}`
+
+;[, res1] = await native.fsys.isDir(path)
+await native.fsys.createDir(path)
+;[, res2] = await native.fsys.isDir(path)
+
+console.log({res1, res2})
+
+// {res1: false, res2: 16}
 ```
 
 ## fsys.createParentDir(路径)
@@ -69,16 +73,13 @@ await main.native.fsys.createDir(`F:/company-code/tmp/test/test1/test1-1`)
 创建指定路径的父目录.
 
 ```js
-await main.native.fsys.createParentDir(`F:/company-code/tmp/test2`)
-/**
- * 返回
-[false, 'F:\\company-code\\tmp\\']
- */
-await main.native.fsys.createParentDir(`F:/company-code/tmp/test2/test2-1`)
-/**
- * 返回
-[false, 'F:\\company-code\\tmp\\test2\\']
- */
+path = `D:/test/${Date.now()}/test`
+
+;[, res1] = await native.fsys.createParentDir(path)
+
+console.log({res1})
+
+// {res1: 'D:\\test\\1710902407231\\'}
 ```
 
 ## fsys.delete
@@ -92,11 +93,17 @@ await main.native.fsys.createParentDir(`F:/company-code/tmp/test2/test2-1`)
 此函数失败返回 false 时可用 fsys.opError 获取错误代码
 
 ```js
-await main.native.fsys.delete(`F:/company-code/tmp/test4`)
-/**
- * 返回
- [false, true]
- */
+path = `D:/test/${Date.now()}.txt`
+await native.string.save(path, `hello`)
+;[, res1] = await native.string.load(path)
+
+await native.fsys.delete(path)
+
+;[, res2] = await native.string.load(path)
+
+console.log({res1, res2})
+
+// {res1: 'hello', res2: undefined}
 ```
 
 ## fsys.deleteEx
