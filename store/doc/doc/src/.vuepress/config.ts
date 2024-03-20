@@ -26,7 +26,7 @@ export default defineUserConfig({  head: [
       server: {}
     },
   }),
-  base: "/blogs/",
+  base: "/",
 
   lang: "zh-CN",
   title: "sys-shim",

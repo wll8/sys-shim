@@ -60,7 +60,7 @@ await main.native.win.msgbox(`hello`)
 - 格式修正：例如参数逗号后空格、参数语义化等。
 - 对于难理解的概念进行适当批注。
 
-此 todo 用于标记工作进度和需求。
+此 todo 用于标记工作进度和需求，为了避免工作冲突，建议`分模块进行工作`，例如 fsys 由 A 完成，fsys.path 由 B 完成。
 
 -  `// 跳过` 表示暂无需关注，不予理睬。
 - 已完成文档和验证的，使用 `- [x]` 标记。
@@ -156,3 +156,50 @@ await main.native.win.msgbox(`hello`)
 - [x] fsys.path.short(路径) 
 - [x] fsys.path.validName(路径) 
 
+
+### sys
+  - [ ] sys.getComputerName()
+  - [x] sys.getStartTime()
+  - [ ] sys.getUserName()
+  - [ ] sys.hibernate()
+  - [ ] sys.lock()
+  - [ ] sys.logoff()
+  - [ ] sys.restart()
+  - [ ] sys.setComputerName(计算机名)
+  - [ ] sys.shutdown()
+  - [ ] sys.sleep()
+
+### sys.cpu
+
+  - [ ] sys.cpu.getBrand() 
+  - [ ] sys.cpu.getFrequence() 
+  - [ ] sys.cpu.getFrequence(true) 
+  - [ ] sys.cpu.getInfo 
+  - [ ] sys.cpu.getInfo() 
+  - [ ] sys.cpu.getInfoByWmi() 
+  - [ ] sys.cpu.getMaxExtFunction() 
+  - [ ] sys.cpu.getVender() 
+
+### win.clip
+
+  - [ ] win.clip.formats() 
+  - [ ] win.clip.read() 
+  - [ ] win.clip.readBitmap() 
+  - [ ] win.clip.readUnicode() 
+  - [ ] win.clip.write() 
+  - [ ] win.clip.writeBitmap 
+  - [ ] win.clip.writeBitmap(位图句柄, 接管位图, 清空剪贴板) 
+  - [ ] win.clip.png.read() 
+  - [ ] win.clip.png.write(剪贴板数据, 是否清空剪贴板) 
+  - [ ] win.clip.html() 
+  - [ ] win.clip.gif.write() 
+  - [ ] win.clip.file.oleCopy() 
+  - [ ] win.clip.file.read() 
+  - [ ] win.clip.file.write(文件路径) 
+  - [ ] win.clip.file.write(文件路径, "copy") 
+  - [ ] win.clip.file.write(文件路径, "move") 
+
+### inet.httpFile 
+  - [ ] inet.httpFile 
+  - [ ] inet.httpFile() 
+  - [ ] inet.httpFile(URL, 存储路径, 配置文件路径, userAgent, proxy, ...) 

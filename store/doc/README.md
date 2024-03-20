@@ -6,6 +6,7 @@
 下载 [main.exe](https://github.com/wll8/sys-shim/releases/download/example/main.exe) 到根目录，运行以下命令：
 
 ``` bat
+pnpm i
 cd doc
 pnpm i
 cd ..
