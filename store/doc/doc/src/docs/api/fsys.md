@@ -410,6 +410,101 @@ await main.native.fsys.longpath("test3-1.txt")
  */
 ```
 
+## fsys.move
+
+移动文件或目录。
+此函数失败返回 false 时可用 fsys.opError 获取错误代码
+
+### fsys.move(源路径, 目标路径)
+
+移动文件或目录,
+源路径参数可以是多个路径组成的数组,其他参数可选。
+如果目标路径已存在或源路径含通配符则移动到目标目录下面,
+否则复制文件或目录到参数@2指定的目标路径。 
+
+如果目标路径的父目录可能不存在，请先用 io.createDir 创建该目录 
+
+```js
+await main.native.fsys.move("C:/sys-shim-code/tmp/test-move1/test-move1-1.txt", "C:/sys-shim-code/tmp/test-move2/")
+/**
+ * 返回
+ [false, true]
+ */
+```
+
+## fsys.rename
+
+重命名文件或目录,
+此函数失败返回 false 时可用 fsys.opError 获取错误代码
+
+### fsys.rename(源路径, 目标路径, FOF选项)
+
+重命名文件或目录,其他参数可选 
+FOF选项为 0 或 不指定该选项但 fsys.opFlags 为 0
+则显示操作界面与错误信息
+
+```js
+await main.native.fsys.rename("C:/sys-shim-code/tmp/test-rename/test-rename1.txt", "C:/sys-shim-code/tmp/test-rename/test-rename2.txt")
+/**
+ * 返回
+ [false, true]
+ */
+```
+## fsys.replace(文件路径, 查找串, 替换串, 替换次数)
+
+替换文件内容,
+查找串支持模式匹配,\支持所有string.replace函数支持的替换串格式,
+不指定替换次数则替换所有匹配串 
+
+成功返回替换次数，否则返回 null
+
+* 使用git bash 查看文件内容
+```shell
+cat C:/sys-shim-code/tmp/test-replace/test-replace1.txt
+test-replace1 # 返回文件内容
+```
+
+* 修改文件内容
+```js
+await main.native.fsys.replace("C:/sys-shim-code/tmp/test-replace/test-replace1.txt", "replace", "rp")
+/**
+ * 返回
+ [false, 1]
+ */
+```
+* 修改文件内容后再次使用git bash 查看文件内容
+```shell
+cat C:/sys-shim-code/tmp/test-replace/test-replace1.txt
+test-rp1 # 返回文件内容 
+```
+
+* 使用git bash 查看文件内容
+```shell
+cat C:/sys-shim-code/tmp/test-replace/test-replace1.txt
+test-replace2 
+test-replace2
+test-replace2
+test-replace2
+```
+  
+* 修改文件内容
+```js
+await main.native.fsys.replace("C:/sys-shim-code/tmp/test-replace/test-replace2.txt", "replace", "rp", 3)
+/**
+ * 返回
+ [false, 3]
+ */
+```
+
+* 修改文件内容后再次使用git bash 查看文件内容
+```shell
+cat C:/sys-shim-code/tmp/test-replace/test-replace1.txt
+test-rp2
+test-rp2
+test-rp2
+test-replace2
+```
+
 ## fsys.setCurDir(目录)
 
 设置当前目录。 
@@ -746,7 +841,16 @@ await main.native.fsys.path.relative("F:/company-code/tmp/", "F:/company-code/",
 路径属性可为0,或 _FILE_ATTRIBUTE_DIRECTORY,可省略
 
 ```js
-await main.native.fsys.path.relativeTo("F:/company-code/tmp/", "F:/company-code/")
+await main.native.fsys.path.relativeTo("C:/sys-shim-code/tmp", "C:/sys-shim-code/")
+/**
+ * 返回
+ [false, '..\\']
+ */
+await main.native.fsys.path.relativeTo("C:/sys-shim-code/tmp", "C:/sys-shim-code/tmp/test")
+/**
+ * 返回
+ [false, '.\\test']
+ */
 ```
 
 ### fsys.path.removeBackslash(路径)
