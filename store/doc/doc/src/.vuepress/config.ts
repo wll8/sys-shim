@@ -27,7 +27,7 @@ export default defineUserConfig({  head: [
       server: {}
     },
   }),
-  base: "/",
+  base: "/sys-shim-doc/",
 
   lang: "zh-CN",
   title: "sys-shim",
