@@ -8,7 +8,7 @@
 文档属性文档：[https://learn.microsoft.com/zh-cn/windows/win32/fileio/file-attribute-constants](https://learn.microsoft.com/zh-cn/windows/win32/fileio/file-attribute-constants)
 
 ```js
-path = `D:/test/${Date.now()}.txt`
+path = `C:/sys-shim-code/tmp/${Date.now()}.txt`
 await native.string.save(path, `hello`)
 
 ;[, res1] = await native.fsys.isHidden(path)
@@ -40,11 +40,15 @@ console.log({res1, res2})
 如果目标路径的父目录可能不存在，请先用 io.createDir 创建该目录
 
 ```js
-path = `D:/test/${Date.now()}.txt`
-await native.string.save(path, `hello`)
+path = `C:/sys-shim-code/tmp/test/`
+filename = `${Date.now()}.txt`
+filepath = path + filename
 
-await native.fsys.copy(path, `${path}.copy.txt`)
-;[, res1] = await native.string.load(`${path}.copy.txt`)
+await native.fsys.createDir(path)
+await native.string.save(filepath, `hello`)
+
+await native.fsys.copy(filepath, `${filepath}.copy.txt`)
+;[, res1] = await native.string.load(`${filepath}.copy.txt`)
 
 console.log({res1})
 
@@ -57,7 +61,7 @@ console.log({res1})
 可创建多层目录, 参数二可选 
 
 ```js
-path = `D:/test/${Date.now()}`
+path = `C:/sys-shim-code/tmp/${Date.now()}`
 
 ;[, res1] = await native.fsys.isDir(path)
 await native.fsys.createDir(path)
@@ -73,13 +77,13 @@ console.log({res1, res2})
 创建指定路径的父目录.
 
 ```js
-path = `D:/test/${Date.now()}/test`
+path = `C:/sys-shim-code/tmp/${Date.now()}/test`
 
 ;[, res1] = await native.fsys.createParentDir(path)
 
 console.log({res1})
 
-// {res1: 'D:\\test\\1710902407231\\'}
+// {res1: 'C:\\sys-shim-code\\tmp\\1710905499024\\'}
 ```
 
 ## fsys.delete
@@ -93,7 +97,8 @@ console.log({res1})
 此函数失败返回 false 时可用 fsys.opError 获取错误代码
 
 ```js
-path = `D:/test/${Date.now()}.txt`
+path = `C:/sys-shim-code/tmp/test/${Date.now()}.txt`
+await native.fsys.createParentDir(path)
 await native.string.save(path, `hello`)
 ;[, res1] = await native.string.load(path)
 
@@ -120,11 +125,18 @@ console.log({res1, res2})
 重启删除文件的顺序与调用时的顺序相同
 
 ```js
-await native.fsys.deleteEx(`F:/company-code/tmp/test4`)
-/**
- * 返回
- [false, true]
- */
+path = `C:/sys-shim-code/tmp/test/${Date.now()}.txt`
+await native.fsys.createParentDir(path)
+await native.string.save(path, `hello`)
+
+;[, res1] = await native.string.load(path)
+
+await native.fsys.deleteEx(path)
+;[, res2] = await native.string.load(path)
+
+console.log({res1, res2})
+
+// {res1: 'hello', res2: undefined}
 ```
 
 ## fsys.formatSize
@@ -144,7 +156,6 @@ await native.fsys.formatSize()
  */
 
 ```
-
 
 ### fsys.formatSize(字节长度)
 
@@ -182,7 +193,7 @@ await native.fsys.formatSize(100, 2)
 很多组件（例如文件对话框）都可能会悄悄改变当前目录
 
 ```js
-await await native.fsys.getCurDir()
+await native.fsys.getCurDir()
 /**
  * 返回
 [false, 'F:\\company-code\\sys-shim-core\\']
@@ -206,7 +217,7 @@ await native.fsys.getDrive()
 无后缀名则返回null空值
 
 ```js
-await native.fsys.getExtensionName("F:/company-code/tmp/test3/test3-1.txt`")
+await native.fsys.getExtensionName("C:/sys-shim-code/tmp/test3-1.txt")
 /**
  * 返回
 [false, 'txt`']
@@ -217,15 +228,17 @@ await native.fsys.getExtensionName("F:/company-code/tmp/test3/test3-1.txt`")
 
 返回路径的所指向的文件名(或目录名称)
 ```js
-await native.fsys.getFileName("F:/company-code/tmp/test3/test3-1.txt`")
+path = "C:/sys-shim-code/tmp/"
+filepath = path + 'test3.txt'
+await native.fsys.getFileName(filepath)
 /**
  * 返回
-[false, 'test3-1.txt`']
+[false, 'test3.txt']
  */
-await native.fsys.getFileName("F:/company-code/tmp/test3`")
+await native.fsys.getFileName(path)
 /**
  * 返回
-[false, 'test3`']
+[false, 'tmp']
  */
 ```
 
@@ -234,15 +247,17 @@ await native.fsys.getFileName("F:/company-code/tmp/test3`")
 返回指定路径的父目录
 
 ```js
-await native.fsys.getParentDir("F:/company-code/tmp/test3/test3-1.txt`")
+path = "C:/sys-shim-code/tmp/test3/"
+filepath = `${path}test3-1.txt`
+await native.fsys.getParentDir(filepath)
 /**
  * 返回
-[false, 'F:/company-code/tmp/test3/']
+[false, 'C:/sys-shim-code/tmp/test3/']
  */
-await native.fsys.getParentDir("F:/company-code/tmp/test3")
+await native.fsys.getParentDir(path)
 /**
  * 返回
-[false, 'F:/company-code/tmp/']
+[false, 'C:/sys-shim-code/tmp/']
  */
 ```
 
@@ -265,10 +280,12 @@ await native.fsys.getTempDir()
 路径转换为名称ID(PIDL)\路径必须存在
 
 ```js
-await native.fsys.idListFromPath("F:/company-code/tmp/test3")
+path = "C://sys-shim-code/tmp/test3"
+await native.fsys.createDir(path)
+await native.fsys.idListFromPath(path)
 /**
  * 返回
-[false, 'pointer: 05552368']
+ [false, 'pointer: 009A9AE8']
  */
 ```
 
@@ -282,15 +299,17 @@ await native.fsys.idListFromPath("F:/company-code/tmp/test3")
 或 string.hex 函数查看
 
 ```js
-await native.fsys.isDir("F:/company-code/tmp/test3")
+path = "C:/sys-shim-code/tmp/test3/"
+filepath = `${path}test3-1.txt`
+await native.fsys.isDir(path)
 /**
  * 返回
  [false, 16]
  */
-await native.fsys.isDir("F:/company-code/tmp/test3/test3-1.txt")
+await native.fsys.isDir(filepath)
 /**
  * 返回
- [false, 0]
+ [false, false]
  */
 ```
 
@@ -301,22 +320,23 @@ await native.fsys.isDir("F:/company-code/tmp/test3/test3-1.txt")
 注意:WIN10 新版存在设为隐藏文件后变只读的问题
 
 ```js
-// 未隐藏文件
-await native.fsys.isHidden("F:/company-code/tmp/test3/test3-1.txt")
-/**
- * 返回
- [false, 0]
- */
+path = `C:/sys-shim-code/tmp/${Date.now()}.txt`
+await native.createParentDir(path)
+await native.string.save(path, `hello`)
 
-// 隐藏文件
-await native.fsys.isHidden("F:/company-code/tmp/test3/test3-2.txt")
-/**
- * 返回
- [false, 2]
- */
+;[, res1] = await native.fsys.isHidden(path)
+
+// 为文件添加隐藏属性
+await native.fsys.attrib(path, undefined, 0x2)
+;[, res2] = await native.fsys.isHidden(path)
+
+console.log({res1, res2})
+
+// {res1: 0, res2: 2}
 
 // 没有创建的文件
-await native.fsys.isHidden("F:/company-code/tmp/test3/test3-2.txt")
+newpath = `C:/sys-shim-code/tmp/${Date.now()}.txt`
+await native.fsys.isHidden(newpath)
 /**
  * 返回
   [false, false]
@@ -329,19 +349,17 @@ await native.fsys.isHidden("F:/company-code/tmp/test3/test3-2.txt")
 调用attrib检查文件是否具有_FILE_ATTRIBUTE_READONLY属性
 
 ```js
-// 判断可读可写文件
-await native.fsys.isReadonly("F:/company-code/tmp/test3/test3-1.txt")
-/**
- * 返回
- [false, 0]
- */
+path = "C:/sys-shim-code/tmp/test3/test3-1.txt"
+await native.fsys.createDir(path)
 
+// 判断可读文件
+;[,res1] = await native.fsys.isReadonly(path)
+// 设置为只读文件
+await native.fsys.attrib(path, undefined, 0x1)
 // 判断只读文件
-await native.fsys.isReadonly("F:/company-code/tmp/test3/test3-4.txt")
-/**
- * 返回
- [false, 1]
- */
+;[,res2] = await native.fsys.isReadonly(path)
+console.log({res1, res2})
+// {res1: 0, res2: 1}
 ```
 
 ## fsys.isSystem(文件路径)
@@ -350,12 +368,17 @@ await native.fsys.isReadonly("F:/company-code/tmp/test3/test3-4.txt")
 调用attrib检查文件是否具有_FILE_ATTRIBUTE_SYSTEM属性
 
 ```js
+path = "C:/sys-shim-code/tmp/test3/test3-2.txt"
+await native.fsys.createDir(path)
+
 // 判断非系统系统文件
-await native.fsys.isSystem("F:/company-code/tmp/test3/test3-1.txt")
-/**
- * 返回
- [false, 0]
- */
+;[,res1] = await native.fsys.isSystem(path)
+
+// 设置为系统文件
+await native.fsys.attrib(path, undefined, 0x4)
+;[,res2] = await native.fsys.isSystem(path)
+console.log({res1, res2})
+// {res1: 0, res2: 4}
 ```
 
 ## fsys.joinpath(根目录, 不定个数子路径)
@@ -384,18 +407,31 @@ await native.fsys.joinpath("C:/", "/test", "/test1-1")
 参数2：模式匹配使用正则表达式语法匹配
 
 ```js
-await native.fsys.list(`F:/company-code/tmp/test3/`, `*?`, '*.txt')
-/**
- * 返回
-[false, 
-[
+path = `C:/sys-shim-code/tmp/test3/`
+filenames = [
   "test3-1.txt",
   "test3-2.txt",
   "test3-4.txt",
   "test3-5.txt"
-],
-[],
-[]
+]
+for (let filename of filenames){
+  await native.fsys.createDir(path)
+  await native.string.save(path+filename, `hello`) 
+}
+[, ...args] = await native.fsys.list(path, `*?`, '*.txt')
+console.log(args)
+/**
+ * 返回
+[
+  // 文件名数组
+  [
+    "test3-1.txt",
+    "test3-2.txt",
+    "test3-4.txt",
+    "test3-5.txt"
+  ], 
+  [], // 子目录数组
+  []  // 全部子目录数组
 ]
  */
 ```
@@ -405,10 +441,11 @@ await native.fsys.list(`F:/company-code/tmp/test3/`, `*?`, '*.txt')
 转换为完整路径,并将短文件名转换为长文件名
 
 ```js
-await native.fsys.longpath("F:/company-code/tmp/test3/test3-1.txt")
+
+await native.fsys.longpath("C:/sys-shim-code/tmp/test3/test3-1.txt")
 /**
  * 返回
- [false, 'F:\\company-code\\tmp\\test3\\test3-1.txt']
+ [false, 'C:/sys-shim-code/tmp/test3/test3-1.txt']
  */
 await native.fsys.longpath("test3-1.txt")
 /**
@@ -432,11 +469,29 @@ await native.fsys.longpath("test3-1.txt")
 如果目标路径的父目录可能不存在，请先用 io.createDir 创建该目录 
 
 ```js
-await native.fsys.move("C:/sys-shim-code/tmp/test-move1/test-move1-1.txt", "C:/sys-shim-code/tmp/test-move2/")
+path = "C:/sys-shim-code/tmp/test-move1/"
+path2 = "C:/sys-shim-code/tmp/test-move2/"
+filename = "test-move1-1.txt"
+filepath = path + filename
+filepath2 = path2 + filename
+// 创建目录
+await native.fsys.createDir(path)
+await native.fsys.createDir(path2)
+
+// 写入文件
+await native.string.save(filepath, "hello")
+// 开始文件不存在
+;[,res1] = await native.string.load(filepath2) 
+// 移动文件
+await native.fsys.move(filepath, path2)
 /**
  * 返回
  [false, true]
  */
+// 移动后文件存在了
+;[,res2] = await native.string.load(filepath2) 
+console.log({res1, res2})
+// {res1: undefined, res2: 'hello'}
 ```
 
 ## fsys.rename
@@ -451,11 +506,26 @@ FOF选项为 0 或 不指定该选项但 fsys.opFlags 为 0
 则显示操作界面与错误信息
 
 ```js
-await native.fsys.rename("C:/sys-shim-code/tmp/test-rename/test-rename1.txt", "C:/sys-shim-code/tmp/test-rename/test-rename2.txt")
+path = "C:/sys-shim-code/tmp/test-rename/"
+filename = path + 'test-rename1.txt'
+refilename = path + 'test-rename2.txt'
+await native.fsys.createDir(path)
+await native.string.save(filename, "hello")
+
+// 表示需要重命名文件不存在
+;[,res1] = await native.string.load(refilename)
+// 重命名文件
+await native.fsys.rename(filename, refilename)
 /**
  * 返回
  [false, true]
  */
+// 文件已经被重命名不存在
+;[,res2] = await native.string.load(filename)
+// 加载已经重命名文件
+;[,res3] = await native.string.load(refilename)
+console.log({res1, res2, res3})
+// {res1: undefined, res2: undefined, res3: 'hello'}
 ```
 ## fsys.replace(文件路径, 查找串, 替换串, 替换次数)
 
@@ -465,51 +535,36 @@ await native.fsys.rename("C:/sys-shim-code/tmp/test-rename/test-rename1.txt", "C
 
 成功返回替换次数，否则返回 null
 
-* 使用git bash 查看文件内容
-```shell
-cat C:/sys-shim-code/tmp/test-replace/test-replace1.txt
-test-replace1 # 返回文件内容
-```
-
-* 修改文件内容
 ```js
-await native.fsys.replace("C:/sys-shim-code/tmp/test-replace/test-replace1.txt", "replace", "rp")
-/**
- * 返回
- [false, 1]
- */
-```
-* 修改文件内容后再次使用git bash 查看文件内容
-```shell
-cat C:/sys-shim-code/tmp/test-replace/test-replace1.txt
-test-rp1 # 返回文件内容 
-```
-
-* 使用git bash 查看文件内容
-```shell
-cat C:/sys-shim-code/tmp/test-replace/test-replace1.txt
-test-replace2 
-test-replace2
-test-replace2
-test-replace2
-```
-  
-* 修改文件内容
-```js
-await native.fsys.replace("C:/sys-shim-code/tmp/test-replace/test-replace2.txt", "replace", "rp", 3)
+path = 'C:/sys-shim-code/tmp/test-replace/test-replace1.txt'
+await native.fsys.createParentDir(path)
+await native.string.save(path, "replace\nreplace\nreplace")
+;[,res1] = await native.string.load(path)
+await native.fsys.replace(path, "replace", "rp")
 /**
  * 返回
  [false, 3]
  */
+;[,res2] = await native.string.load(path)
+console.log({res1, res2})
+// {res1: 'replace\nreplace\nreplace', res2: 'rp\nrp\nrp'}
 ```
 
-* 修改文件内容后再次使用git bash 查看文件内容
-```shell
-cat C:/sys-shim-code/tmp/test-replace/test-replace1.txt
-test-rp2
-test-rp2
-test-rp2
-test-replace2
+* 替换并设置替换次数
+
+```js
+path = "C:/sys-shim-code/tmp/test-replace/test-replace2.txt"
+await native.fsys.createParentDir(path)
+await native.string.save(path, "replace\nreplace\nreplace\nreplace")
+;[,res1] = await native.string.load(path)
+await native.fsys.replace(path, "replace", "rp", 3)
+/**
+ * 返回
+ [false, 3]
+ */
+;[,res2] = await native.string.load(path)
+console.log({res1, res2})
+// {res1: 'replace\nreplace\nreplace\nreplace', res2: 'rp\nrp\nrp\nreplace'}
 ```
 
 ## fsys.setCurDir(目录)
@@ -544,16 +599,17 @@ await native.fsys.getCurDir()
 如无必要，不建议使用或依赖此函数，正确使用 process 等可以自动 
 转义路径参数中的空格
 
+短路径与长路径的区别: [https://zhidao.baidu.com/question/458582247.html](https://zhidao.baidu.com/question/458582247.html)
+
 ```js
-await native.fsys.shortpath("F:/company-code/sys-shim-core/src/api")
+// 创建路径
+path = 'C:/sys-shim-code/tmp/program files/'
+
+await native.fsys.createDir(path)
+await native.fsys.shortpath(path)
 /**
  * 返回
- [false, 'F:\\company-code\\sys-shim-core\\src\\api']
- */
-await native.fsys.shortpath("../src/api")
-/**
- * 返回
- [false, 'F:\\company-code\\sys-shim-core\\src\\api']
+  [false, 'C:\\SYS-SH~1\\tmp\\PROGRA~1\\']
  */
 ```
 
@@ -653,15 +709,18 @@ await native.fsys.path.canonicalize(`C:/a/b/./c/../`)
 应使用fsys.fileInfo函数
 
 ``` js
+path = 'C:/sys-shim-code/tmp/test-path-cmp'
+path1 = 'C:/sys-shim-code/tmp/test-path-cmp/../test-path-cmp/'
+await native.fsys.createDir(path)
 // 路径指向同一个
-await native.fsys.path.cmp(`./src`, `F:/company-code/sys-shim-core/src`)
+await native.fsys.path.cmp(path, path1)
 /**
  * 返回
  [false, 0]
  */
 
 // 路径执行不同位置
-await native.fsys.path.cmp(`./src`, `F:/company-code/sys-shim-core`)
+await native.fsys.path.cmp(path, './src')
 /**
  * 返回
  [false, 92]
@@ -675,10 +734,10 @@ await native.fsys.path.cmp(`./src`, `F:/company-code/sys-shim-core`)
 在比较以前自动对路径归一化处理,忽略大小写
 
 ``` js
-await native.fsys.path.commonPrefix(`F:/company-code/tmp/test`, `F:/company-code/tmp/test2`)
+await native.fsys.path.commonPrefix(`C:/sys-shim-code/tmp/test`, `C:/sys-shim-code/tmp/test2`)
 /**
  * 返回
- [false, 'F:\\company-code\\tmp\\']
+ [false, 'C:\\sys-shim-code\\tmp\\']
  */
 ```
 
@@ -687,17 +746,17 @@ await native.fsys.path.commonPrefix(`F:/company-code/tmp/test`, `F:/company-code
 截断路径来适合一定数目的像素
 
 ``` js
-await native.fsys.path.compact(`F:/company-code/tmp/test/test1-1`)
+await native.fsys.path.compact(`C:/sys-shim-code/tmp/test/test1-1`)
 /**
  * 返回
  [false, 'F:/company-code/tmp/test/test1-1']
  */
-await native.fsys.path.compact(`F:/company-code/tmp/test/test1-1`, 0)
+await native.fsys.path.compact(`C:/sys-shim-code/tmp/test/test1-1`, 0)
 /**
  * 返回
  [false, '...\\test1-1...']
  */
-await native.fsys.path.compact(`F:/company-code/tmp/test/test1-1`, 200)
+await native.fsys.path.compact(`C:/sys-shim-code/tmp/test/test1-1`, 200)
 /**
  * 返回
  [false, 'F:/company-c...\\test1-1']
@@ -710,20 +769,20 @@ await native.fsys.path.compact(`F:/company-code/tmp/test/test1-1`, 200)
 检测路径尾部是否有反斜杠
 
 ```js
-await native.fsys.path.eofBackslash(`F:/company-code/tmp/test/test1-1`)
+await native.fsys.path.eofBackslash(`C:/sys-shim-code/tmp/test/test1-1/`)
 /**
  * 返回
- [false, 33]
+ [false, 34]
  */
-await native.fsys.path.eofBackslash(`F:/company-code/tmp/test\\test1-1`)
+await native.fsys.path.eofBackslash(`C:/sys-shim-code/tmp/test\\test1-1`)
 /**
  * 返回
  [false]
  */
-await native.fsys.path.eofBackslash(`F:/company-code/tmp/test\\test1-1\\`)
+await native.fsys.path.eofBackslash(`C:/sys-shim-code/tmp/test\\test1-1\\`)
 /**
  * 返回
- [false, 33]
+ [false, 34]
  */
 ```
 
@@ -733,10 +792,10 @@ await native.fsys.path.eofBackslash(`F:/company-code/tmp/test\\test1-1\\`)
 否则返回null
 
 ```js
-await native.fsys.path.full(`F:/company-code/tmp/test/test1-1`)
+await native.fsys.path.full(`C:/sys-shim-code/tmp/test/test1-1/`)
 /**
  * 返回
- [false, 'F:/company-code/tmp/test/test1-1']
+ [false, 'C:/sys-shim-code/tmp/test/test1-1/']
  */
 await native.fsys.path.full(`./src`)
 /**
@@ -775,16 +834,23 @@ await native.fsys.path.full("./src", "test")
 或者路径路径以斜杠、反斜杠结束返回真
 
 ```js
-await native.fsys.path.isDir("F:/company-code/tmp/test")
+path = "C:/sys-shim-code/tmp/test"
+filenamepath = "C:/sys-shim-code/tmp/test/test1.txt"
+// 添加路径
+await native.fsys.createDir(path)
+// 判断文件
+;[, res1] = await native.fsys.path.isDir(filenamepath)
 /**
  * 返回
  [false, false]
  */
-await native.fsys.path.isDir("F:/company-code/tmp/test/")
+;[, res2] = await native.fsys.path.isDir("C:/sys-shim-code/tmp/test/")
 /**
  * 返回
  [false, true]
  */
+console.log({res1, res2})
+// {res1: false, res2: true}
 ```
 
 ### fsys.path.ischild(目录, 路径)
@@ -792,12 +858,12 @@ await native.fsys.path.isDir("F:/company-code/tmp/test/")
 检测参数@2指定的路径是否在参数@1指定的目录之下
 
 ```js
-await native.fsys.path.ischild("F:/company-code/tmp/", "F:/company-code/tmp/test/")
+await native.fsys.path.ischild("C:/sys-shim-code/", "C:/sys-shim-code/tmp/test/")
 /**
  * 返回
  [false, true]
  */
-await native.fsys.path.ischild("F:/company-code/tmp/", "/test/")
+await native.fsys.path.ischild("C:/sys-shim-code/tmp/", "/test/")
 /**
  * 返回
  [false, false]
@@ -814,10 +880,16 @@ await native.fsys.path.long("./src")
  * 返回
  [false, 'F:\\company-code\\sys-shim-core\\src']
  */
-await native.fsys.path.long("F:/company-code/tmp/")
+
+path = 'C:/sys-shim-code/tmp/program files/'
+await native.fsys.createDir(path)
+// 获取短路径
+;[,shortpath] = await native.fsys.shortpath(path)
+// 将短路径转为长路径
+await native.fsys.path.long(shortpath)
 /**
  * 返回
- [false, 'F:\\company-code\\tmp\\']
+ [false, 'C:\\sys-shim-code\\tmp\\program files\\']
  */
 ```
 
@@ -829,12 +901,12 @@ await native.fsys.path.long("F:/company-code/tmp/")
 参数三可选,默认首字符为斜杠
 
 ```js
-await native.fsys.path.relative("F:/company-code/tmp/", "F:/company-code/", true)
+await native.fsys.path.relative("C:/sys-shim-code/tmp/", "C:/sys-shim-code/", true)
 /**
  * 返回
  [false, '\\tmp\\']
  */
-await native.fsys.path.relative("F:/company-code/tmp/", "F:/company-code/", false)
+await native.fsys.path.relative("C:/sys-shim-code/tmp/", "C:/sys-shim-code/", false)
 /**
  * 返回
  [false, 'tmp\\']
@@ -868,10 +940,10 @@ await native.fsys.path.relativeTo("C:/sys-shim-code/tmp", "C:/sys-shim-code/tmp/
 如果是分区号后的反斜杠或路径只有一个反斜杠,第二个返回值为反斜杠
 
 ```js
-await native.fsys.path.removeBackslash("F:/company-code/tmp/")
+await native.fsys.path.removeBackslash("C:/sys-shim-code/tmp/")
 /**
  * 返回
- [false, 'F:/company-code/tmp']
+ [false, 'C:/sys-shim-code/tmp']
  */
 ```
 
@@ -881,10 +953,10 @@ await native.fsys.path.removeBackslash("F:/company-code/tmp/")
 再将其转换为新的根目录下的绝对路径
 
 ```js
-await native.fsys.path.replaceDir("F:/company-code/tmp", "F:/", "C:/")
+await native.fsys.path.replaceDir("F:/sys-shim-code/tmp", "F:/", "C:/")
 /**
  * 返回
- [false, 'C:\\company-code\\tmp']
+ [false, 'C:\\sys-shim-code\\tmp']
  */
 ```
 
@@ -893,10 +965,10 @@ await native.fsys.path.replaceDir("F:/company-code/tmp", "F:/", "C:/")
 替换路径中的文件名部分
 
 ```js
-await native.fsys.path.replaceFile("F:/company-code/tmp/test/test1-1.txt", "test2-1.txt")
+await native.fsys.path.replaceFile("C:/sys-shim-code/tmp/test/test1-1.txt", "test2-1.txt")
 /**
  * 返回
- [false, 'F:\\company-code\\tmp\\test\\test2-1.txt']
+ [false, 'C:\\sys-shim-code\\tmp\\test\\test2-1.txt']
  */
 ```
 
@@ -910,11 +982,16 @@ await native.fsys.path.replaceFile("F:/company-code/tmp/test/test1-1.txt", "test
 如无必要，不建议使用或依赖此函数，正确使用 process 等可以自动
 转义路径参数中的空格。
 
+短路径与长路径的区别: [https://zhidao.baidu.com/question/458582247.html](https://zhidao.baidu.com/question/458582247.html)
+
 ```js
-await native.fsys.path.short("F:/company-code/sys-shim-core/doc")
+path = 'C:/sys-shim-code/tmp/program files/'
+
+await native.fsys.createDir(path)
+await native.fsys.path.short(path)
 /**
  * 返回
- [false, 'F:\\company-code\\sys-shim-core\\doc']
+ [false, 'C:\\SYS-SH~1\\tmp\\PROGRA~1\\']
  */
 ```
 
