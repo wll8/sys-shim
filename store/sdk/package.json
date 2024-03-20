@@ -1,8 +1,5 @@
 {
   "debug": true,
-  "socket": {
-    "port": 7788
-  },
   "main": "dev.sys.js",
   "browserArguments": "--disable-web-security --kiosk-printing --allow-running-insecure-content --no-displaying-insecure-content --ignore-certificate-errors",
   "nodeArguments": "--trace-deprecation",
