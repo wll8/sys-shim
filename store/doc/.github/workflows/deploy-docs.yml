@@ -40,7 +40,7 @@ jobs:
           NODE_OPTIONS: --max_old_space_size=8192
         run: |-
           pnpm run docs:build --prefix doc
-          > src/.vuepress/dist/.nojekyll
+          touch doc/src/.vuepress/dist/.nojekyll
 
       - name: 部署文档
         uses: JamesIves/github-pages-deploy-action@v4
