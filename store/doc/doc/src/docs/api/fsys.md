@@ -1,4 +1,8 @@
-## fsys.attrib(文件路径, 文件属性)
+## fsys.attrib
+
+添加，移除，获取文件属性
+
+### fsys.attrib(文件路径, undefined, 文件属性)
 
 添加文件属性
 参数一为文件路径
@@ -20,6 +24,58 @@ await native.fsys.attrib(path, undefined, 0x2)
 console.log({res1, res2})
 
 // {res1: 0, res2: 2}
+```
+
+### fsys.attrib(文件路径, 文件属性)
+
+移除件属性
+参数一为文件路径
+参数二可以用 | 操作符连接多个属性
+成功返回新属性,失败返回null
+
+文档属性文档：[https://learn.microsoft.com/zh-cn/windows/win32/fileio/file-attribute-constants](https://learn.microsoft.com/zh-cn/windows/win32/fileio/file-attribute-constants)
+
+```js
+path = `C:/sys-shim-code/tmp/${Date.now()}.txt`
+await native.string.save(path, `hello`)
+
+;[, res1] = await native.fsys.isHidden(path)
+
+// 为文件添加隐藏属性
+await native.fsys.attrib(path, undefined, 0x2)
+;[, res2] = await native.fsys.isHidden(path)
+
+console.log({res1, res2})
+
+// {res1: 0, res2: 2, res3: 0}
+
+// 为文件移除文件属性
+await native.fsys.attrib(path, 0x2)
+;[, res3] = await native.fsys.isHidden(path)
+
+console.log({res1, res2, res3})
+// {res1: 0, res2: 2, res3: 0}
+```
+
+### fsys.attrib(文件路径)
+
+返回文件属性,
+以_FILE_ATTRIBUTE_前缀的常量标志各属性
+注意:WIN10 新版存在设为隐藏文件后变只读的问题
+参数为空字符串、null、不存在的路径都会 返回 -1
+
+文档属性文档：[https://learn.microsoft.com/zh-cn/windows/win32/fileio/file-attribute-constants](https://learn.microsoft.com/zh-cn/windows/win32/fileio/file-attribute-constants)
+
+```js
+path = `C:/sys-shim-code/tmp/${Date.now()}.txt`
+await native.string.save(path, `hello`)
+
+// 为文件添加隐藏属性
+await native.fsys.attrib(path, undefined, 0x2)
+// 获取文件属性
+;[, res1] = await native.fsys.attrib(path)
+console.log({res1})
+// {res1: 34}
 ```
 
 ## fsys.copy
