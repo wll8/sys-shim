@@ -31,10 +31,11 @@ export default hopeTheme({
 
   // 博客相关
   blog: {
-    name: "sys-shim",
-    description: "一群小年轻",
+    name: "sys-shim-doc",
+    description: "sys-shim 文档",
     intro: "",
     medias: {},
+    sidebarDisplay: `none`,
   },
 
   // 加密配置

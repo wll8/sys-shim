@@ -1,58 +1,63 @@
+# sys.cpu
+
 ## sys.cpu.getBrand()
 返回CPU商标信息
 
 ``` js
-await native.sys.cpu.getBrand()
+;[, res] = await native.sys.cpu.getBrand()
+console.log(res)
 
-/**
- * 返回
-[false, '12th Gen Intel(R) Core(TM) i7-12700K']
- */
+// Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
 ```
 
 ## sys.cpu.getFrequence()
 返回表示 CPU 频率的数值,以 MHz 为单位
 
 ``` js
-await native.sys.cpu.getFrequence()
+;[, res] = await native.sys.cpu.getFrequence()
+console.log(res)
 
-/**
- * 返回
-[false, 3629.869264]
- */
+// 2271.18168
 ```
 
 ## sys.cpu.getFrequence(true) 
 返回表示 CPU 频率的友好格式的字符串,单位: GHz 小数位数：1
 
 ``` js
-await native.sys.cpu.getFrequence(true)
+;[, res] = await native.sys.cpu.getFrequence(true)
+console.log(res)
 
-/**
- * 返回
-[false, '3.7 GHz']
- */
+// 2.3 GHz
 ```
 
-## sys.cpu.getInfo
-按原始文档，不传参数会报错，故不予实现
+## sys.cpu.getInfo(EAX, 结构体) 
 
-## sys.cpu.getInfo() 
-[参考](https://bbs.aardio.com/doc/reference/libraries/kernel/raw/datatype.html)
+参考文档： https://en.wikipedia.org/wiki/CPUID
+
+根据结构体查询 cpu 信息。
+
+例如获取制造商信息：
 
 ``` js
-await native.sys.cpu.getInfo(1,{_struct: `INT eax;INT ebx;INT eCx;INT edx`})
+;[, res] = await native.sys.cpu.getInfo(0, {_struct: `INT eax;BYTE ebx[4];BYTE ecx[4];BYTE edx[4]` })
 
-/**
- * 返回
-[false, {
-    "eCx": 4277859203,
-    "eax": 591474,
-    "ebx": 1283459072,
-    "edx": 3217816575,
-    "_struct": "INT eax;INT ebx;INT eCx;INT edx"
-}]
- */
+console.log([res.ebx, res.ecx, res.edx].join(``))
+
+// 返回值： GenuntelineI
+// 也可以直接调用 `sys.cpu.getVender()` 获取。
+```
+
+获取制造商信息：
+
+``` js
+;[, res1] = await native.sys.cpu.getInfo(0x80000002, {_struct: `BYTE str[16]` })
+;[, res2] = await native.sys.cpu.getInfo(0x80000003, {_struct: `BYTE str[16]` })
+;[, res3] = await native.sys.cpu.getInfo(0x80000004, {_struct: `BYTE str[16]` })
+
+console.log([res1.str, res2.str, res3.str].join(``))
+
+// 返回值： Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
+// 也可以直接调用 `sys.cpu.getBrand()` 获取。
 ```
 
 ## sys.cpu.getInfoByWmi() 
@@ -61,73 +66,67 @@ await native.sys.cpu.getInfo(1,{_struct: `INT eax;INT ebx;INT eCx;INT edx`})
 [返回对象:sysCpuWmiInfoObject](#syscpuwmiinfoobject)
 
 ``` js
-await native.sys.cpu.getInfoByWmi()
+;[, res] = await native.sys.cpu.getInfoByWmi()
+console.log(res)
 
 /**
- * 返回
-[false, {
-    "AddressWidth": 64,
-    "Architecture": 9,
-    "AssetTag": "To Be Filled By O.E.M.",
-    "Availability": 3,
-    "Caption": "Intel64 Family 6 Model 151 Stepping 2",
-    ...
-}]
- */
+{
+  "AddressWidth": 64,
+  "Architecture": 9,
+  "AssetTag": "To Be Filled By O.E.M.",
+  "Availability": 3,
+  "Caption": "Intel64 Family 6 Model 151 Stepping 2",
+  ...
+}
 ```
 
 ## sys.cpu.getMaxExtFunction() 
 CPU的扩展信息最大查询索引
 
 ``` js
-await native.sys.cpu.getMaxExtFunction()
+;[, res] = await native.sys.cpu.getMaxExtFunction()
+console.log(res)
 
-/**
- * 返回
-[false, 2147483656]
- */
+// 2147483656
 ```
 
 ## sys.cpu.getVender() 
 返回制造商信息,Intel会返回"GenuineIntel",AMD会返回"AuthenticAMD"
 
 ``` js
-await native.sys.cpu.getVender()
+;[, res] = await native.sys.cpu.getVender()
+console.log(res)
 
-/**
- * 返回
-[false, 'GenuineIntel']
- */
+// GenuineIntel
 ```
 
 ## sysCpuWmiInfoObject
 
-### sysCpuWmiInfoObject.? 
  [参考](https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/win32-processor)
 
-### sysCpuWmiInfoObject.AddressWidth 
+### .AddressWidth 
  CPU 位宽,值为 32 或 64
 
-### sysCpuWmiInfoObject.Architecture 
+### .Architecture 
  指令集架构,x86 值为 0,x64 值为 9
 
-### sysCpuWmiInfoObject.CurrentClockSpeed 
+### .CurrentClockSpeed 
  CPU 当前速度,单位 MHz,该值除 1000 可换算为单位 GHz,使用 math.round 可以限定小数位数
 
-### sysCpuWmiInfoObject.DeviceID 
+### .DeviceID 
  设备 ID
 
-### sysCpuWmiInfoObject.Manufacturer 
+### .Manufacturer 
  生产厂商,例如"GenuineIntel"
 
-### sysCpuWmiInfoObject.MaxClockSpeed 
+### .MaxClockSpeed 
  CPU 最大速度,单位 MHz,该值除 1000 可换算为单位 GHz
 
-### sysCpuWmiInfoObject.Name 
+### .Name 
  设备名
 
-### sysCpuWmiInfoObject.NumberOfCores 
+### .NumberOfCores 
  CPU 核心数
 
-### sysCpuWmiInfoObject.NumberOfLogicalProcessors 
+### .NumberOfLogicalProcessors 
  CPU 逻辑核心数

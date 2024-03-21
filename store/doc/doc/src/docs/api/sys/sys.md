@@ -1,20 +1,35 @@
+# sys
+
 ## sys.getComputerName()
  返回计算机名
+
+``` js
+;[, res] = await main.native.sys.getComputerName()
+console.log(res)
+
+// DESKTOP-DJKAAO2
+```
+ 
 
 ## sys.getStartTime()
  返回系统启动时间  
 
 ``` js
-await main.native.sys.getStartTime()
+;[, res] = await main.native.sys.getStartTime()
+console.log(res)
 
-/**
- * 返回
-[false, '2024-03-17T03:58:18Z']
- */
+// 2024-03-17T03:58:19Z
 ```
 
 ## sys.getUserName()
  返回当前登录用户名
+
+``` js
+;[, res] = await main.native.sys.getUserName()
+console.log(res)
+
+// win
+```
 
 ## sys.hibernate()
  休眠

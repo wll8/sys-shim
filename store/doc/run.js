@@ -25,6 +25,7 @@ async function runExe(url) {
   const textJson = JSON.parse(text)
   textJson.page = url
   fs.writeFileSync(`./package.json`, JSON.stringify(textJson, null, 2))
+  await sleep()
   const cp = new ProcessManager({
     bin: `main.exe`,
     autoReStart: false,
