@@ -4,36 +4,30 @@
 返回CPU商标信息
 
 ``` js
-await native.sys.cpu.getBrand()
+;[, res] = await native.sys.cpu.getBrand()
+console.log(res)
 
-/**
- * 返回
-[false, '12th Gen Intel(R) Core(TM) i7-12700K']
- */
+// Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
 ```
 
 ## sys.cpu.getFrequence()
 返回表示 CPU 频率的数值,以 MHz 为单位
 
 ``` js
-await native.sys.cpu.getFrequence()
+;[, res] = await native.sys.cpu.getFrequence()
+console.log(res)
 
-/**
- * 返回
-[false, 3629.869264]
- */
+// 2271.18168
 ```
 
 ## sys.cpu.getFrequence(true) 
 返回表示 CPU 频率的友好格式的字符串,单位: GHz 小数位数：1
 
 ``` js
-await native.sys.cpu.getFrequence(true)
+;[, res] = await native.sys.cpu.getFrequence(true)
+console.log(res)
 
-/**
- * 返回
-[false, '3.7 GHz']
- */
+// 2.3 GHz
 ```
 
 ## sys.cpu.getInfo(EAX, 结构体) 
@@ -72,43 +66,38 @@ console.log([res1.str, res2.str, res3.str].join(``))
 [返回对象:sysCpuWmiInfoObject](#syscpuwmiinfoobject)
 
 ``` js
-await native.sys.cpu.getInfoByWmi()
+;[, res] = await native.sys.cpu.getInfoByWmi()
+console.log(res)
 
 /**
- * 返回
-[false, {
-    "AddressWidth": 64,
-    "Architecture": 9,
-    "AssetTag": "To Be Filled By O.E.M.",
-    "Availability": 3,
-    "Caption": "Intel64 Family 6 Model 151 Stepping 2",
-    ...
-}]
- */
+{
+  "AddressWidth": 64,
+  "Architecture": 9,
+  "AssetTag": "To Be Filled By O.E.M.",
+  "Availability": 3,
+  "Caption": "Intel64 Family 6 Model 151 Stepping 2",
+  ...
+}
 ```
 
 ## sys.cpu.getMaxExtFunction() 
 CPU的扩展信息最大查询索引
 
 ``` js
-await native.sys.cpu.getMaxExtFunction()
+;[, res] = await native.sys.cpu.getMaxExtFunction()
+console.log(res)
 
-/**
- * 返回
-[false, 2147483656]
- */
+// 2147483656
 ```
 
 ## sys.cpu.getVender() 
 返回制造商信息,Intel会返回"GenuineIntel",AMD会返回"AuthenticAMD"
 
 ``` js
-await native.sys.cpu.getVender()
+;[, res] = await native.sys.cpu.getVender()
+console.log(res)
 
-/**
- * 返回
-[false, 'GenuineIntel']
- */
+// GenuineIntel
 ```
 
 ## sysCpuWmiInfoObject
