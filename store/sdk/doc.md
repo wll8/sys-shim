@@ -455,6 +455,10 @@ new Sys(`ws://localhost:7788`).then(async main => {
 - Neutralino.debug
 
 - Neutralino.events
+  - [x] events.on
+  - [x] events.off
+  - [x] events.dispatch -- 注：暂不实现
+  - [x] events.broadcast
 
 - Neutralino.extensions
 

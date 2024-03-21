@@ -3,6 +3,7 @@ import Filesystem from "@/api/neutralino/core/filesystem.js"
 import Os from "@/api/neutralino/core/os.js"
 import Computer from "@/api/neutralino/core/computer.js"
 import App from "@/api/neutralino/core/app.js"
+import Events from "@/api/neutralino/core/events.js"
 
 async function init() {
   Object.assign(globalThis, {
@@ -50,6 +51,7 @@ class Api {
     this.os = new Os(base)
     this.computer = new Computer(base)
     this.app = new App(base)
+    this.events = new Events(base)
 
     return new Promise(async (resolve) => {
       await init.apply(this)
