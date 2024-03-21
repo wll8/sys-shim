@@ -36,7 +36,17 @@ export default sidebar({
         },
         {
           text: `sys 系统相关`,
-          link: `/docs/api/sys`,
+          collapsible: true,
+          children: [
+            {
+              text: `sys`,
+              link: `/docs/api/sys/sys`,
+            },
+            {
+              text: `cpu`,
+              link: `/docs/api/sys/cpu`,
+            },
+          ]
         },
       ],
     },
