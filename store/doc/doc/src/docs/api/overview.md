@@ -171,14 +171,14 @@ await main.native.win.msgbox(`hello`)
 
 ### sys.cpu
 
-  - [ ] sys.cpu.getBrand() 
-  - [ ] sys.cpu.getFrequence() 
-  - [ ] sys.cpu.getFrequence(true) 
-  - [ ] sys.cpu.getInfo 
-  - [ ] sys.cpu.getInfo() 
-  - [ ] sys.cpu.getInfoByWmi() 
-  - [ ] sys.cpu.getMaxExtFunction() 
-  - [ ] sys.cpu.getVender() 
+  - [x] sys.cpu.getBrand() 
+  - [x] sys.cpu.getFrequence() 
+  - [x] sys.cpu.getFrequence(true) 
+  - [ ] sys.cpu.getInfo // 跳过
+  - [x] sys.cpu.getInfo()
+  - [x] sys.cpu.getInfoByWmi() 
+  - [x] sys.cpu.getMaxExtFunction() 
+  - [x] sys.cpu.getVender() 
 
 ### win.clip
 
