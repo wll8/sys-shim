@@ -36,25 +36,34 @@ await native.sys.cpu.getFrequence(true)
  */
 ```
 
-## sys.cpu.getInfo
-按原始文档，不传参数会报错，故不予实现
+## sys.cpu.getInfo(EAX, 结构体) 
 
-## sys.cpu.getInfo() 
-[参考](https://bbs.aardio.com/doc/reference/libraries/kernel/raw/datatype.html)
+参考文档： https://en.wikipedia.org/wiki/CPUID
+
+根据结构体查询 cpu 信息。
+
+例如获取制造商信息：
 
 ``` js
-await native.sys.cpu.getInfo(1,{_struct: `INT eax;INT ebx;INT eCx;INT edx`})
+;[, res] = await native.sys.cpu.getInfo(0, {_struct: `INT eax;BYTE ebx[4];BYTE ecx[4];BYTE edx[4]` })
 
-/**
- * 返回
-[false, {
-    "eCx": 4277859203,
-    "eax": 591474,
-    "ebx": 1283459072,
-    "edx": 3217816575,
-    "_struct": "INT eax;INT ebx;INT eCx;INT edx"
-}]
- */
+console.log([res.ebx, res.ecx, res.edx].join(``))
+
+// 返回值： GenuntelineI
+// 也可以直接调用 `sys.cpu.getVender()` 获取。
+```
+
+获取制造商信息：
+
+``` js
+;[, res1] = await native.sys.cpu.getInfo(0x80000002, {_struct: `BYTE str[16]` })
+;[, res2] = await native.sys.cpu.getInfo(0x80000003, {_struct: `BYTE str[16]` })
+;[, res3] = await native.sys.cpu.getInfo(0x80000004, {_struct: `BYTE str[16]` })
+
+console.log([res1.str, res2.str, res3.str].join(``))
+
+// 返回值： Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
+// 也可以直接调用 `sys.cpu.getBrand()` 获取。
 ```
 
 ## sys.cpu.getInfoByWmi() 
@@ -104,32 +113,31 @@ await native.sys.cpu.getVender()
 
 ## sysCpuWmiInfoObject
 
-### sysCpuWmiInfoObject.? 
  [参考](https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/win32-processor)
 
-### sysCpuWmiInfoObject.AddressWidth 
+### .AddressWidth 
  CPU 位宽,值为 32 或 64
 
-### sysCpuWmiInfoObject.Architecture 
+### .Architecture 
  指令集架构,x86 值为 0,x64 值为 9
 
-### sysCpuWmiInfoObject.CurrentClockSpeed 
+### .CurrentClockSpeed 
  CPU 当前速度,单位 MHz,该值除 1000 可换算为单位 GHz,使用 math.round 可以限定小数位数
 
-### sysCpuWmiInfoObject.DeviceID 
+### .DeviceID 
  设备 ID
 
-### sysCpuWmiInfoObject.Manufacturer 
+### .Manufacturer 
  生产厂商,例如"GenuineIntel"
 
-### sysCpuWmiInfoObject.MaxClockSpeed 
+### .MaxClockSpeed 
  CPU 最大速度,单位 MHz,该值除 1000 可换算为单位 GHz
 
-### sysCpuWmiInfoObject.Name 
+### .Name 
  设备名
 
-### sysCpuWmiInfoObject.NumberOfCores 
+### .NumberOfCores 
  CPU 核心数
 
-### sysCpuWmiInfoObject.NumberOfLogicalProcessors 
+### .NumberOfLogicalProcessors 
  CPU 逻辑核心数
