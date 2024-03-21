@@ -1,3 +1,5 @@
+# sys.cpu
+
 ## sys.cpu.getBrand()
 返回CPU商标信息
 

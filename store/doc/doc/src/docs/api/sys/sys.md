@@ -1,3 +1,5 @@
+# sys
+
 ## sys.getComputerName()
  返回计算机名
 
