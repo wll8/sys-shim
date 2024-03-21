@@ -68,9 +68,9 @@ await main.native.win.msgbox(`hello`)
 
 ### fsys
 - [ ] fsys.WIN32_FIND_DATA -- // 跳过
-- [ ] fsys.attrib(文件路径, , 文件属性) 
-- [ ] fsys.attrib(文件路径, 文件属性) 
-- [ ] fsys.attrib(文件路径) 
+- [x] fsys.attrib(文件路径, , 文件属性) 
+- [x] fsys.attrib(文件路径, 文件属性) 
+- [x] fsys.attrib(文件路径) 
 - [x] fsys.copy 
 - [ ] fsys.copy(源路径, 目标路径, FOF选项, 进度标题, 父窗口句柄) 
 - [x] fsys.createDir(目录路径, 是否清空重建) 
@@ -102,7 +102,7 @@ await main.native.win.msgbox(`hello`)
 - [x] fsys.isDir(路径) 
 - [x] fsys.isHidden(文件路径) 
 - [x] fsys.isReadonly(文件路径) 
-- [ ] fsys.isSystem(文件路径) 
+- [x] fsys.isSystem(文件路径) 
 - [x] fsys.joinpath(根目录, 不定个数子路径) 
 - [x] fsys.list(目录路径, 模式匹配, 通配符) 
 - [x] fsys.longpath(路径) 
