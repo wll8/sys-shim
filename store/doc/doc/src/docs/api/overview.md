@@ -1,5 +1,5 @@
 ---
-title: 原生API概览
+title: 概览
 ---
 
 ## globalThis.ext
@@ -98,7 +98,7 @@ await main.native.win.msgbox(`hello`)
 - [x] fsys.getTempDir() 
 - [x] fsys.getWinDir() 
 - [ ] fsys.gmatch(文件路径, 查找串) 
-- [x] fsys.idListFromPath(路径) 
+- [ ] fsys.idListFromPath(路径) // 跳过
 - [x] fsys.isDir(路径) 
 - [x] fsys.isHidden(文件路径) 
 - [x] fsys.isReadonly(文件路径) 
@@ -118,7 +118,7 @@ await main.native.win.msgbox(`hello`)
 - [x] fsys.searchFile(文件名) 
 - [x] fsys.searchFile(文件名, 目录, ...) 
 - [x] fsys.searchFile(文件名, 目录, true) 
-- [ ] fsys.setAttributes(文件路径, 文件属性) 
+- [x] fsys.setAttributes(文件路径, 文件属性) 
 - [x] fsys.setCurDir(目录) 
 - [x] fsys.shortpath(路径) 
 - [ ] _CSIDL_COMMON_FAVORITES -- // 跳过
@@ -126,14 +126,14 @@ await main.native.win.msgbox(`hello`)
 - [ ] _CSIDL_HISTORY -- // 跳过
 - [ ] _CSIDL_INTERNET_CACHE -- // 跳过
 - [ ] _CSIDL_TEMPLATES -- // 跳过
-- [ ] findDataObject.cAlternateFileName -- // 跳过
-- [ ] findDataObject.cFileName -- // 跳过
-- [ ] findDataObject.dwFileAttributes -- // 跳过
-- [ ] findDataObject.ftCreationTime -- // 跳过
-- [ ] findDataObject.ftLastAccessTime -- // 跳过
-- [ ] findDataObject.ftLastWriteTime -- // 跳过
-- [ ] findDataObject.nFileSizeHigh -- // 跳过
-- [ ] findDataObject.nFileSizeLow -- // 跳过
+- [ ] findDataObject.cAlternateFileName 
+- [ ] findDataObject.cFileName 
+- [ ] findDataObject.dwFileAttributes 
+- [ ] findDataObject.ftCreationTime 
+- [ ] findDataObject.ftLastAccessTime 
+- [ ] findDataObject.ftLastWriteTime 
+- [ ] findDataObject.nFileSizeHigh 
+- [ ] findDataObject.nFileSizeLow 
 
 ### fsys.path
 
@@ -141,7 +141,7 @@ await main.native.win.msgbox(`hello`)
 - [x] fsys.path.canonicalize(路径, 是否处理短路径) 
 - [x] fsys.path.cmp(路径, 比较路径) 
 - [x] fsys.path.commonPrefix(路径, 路径2) 
-- [x] fsys.path.compact(文件路径, 显示像素宽度) 
+- [ ] fsys.path.compact(文件路径, 显示像素宽度) // 跳过
 - [x] fsys.path.eofBackslash(文件路径) 
 - [x] fsys.path.full(path) 
 - [x] fsys.path.full(path, root) 
@@ -149,25 +149,86 @@ await main.native.win.msgbox(`hello`)
 - [x] fsys.path.ischild(目录, 路径) 
 - [x] fsys.path.long(路径) 
 - [x] fsys.path.relative(路径, 目录, 返回路径是否以斜杠开始) 
-- [ ] fsys.path.relativeTo(参考路径, 目标路径, 参考路径属性, 目标路径属性) 
+- [x] fsys.path.relativeTo(参考路径, 目标路径, 参考路径属性, 目标路径属性) 
 - [x] fsys.path.removeBackslash(路径) 
 - [x] fsys.path.replaceDir(路径, 根目录, 新的根目录) 
 - [x] fsys.path.replaceFile(路径, 新文件名) 
 - [x] fsys.path.short(路径) 
 - [x] fsys.path.validName(路径) 
 
+### fsys.dlg
+- [ ] fsys.dlg.OPENFILENAME() // 跳过
+- [ ] fsys.dlg.OPENFILENAME(缓冲区大小, 默认文件名) // 跳过
+- [ ] fsys.dlg.open 
+- [ ] fsys.dlg.open(指定文件类型, 对话框标题, 默认目录, 父窗口, 选项参数, 默认文件名) 
+- [ ] fsys.dlg.openDir 
+- [ ] fsys.dlg.openDir() 
+- [ ] fsys.dlg.openDir(目录, 父窗口, 标题, 窗口标题) 
+- [ ] fsys.dlg.openEx 
+- [ ] fsys.dlg.openEx(指定文件类型, 对话框标题, 默认目录, 父窗口, 选项参数, 缓冲区大小) 
+- [ ] fsys.dlg.save 
+- [ ] fsys.dlg.save(指定文件类型, 对话框标题, 默认目录, 父窗口, 选项参数, 默认文件名) 
+- [ ] fsys.dlg.saveOp 
+- [ ] fsys.dlg.saveOp(指定文件类型, 对话框标题, 默认目录, 父窗口, 默认文件名) 
+- [ ] OPENFILENAMEObject.defExt
+- [ ] OPENFILENAMEObject.defaultFileName
+- [ ] OPENFILENAMEObject.filter
+- [ ] OPENFILENAMEObject.flags
+- [ ] OPENFILENAMEObject.hwndOwner
+- [ ] OPENFILENAMEObject.initialDir
+- [ ] OPENFILENAMEObject.open()
+- [ ] OPENFILENAMEObject.save()
+- [ ] OPENFILENAMEObject.title
+
+### fsys.dlg.dir
+- [ ] fsys.dlg.dir 
+- [ ] fsys.dlg.dir(path,hwndOwner,title,okLabel,clientGuid,multiSel) 
+
+### fsys.lnk
+- [ ] fsys.lnk() 
+- [ ] fsys.lnk.enum 
+- [ ] fsys.lnk.getMsiTarget(lnk文件路径) 
+- [ ] fsys.lnk.getTarget(lnk文件路径) 
+- [ ] fsys.lnk.search 
+- [ ] fsys.lnk.search(目标文件名或参数, 快捷方式标题) 
+- [ ] fsys.lnk.searchInDesktop 
+- [ ] fsys.lnk.searchInDesktop(目标文件名或参数, 快捷方式标题) 
+- [ ] fsys.lnk.searchLnk(文件名或参数, 快捷方式标题, 0) 
+- [ ] fsys.lnk.searchLnk(文件名或参数, 快捷方式标题, 2) 
+- [ ] lnkfileObject.arguments 
+- [ ] lnkfileObject.description 
+- [ ] lnkfileObject.filename 
+- [ ] lnkfileObject.filepath 
+- [ ] lnkfileObject.free() // 跳过
+- [ ] lnkfileObject.getIcon() // 跳过
+- [ ] lnkfileObject.hotkey 
+- [ ] lnkfileObject.load() // 跳过
+- [ ] lnkfileObject.load(lnk文件路径) // 跳过
+- [ ] lnkfileObject.path 
+- [ ] lnkfileObject.pinToDesktop(false) // 跳过
+- [ ] lnkfileObject.pinToDesktop(true) // 跳过
+- [ ] lnkfileObject.pinToPrograms(false, 子目录路径) // 跳过
+- [ ] lnkfileObject.pinToPrograms(true, 子目录路径) // 跳过
+- [ ] lnkfileObject.resolve(hwndParent, flags) // 跳过
+- [ ] lnkfileObject.save(lnk文件存储路径) // 跳过
+- [ ] lnkfileObject.setIcon(文件路径, 图标索引) // 跳过
+- [ ] lnkfileObject.showCmd 
+- [ ] lnkfileObject.workDir 
+
+### fsys.remove
+- [ ] fsys.remove() 
 
 ### sys
-  - [ ] sys.getComputerName()
+  - [x] sys.getComputerName()
   - [x] sys.getStartTime()
-  - [ ] sys.getUserName()
-  - [ ] sys.hibernate()
-  - [ ] sys.lock()
-  - [ ] sys.logoff()
-  - [ ] sys.restart()
-  - [ ] sys.setComputerName(计算机名)
-  - [ ] sys.shutdown()
-  - [ ] sys.sleep()
+  - [x] sys.getUserName()
+  - [x] sys.hibernate()
+  - [x] sys.lock()
+  - [x] sys.logoff()
+  - [x] sys.restart()
+  - [x] sys.setComputerName(计算机名)
+  - [x] sys.shutdown()
+  - [x] sys.sleep()
 
 ### sys.cpu
 
@@ -175,7 +236,7 @@ await main.native.win.msgbox(`hello`)
   - [x] sys.cpu.getFrequence() 
   - [x] sys.cpu.getFrequence(true) 
   - [ ] sys.cpu.getInfo // 跳过
-  - [x] sys.cpu.getInfo()
+  - [ ] sys.cpu.getInfo() // 跳过
   - [x] sys.cpu.getInfoByWmi() 
   - [x] sys.cpu.getMaxExtFunction() 
   - [x] sys.cpu.getVender() 
