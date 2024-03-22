@@ -1,0 +1,82 @@
+<script lang="ts" setup>
+const navList = [
+  {
+    text: '分享',
+    icon: 'i-carbon-share',
+  },
+  {
+    text: '重置',
+    icon: 'i-carbon-reset',
+  },
+  {
+    text: '设置',
+    icon: 'i-carbon-settings',
+  },
+  {
+    text: '源码',
+    icon: 'i-carbon-logo-github',
+    link: ''
+  },
+]
+</script>
+
+<template>
+  <header class="nav-header reset-list-style">
+    <nav class="nav flex justify-between items-center">
+      <div class="nav-left">
+        <router-link to="/" class="flex items-center">
+          <img src="" alt="logo">
+          <span class="title text-xl font-bold flex-1">游乐场</span>
+        </router-link>
+      </div>
+      <ul class="nav-right flex items-center">
+        <li v-for="(item, index) in navList" :key="index" class="nav-item">
+          <a :href="item.link">
+            <span class="item-icon" :class="item.icon" />
+            <span class="item-text">{{ item.text }}</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+</template>
+
+<style lang="scss" scoped>
+.nav-header {
+  height: 40px;
+  padding: 11px 24px;
+  background-color: var(--nav-header-bg);
+  nav {
+    height: 100%;
+  }
+  color: var(--nav-header-text-color);
+  a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    color: var(--nav-header-text-color);
+    padding: 0 2px;
+    .item-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 2px;
+    }
+    &:hover {
+      color: var(--nav-header-hover-color);
+    }
+  }
+  box-shadow: 0 2px 8px var(--card-shadow);
+  line-height: var(--navbar-line-height);
+  white-space: nowrap;
+}
+.nav-left {
+  img {
+    background-color: pink;
+    margin-right: 10px;
+  }
+}
+.nav-right li {
+  cursor: pointer;
+  margin: 0 4px;
+}
+</style>

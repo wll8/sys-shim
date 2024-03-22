@@ -5,6 +5,7 @@ import store from './store'
 
 import 'normalize.css'
 import 'virtual:uno.css'
+import './assets/css/index.scss'
 
 const app = createApp(App)
 app.use(router)

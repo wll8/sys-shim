@@ -4,6 +4,7 @@
 
 <template>
   <div class="app">
+    <nav-header />
     <router-view />
   </div>
 </template>

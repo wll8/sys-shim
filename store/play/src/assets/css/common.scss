@@ -1,0 +1,23 @@
+:root {
+  // 定义css变量
+  --nav-header-bg: #fff;
+  --nav-header-text-color: #8a8a8a;
+  --nav-header-hover-color: #333;
+  // 卡片阴影颜色
+  --card-shadow: rgba(0, 0, 0, 0.15);
+
+}
+
+.wrapper {
+  width: 1200px;
+  margin: 0 auto;
+}
+
+// 重置ul, li列表样式
+.reset-list-style {
+  ul, li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+}
