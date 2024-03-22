@@ -25,30 +25,33 @@ export default sidebar({
       text: "原生 API",
       collapsible: true,
       prefix: "docs/api",
-      children: [
-        {
-          text: `概览`,
-          link: `/docs/api/overview`,
-        },
-        {
-          text: `fsys 文件操作`,
-          link: `/docs/api/fsys`,
-        },
-        {
-          text: `sys 系统相关`,
-          collapsible: true,
-          children: [
-            {
-              text: `sys`,
-              link: `/docs/api/sys/sys`,
-            },
-            {
-              text: `cpu`,
-              link: `/docs/api/sys/cpu`,
-            },
-          ]
-        },
-      ],
+      children: "structure",
+      // children: [
+      //   {
+      //     text: `概览`,
+      //     link: `/docs/api/overview`,
+      //   },
+      //   {
+      //     text: `fsys 文件操作`,
+      //     link: `/docs/api/fsys/`,
+      //   },
+      //   {
+      //     text: `sys 系统相关`,
+      //     collapsible: true,
+      //     prefix: "docs/api/sys",
+      //     children: `structure`,
+      //     // children: [
+      //     //   {
+      //     //     text: `sys`,
+      //     //     link: `/docs/api/sys/sys`,
+      //     //   },
+      //     //   {
+      //     //     text: `sys.cpu`,
+      //     //     link: `/docs/api/sys/sys.cpu`,
+      //     //   },
+      //     // ]
+      //   },
+      // ],
     },
     {
       text: "三方 API",
