@@ -54,9 +54,11 @@ function injectStyle(css){
 }
 function addExecDiv(parentEl){
   const execDiv = document.createElement("div")
-  // 
-  const text = parentEl.querySelector(".language-javascript").textContent
- 
+  const languageJS = parentEl.querySelector(".language-javascript")
+  // 没有获取的dom直接返回
+  if(!languageJS) return
+  const text = languageJS.textContent
+  
   execDiv.innerHTML = `
       <div class="exec code-common-btn">
         <span class="icon exec-icon" />
@@ -69,6 +71,7 @@ function addExecDiv(parentEl){
   const shareBtn = execDiv.querySelector(".share")
   // 得到异步函数
   const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+
   // 得到执行函数
   const execCode = new AsyncFunction(text)
   // 执行代码
@@ -83,6 +86,8 @@ function addExecDiv(parentEl){
 }
 function addMdButtons(){
   const jsCodeDoms = document.querySelectorAll(".line-numbers-mode")
+  // 如何jsCodeDomes为假就不执行下面步骤
+  if(!jsCodeDoms && !jsCodeDoms.length)return
   const length = jsCodeDoms.length
   for(let i = 0 ;  i < length; i++){
     const jsCodeDom = jsCodeDoms[i]
