@@ -7,9 +7,13 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    Header: typeof import('./src/components/header/index.vue')['default']
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
-    HolloWorld: typeof import('./src/components/HolloWorld.vue')['default']
+    AButton: typeof import('ant-design-vue/es')['Button']
+    ACheckboxGroup: typeof import('ant-design-vue/es')['CheckboxGroup']
+    ADrawer: typeof import('ant-design-vue/es')['Drawer']
+    ASpace: typeof import('ant-design-vue/es')['Space']
+    Filter: typeof import('./src/components/LogFilter/components/filter.vue')['default']
+    LogFilter: typeof import('./src/components/LogFilter/index.vue')['default']
+    Native: typeof import('./src/components/LogFilter/components/native.vue')['default']
     NavHeader: typeof import('./src/components/nav-header/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

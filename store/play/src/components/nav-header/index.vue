@@ -15,7 +15,7 @@ const navList = [
   {
     text: '源码',
     icon: 'i-carbon-logo-github',
-    link: ''
+    link: '',
   },
 ]
 </script>

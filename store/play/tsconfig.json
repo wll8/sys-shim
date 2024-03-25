@@ -13,6 +13,7 @@
     },
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
+    "allowJs": true,
 
     /* Linting */
     "strict": true,

@@ -4,8 +4,9 @@ const test = ref('test auto import')
 
 <template>
   <div class="home">
-    <div class="header m-1">
+    <div class="header m1">
       {{ test }}
+      <LogFilter />
     </div>
   </div>
 </template>
