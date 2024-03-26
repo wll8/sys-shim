@@ -5,3 +5,7 @@ body {
 img {
   vertical-align: top;
 }
+
+div, img, ul, li, header {
+  box-sizing: border-box;
+}

@@ -15,6 +15,7 @@ declare module 'vue' {
     LogFilter: typeof import('./src/components/LogFilter/index.vue')['default']
     Native: typeof import('./src/components/LogFilter/components/native.vue')['default']
     NavHeader: typeof import('./src/components/nav-header/index.vue')['default']
+    PlaygroundLayoutWrapper: typeof import('./src/components/playground-layout-wrapper/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
