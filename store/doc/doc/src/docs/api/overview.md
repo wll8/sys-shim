@@ -159,17 +159,17 @@ await main.native.win.msgbox(`hello`)
 ### fsys.dlg
 - [ ] fsys.dlg.OPENFILENAME() // 跳过
 - [ ] fsys.dlg.OPENFILENAME(缓冲区大小, 默认文件名) // 跳过
-- [ ] fsys.dlg.open 
-- [ ] fsys.dlg.open(指定文件类型, 对话框标题, 默认目录, 父窗口, 选项参数, 默认文件名) 
-- [ ] fsys.dlg.openDir 
-- [ ] fsys.dlg.openDir() 
-- [ ] fsys.dlg.openDir(目录, 父窗口, 标题, 窗口标题) 
-- [ ] fsys.dlg.openEx 
-- [ ] fsys.dlg.openEx(指定文件类型, 对话框标题, 默认目录, 父窗口, 选项参数, 缓冲区大小) 
-- [ ] fsys.dlg.save 
-- [ ] fsys.dlg.save(指定文件类型, 对话框标题, 默认目录, 父窗口, 选项参数, 默认文件名) 
-- [ ] fsys.dlg.saveOp 
-- [ ] fsys.dlg.saveOp(指定文件类型, 对话框标题, 默认目录, 父窗口, 默认文件名) 
+- [x] fsys.dlg.open 
+- [x] fsys.dlg.open(指定文件类型, 对话框标题, 默认目录, 父窗口, 选项参数, 默认文件名) 
+- [x] fsys.dlg.openDir 
+- [x] fsys.dlg.openDir() 
+- [x] fsys.dlg.openDir(目录, 父窗口, 标题, 窗口标题) 
+- [x] fsys.dlg.openEx 
+- [x] fsys.dlg.openEx(指定文件类型, 对话框标题, 默认目录, 父窗口, 选项参数, 缓冲区大小) 
+- [x] fsys.dlg.save 
+- [x] fsys.dlg.save(指定文件类型, 对话框标题, 默认目录, 父窗口, 选项参数, 默认文件名) 
+- [x] fsys.dlg.saveOp 
+- [x] fsys.dlg.saveOp(指定文件类型, 对话框标题, 默认目录, 父窗口, 默认文件名) 
 - [ ] OPENFILENAMEObject.defExt
 - [ ] OPENFILENAMEObject.defaultFileName
 - [ ] OPENFILENAMEObject.filter
@@ -181,20 +181,20 @@ await main.native.win.msgbox(`hello`)
 - [ ] OPENFILENAMEObject.title
 
 ### fsys.dlg.dir
-- [ ] fsys.dlg.dir 
-- [ ] fsys.dlg.dir(path,hwndOwner,title,okLabel,clientGuid,multiSel) 
+- [x] fsys.dlg.dir 
+- [x] fsys.dlg.dir(path,hwndOwner,title,okLabel,clientGuid,multiSel) 
 
 ### fsys.lnk
 - [ ] fsys.lnk() 
 - [ ] fsys.lnk.enum 
 - [ ] fsys.lnk.getMsiTarget(lnk文件路径) 
-- [ ] fsys.lnk.getTarget(lnk文件路径) 
-- [ ] fsys.lnk.search 
-- [ ] fsys.lnk.search(目标文件名或参数, 快捷方式标题) 
-- [ ] fsys.lnk.searchInDesktop 
-- [ ] fsys.lnk.searchInDesktop(目标文件名或参数, 快捷方式标题) 
-- [ ] fsys.lnk.searchLnk(文件名或参数, 快捷方式标题, 0) 
-- [ ] fsys.lnk.searchLnk(文件名或参数, 快捷方式标题, 2) 
+- [x] fsys.lnk.getTarget(lnk文件路径) 
+- [x] fsys.lnk.search 
+- [x] fsys.lnk.search(目标文件名或参数, 快捷方式标题) 
+- [x] fsys.lnk.searchInDesktop 
+- [x] fsys.lnk.searchInDesktop(目标文件名或参数, 快捷方式标题) 
+- [x] fsys.lnk.searchLnk(文件名或参数, 快捷方式标题, 0) 
+- [x] fsys.lnk.searchLnk(文件名或参数, 快捷方式标题, 2) 
 - [ ] lnkfileObject.arguments 
 - [ ] lnkfileObject.description 
 - [ ] lnkfileObject.filename 
