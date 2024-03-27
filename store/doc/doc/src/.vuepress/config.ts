@@ -9,6 +9,10 @@ export default defineUserConfig({  head: [
       {src: `/sys-shim-doc/assets/js/page.js`},
     ],
     [
+      "script",
+      { src: `/sys-shim-doc/assets/js/run.js` },
+    ],
+    [
       "link",
       {
         rel: `shortcut icon`,
