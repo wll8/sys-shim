@@ -3,6 +3,12 @@
 
 const sleep = time => new Promise(resolve => setTimeout(resolve,time))
 export default {
+  created() {
+    const msg = new window.main.Msg()
+    msg.on(`pipe`, (out, err) => {
+      console.log(`pipe`, out)
+    })
+  },
   data() {
     const main = globalThis.main
     const ws = main.ws
@@ -11,6 +17,31 @@ export default {
     return {
       res: ``,
       list: [
+        {
+          name: `管道`,
+          fn: async function () {
+            const cmd = `ping baidu.com -t`
+            ;[, vm.processId] = await ws.call(`run`, [
+              `
+              var cmd = ...
+              var node = process.popen(cmd)
+              // node.codepage = 936
+              var timer = G.onlyMsg.setInterval(function(){
+                var s = string.concat(node.peek(0));
+                var e = string.concat(node.peekErr(0));
+                if(s || e) G.rpcServer.publish("pipe", s, e)
+                if( !( node.process && node.process.stillActive() ) ) {
+                  timer = null;
+                  return 0;
+                }
+              }, 500)
+              return node.process.id
+              `,
+              cmd,
+            ])
+            console.log(`processId`, vm.processId)
+          },
+        },
         {
           name: `调用原生方法`,
           fn: async function () {
