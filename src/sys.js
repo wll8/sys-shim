@@ -108,8 +108,6 @@ class Base {
         res(runRes)
       })
     }})
-    this.win = this.native.win
-    this.fsys = this.native.fsys
   }
   get api() {
     return {
@@ -118,9 +116,6 @@ class Base {
         return res
       },
     }
-  }
-  get form() {
-    return this.native.win.form._forms[this.hwnd]
   }
 }
 

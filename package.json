@@ -7,7 +7,7 @@
   "page": "http://localhost:5173/",
   "name": "sys-shim",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "scripts": {
     "lint": "eslint ./ --format unix",
     "lint-fix": "eslint ./ --fix --format unix",

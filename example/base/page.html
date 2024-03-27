@@ -7,12 +7,11 @@
   </head>
   <script>
     new Sys().then(async main => {
-      globalThis.main = main
-      main.form.show()
+      globalThis.native = main.native
     })
   </script>
   <body>
-    <button onclick="main.win.msgbox(`hello`, `title`)">msgbox</button>
-    <button onclick="main.win.quitMessage()">exit</button>
+    <button onclick="native.win.msgbox(`hello`, `title`)">msgbox</button>
+    <button onclick="native.win.quitMessage()">exit</button>
   </body>
 </html>

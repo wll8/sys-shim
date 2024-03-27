@@ -238,13 +238,13 @@ export default {
         {
           name: `弹窗`,
           async fn() {
-            main.win.msgbox(`hello`)
+            main.native.win.msgbox(`hello`)
           },
         },
         {
           name: `退出`,
           async fn() {
-            main.win.quitMessage()
+            main.native.G.killAll()
           },
         },
         /* test the writeText method of Api.clipboard */
