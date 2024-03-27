@@ -78,6 +78,7 @@ console.log(res)
   "Caption": "Intel64 Family 6 Model 151 Stepping 2",
   ...
 }
+**/
 ```
 
 ## sys.cpu.getMaxExtFunction() 
