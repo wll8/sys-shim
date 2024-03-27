@@ -427,7 +427,7 @@ pnpm dev
 ``` js
 require(`数据目录/res/node/main.js`)
 new Sys(`ws://localhost:7788`).then(async main => {
-  await main.win.msgbox(`hello`)
+  await main.native.msgbox(`hello`)
 })
 ```
 
