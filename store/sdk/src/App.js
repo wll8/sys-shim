@@ -207,7 +207,7 @@ export default {
         {
           name: `弹窗`,
           async fn() {
-            main.win.msgbox(`hello`)
+            main.win.msgbox(`hello`).then()
           },
         },
         {
