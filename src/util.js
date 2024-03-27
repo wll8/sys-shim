@@ -1,7 +1,7 @@
 import { DeepProxy } from './proxy-deep.js'
 const KEYS_MAP = new Map()
 export function get([key]) {
-  return KEYS_MAP.get(key) ?? key
+  return KEYS_MAP.get(key) || key
 }
 export function deepProxy({
   keys = [`then`, `catch`],
@@ -19,8 +19,8 @@ export function deepProxy({
     KEYS_MAP.set(key, _val)
     KEYS_MAP.set(_val, key)
   })
-  function getRecords(context) {
-    return context?.records ?? []
+  function getRecords(context = {}) {
+    return context.records || []
   }
   // 代理处理程序
   const handler = {
@@ -28,6 +28,7 @@ export function deepProxy({
       let records = getRecords(this)
       if (keys.includes(key)) {
         let promise = cb(records)
+        records.hackRun = true // 已运行过
         return promise[key].bind(promise)
       } else {
         records.push({ type: `get`, key: get([key]) })
@@ -37,6 +38,10 @@ export function deepProxy({
     },
     apply(target, thisArg, args) {
       let records = getRecords(this)
+      setTimeout(() => {
+        let recordsEnd = getRecords(this)
+        !recordsEnd.hackRun && cb(recordsEnd)
+      }, 0)
       const key = records[records.length - 1].key
       records[records.length - 1] = { type: `apply`, key, arg: args }
       let newTarget = function () { }
