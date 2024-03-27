@@ -241,6 +241,79 @@ await main.native.win.msgbox(`hello`)
   - [x] sys.cpu.getMaxExtFunction() 
   - [x] sys.cpu.getVender() 
 
+### sys.baseBoard
+- [ ] sys.baseBoard.caption 
+- [ ] sys.baseBoard.configOption 
+- [ ] sys.baseBoard.creationClassName 
+- [ ] sys.baseBoard.description 
+- [ ] sys.baseBoard.getFullName() 
+- [ ] sys.baseBoard.manufacturer 
+- [ ] sys.baseBoard.name 
+- [ ] sys.baseBoard.otherIdentifyingInfo 
+- [ ] sys.baseBoard.partNumber 
+- [ ] sys.baseBoard.product 
+- [ ] sys.baseBoard.serialNumber 
+- [ ] sys.baseBoard.status 
+- [ ] sys.baseBoard.tag 
+- [ ] sys.baseBoard.version 
+- [ ] sys.baseBoard.bios.BIOSReleaseDate 
+- [ ] sys.baseBoard.bios.BIOSVendor 
+- [ ] sys.baseBoard.bios.BIOSVersion 
+- [ ] sys.baseBoard.bios.BaseBoardManufacturer 
+- [ ] sys.baseBoard.bios.BaseBoardProduct 
+- [ ] sys.baseBoard.bios.BaseBoardVersion 
+- [ ] sys.baseBoard.bios.BiosMajorRelease 
+- [ ] sys.baseBoard.bios.BiosMinorRelease 
+- [ ] sys.baseBoard.bios.SystemFamily 
+- [ ] sys.baseBoard.bios.SystemManufacturer 
+- [ ] sys.baseBoard.bios.SystemProductName 
+- [ ] sys.baseBoard.bios.SystemSKU 
+- [ ] sys.baseBoard.bios.SystemVersion 
+
+### sys.hd
+- [ ] sys.hd.getInfo() 
+- [ ] syshdinfObject.sFirmwareRev 
+- [ ] syshdinfObject.sModelNumber 
+- [ ] syshdinfObject.sSerialNumber 
+- [ ] syshdinfObject.ulTotalAddressableSectors 
+- [ ] syshdinfObject.wBufferSize 
+- [ ] syshdinfObject.wBufferType 
+- [ ] syshdinfObject.wCapabilities 
+- [ ] syshdinfObject.wGenConfig 
+- [ ] syshdinfObject.wNumCyls 
+- [ ] syshdinfObject.wNumHeads 
+- [ ] syshdinfObject.wNumSectorsPerTrack 
+- [ ] syshdinfObject.wReserved2 
+- [ ] syshdinfObject.wUltraDMA 
+
+### sys.info
+- [ ] sys.info 
+- [ ] sys.info() 
+- [ ] sysInfoObject.dwActiveProcessorMask 
+- [ ] sysInfoObject.dwAllocationGranularity 
+- [ ] sysInfoObject.dwNumberOfProcessors 
+- [ ] sysInfoObject.dwPageSize 
+- [ ] sysInfoObject.dwProcessorType 
+- [ ] sysInfoObject.isX64() 
+- [ ] sysInfoObject.lpMaximumApplicationAddress 
+- [ ] sysInfoObject.lpMinimumApplicationAddress 
+- [ ] sysInfoObject.wProcessorArchitecture 
+- [ ] sysInfoObject.wProcessorLevel 
+- [ ] sysInfoObject.wProcessorRevision 
+
+### sys.mem
+- [ ] sys.mem.getInfo() 
+- [ ] MEMORYSTATUSEX2Object.availPageFile 
+- [ ] MEMORYSTATUSEX2Object.availPhys 
+- [ ] MEMORYSTATUSEX2Object.availVirtual 
+- [ ] MEMORYSTATUSEX2Object.memoryLoad 
+- [ ] MEMORYSTATUSEX2Object.totalPageFile 
+- [ ] MEMORYSTATUSEX2Object.totalPhys 
+- [ ] MEMORYSTATUSEX2Object.totalVirtual 
+- [ ] memorystatusFieldObject.formatSize 
+- [ ] memorystatusFieldObject.size 
+- [ ] memorystatusFieldObject.sizeHighPart 
+
 ### win.clip
 
   - [ ] win.clip.formats() 
