@@ -1,4 +1,4 @@
-import proxy from '@/proxy.js'
+import { deepProxy } from '@/util.js'
 import Neutralino from '@/api/neutralino/index.js'
 let lib = {
   encoder: undefined,
@@ -36,17 +36,6 @@ function getUuid () {
     }
     return (c === `x` ? random : (random & 0x3) | 0x8).toString(16)
   })
-}
-
-/**
- * 转换路径数组为字符串
- * 例如： ["a", "2", "b"] 为 a[2]["b"]
- * 注意： 在 js 中，proxy a[2]["b"] 时等到的 2 依然是字符串，所以只能通过正则处理
- * // todo 有知道访问路径的具体类型的方式吗？
- */
-function pathToStr (key) {
-  let [root, ...path] = key
-  return `${root}${path.map(item => /^\d+$/.test(item) ? `[${item}]` : `["${item}"]`).join(``)}`
 }
 
 /**
@@ -98,36 +87,27 @@ function sliceStringByBytes(str, sliceLength) {
 
 class Base {
   constructor() {
-    this.native = proxy(``, {
-      deep: {
-        async set(key, val) {
-          let [root, ...path] = key
-          await ws.call(`${root}.setVal`, [...path, val])
-          let code = `
-            var val = ...
-            ${pathToStr(key)} = val
-            return ${pathToStr(key)}
-          `
-          let res = await ws.call(`run`, [code, val])
-          return res
-        },
-        async get(key) {
-          let code = `
-            return ${pathToStr(key)}
-          `
-          let res = await ws.call(`run`, [code])
-          return res
-        },
-        async call(key, ...arg) {
-          let code = `
-            var arg = {...}
-            return ${pathToStr(key)}(...)
-          `
-          let res = await ws.call(`run`, [code, ...arg])
-          return res
-        },
-      },
-    })
+    this.native = deepProxy({cb: (list) => {
+      return new Promise(async (res) => {
+        function strFix (str) {
+          return /^\d+$/.test(str) ? `[${str}]` : `.${str}`
+        }
+        let code = list.reduce((acc, {type, key, arg = []}) => {
+          if(type === `get`) {
+            acc = acc + strFix(key)
+          }
+          if(type === `apply`) {
+            acc = acc + `${strFix(key)}(${arg.map(_ => JSON.stringify(_)).join(`, `)})`
+          }
+          return acc
+        }, ``).slice(1)
+        code = `
+          return ${code}
+        `
+        let runRes = await ws.call(`run`, [code])
+        res(runRes)
+      })
+    }})
     this.win = this.native.win
     this.fsys = this.native.fsys
   }
