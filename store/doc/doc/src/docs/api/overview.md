@@ -216,7 +216,7 @@ await main.native.win.msgbox(`hello`)
 - [ ] lnkfileObject.workDir 
 
 ### fsys.remove
-- [ ] fsys.remove() 
+- [x] fsys.remove() 
 
 ### sys
   - [x] sys.getComputerName()

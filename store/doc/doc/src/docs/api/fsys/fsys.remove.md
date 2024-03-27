@@ -15,10 +15,10 @@ path = 'C:\\sys-shim-test'
 await native.fsys.createDir(path)
 
 // 写入文件夹，文件
-path2 = `C:/sys-shim-test/test2`
+path2 = `C:\\sys-shim-test\\test2`
 await native.fsys.createDir(path2)
 
-filepath = `C:/sys-shim-test/${Date.now()}.md`
+filepath = `C:\\sys-shim-test\\${Date.now()}.md`
 await native.string.save(filepath, `hello`)
 
 // 移除目录
