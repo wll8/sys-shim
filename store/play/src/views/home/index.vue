@@ -5,7 +5,8 @@
 <template>
   <div class="home">
     <playground-layout-wrapper>
-      <template #left>
+      <template #left />
+      <template #right>
         <LogFilter />
       </template>
     </playground-layout-wrapper>
