@@ -55,18 +55,10 @@ function dragEnd() {
   cursor: ew-resize;
 }
 .scroll-area {
-  width: 20px;
+  width: 2px;
   cursor: ew-resize;
   position: relative;
-  &::after {
-    position: absolute;
-    content: "";
-    width: 1px;
-    height: 100%;
-    background: #ccc;
-    left: 50%;
-    top: 0;
-    transform: translateX(-50%);
-  }
+  height: 100%;
+  background: var(--border-color);
 }
 </style>

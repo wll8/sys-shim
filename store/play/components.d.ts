@@ -19,6 +19,7 @@ declare module 'vue' {
     ARadioGroup: typeof import('ant-design-vue/es')['RadioGroup']
     ASelect: typeof import('ant-design-vue/es')['Select']
     ASpace: typeof import('ant-design-vue/es')['Space']
+    EnvironmentalChoice: typeof import('./src/components/environmental-choice/index.vue')['default']
     Filter: typeof import('./src/components/LogFilter/components/filter.vue')['default']
     LogFilter: typeof import('./src/components/LogFilter/index.vue')['default']
     Native: typeof import('./src/components/LogFilter/components/native.vue')['default']
@@ -27,5 +28,6 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SettingDrawer: typeof import('./src/components/setting-drawer/index.vue')['default']
+    WEasyTabs: typeof import('./src/components/w-easy-tabs/index.vue')['default']
   }
 }

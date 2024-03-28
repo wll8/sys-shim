@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { CACHE_SETTING_INFO } from './constants'
 import { localCache } from '@/utils/cache'
+import type { IPublicOption } from '@/types'
 
 export interface ISettingInfo {
   ws: string
@@ -13,23 +14,18 @@ export interface ISettingInfo {
   logMode: 'simple' | 'detailed' // simple: 简洁模式 detailed: 详细模式
 }
 
-interface IGroupRadioOption<T = any> {
-  label: string
-  value: T
-}
-
 interface ISettingState {
   // 设置信息
   settingInfo: ISettingInfo
   // 风格模式列表
-  styleModeOptions: IGroupRadioOption<ISettingInfo['styleMode']>[]
+  styleModeOptions: IPublicOption<ISettingInfo['styleMode']>[]
   // 日志模式列表
-  logModeOptions: IGroupRadioOption<ISettingInfo['logMode']>[]
+  logModeOptions: IPublicOption<ISettingInfo['logMode']>[]
   // 版本配置列表
   versionOptions: {
-    node: IGroupRadioOption<string>[]
-    browser: IGroupRadioOption<string>[]
-    app?: IGroupRadioOption<string>[]
+    node: IPublicOption<string>[]
+    browser: IPublicOption<string>[]
+    app?: IPublicOption<string>[]
   }
 }
 
