@@ -120,11 +120,11 @@ function execCode(){
 }
 if(globalThis.Sys) {
  
-  new globalThis.Sys().then(async main => {
+  new globalThis.Sys({log: true}).then(async main => {
     globalThis.main = main
     globalThis.native = main.native
     globalThis.Neutralino = await main.api.neutralino()
-    const [, hwnd] = await main.form.hwnd
+    const hwnd = main.hwnd
     const title = 'sys-shim 文档'
     const icon = "https://www.hongqiye.com/favicon.ico"
     const obj = {hwnd, title, icon}
