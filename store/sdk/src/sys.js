@@ -1,5 +1,4 @@
 import { deepProxy } from '@/util.js'
-import mitt from 'mitt'
 import Neutralino from '@/api/neutralino/index.js'
 let lib = {
   encoder: undefined,
@@ -196,8 +195,7 @@ class Sys extends Base {
     ws = cfg.ws
     super()
     this.ws = cfg.ws
-    this.log = mitt()
-    cfg.log && this.log.on(`log`, cfg.log)
+    this.ignoreLog = [`log`] // 不要被推送到日志记录器的事件标志
     const getBaseLog = () => ({
       id: ``, // 当前运行的 id
       action: ``, // 当前动作
@@ -215,6 +213,7 @@ class Sys extends Base {
     const call = ws.call
     ws.call = async (action, arg = []) => {
       const id = `fn${getUuid().replace(/-/g, ``)}`
+      let newArg = []
       let log = {
         ...getBaseLog(),
         id,
@@ -231,7 +230,7 @@ class Sys extends Base {
         const limit = Math.floor(chromeWsSize) - reserved
         const chunkList = sliceStringByBytes(strArg, limit)
         log.reqFormat = chunkList
-        this.log.emit(`log`, log)
+        !this.ignoreLog.includes(arg[1]) && this.msg.emit(`log`, log)
         const chunkListSize = chunkList.length
         // 否则分段发送
         for (let index = 0; index < chunkListSize; index++) {
@@ -248,7 +247,7 @@ class Sys extends Base {
           ])
         }
         // 函数拦截参考 lib/util/_.aardio apply 的实现
-        arg = [
+        newArg = [
           `
             var arg = global.G["${id}"] ? web.json.parse(global.G["${id}"]) : null;
             global.G["${id}"] = null
@@ -260,7 +259,7 @@ class Sys extends Base {
         ]
       }
       return new Promise(async (res) => {
-        const resRaw = await call.bind(ws)(action, arg)
+        const resRaw = await call.bind(ws)(action, newArg)
         let log = {
           ...getBaseLog(),
           id,
@@ -268,7 +267,7 @@ class Sys extends Base {
           endTime: Date.now(),
           resRaw,
         }
-        this.log.emit(`log`, log)
+        !this.ignoreLog.includes(arg[1]) && this.msg.emit(`log`, log)
         res(resRaw)
       })
     }
@@ -281,6 +280,8 @@ class Sys extends Base {
         this.Tray = Tray
         this.View = View
         this.Msg = Msg
+        this.msg = await new Msg()
+        cfg.log && this.msg.on(`log`, cfg.log)
         resolve(this)
       })
     })
