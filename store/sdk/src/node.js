@@ -15,11 +15,16 @@ const lib = {
 }
 
 class Sys extends SysRef {
-  constructor(wsUrl) {
+  constructor(user = {}) {
+    user = typeof(user) === `string` ? {wsUrl: user} : user
     return new Promise(async (resolve) => {
-      wsUrl = wsUrl || `${globalThis.ext.wsUrl}?token=${globalThis.ext.token }`
-      const ws = new RPCWebSocket.Client(wsUrl)
-      const that = await super(ws, lib)
+      user.wsUrl = user.wsUrl || `${globalThis.ext.wsUrl}?token=${globalThis.ext.token }`
+      const ws = new RPCWebSocket.Client(user.wsUrl)
+      const that = await super({
+        ...user,
+        ws,
+        lib,
+      })
       resolve(that)
     })
   }

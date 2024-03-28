@@ -3,3 +3,4 @@ dist
 node_modules
 dev.*
 win-api/res
+/page.html
