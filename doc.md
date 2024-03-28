@@ -205,41 +205,24 @@ new Sys().then(obj => {
 })
 ```
 
+sys 的参数:
+
+- string 时为 wsUrl
+- object 时为 {wsUrl, log}
+  - log 值可为函数或布尔值，函数接收 log 对象，为 true 时使用内置日志函数，log对象属性如何。
+    ``` js
+    const getBaseLog = () => ({
+      id: ``, // 当前运行的 id
+      action: ``, // 当前动作
+      startTime: ``, // 当前 id 开始时间
+      endTime: ``, // 当前 id 结束时间
+      reqRaw: [], // 待发送给服务器的，当 action 为 run 时，第一项为代码，其他项为参数
+      reqFormat: [], // 实际发送给服务器的，可能分片发送
+      resRaw: [], // 接收到的服务器响应，第一项为是否错误，其他项为返回值
+    })
+    ```
+
 初始化完成后，会得到对象 obj，属性为：
-
-### win
-
-窗口操作相关 api。
-
-#### win.msgbox()
-
-弹出对话框。
-
-参数："文本","标题",样式,所有者窗口句柄,显示时间
-
-#### win.quitMessage()
-
-退出消息循环。
-
-参数：loopMessage 退出代码。
-
-#### win.show()
-
-显示窗口。
-
-参数：hwnd, 显示参数
-
-#### win.setTopmost()
-
-置顶并显示窗口。
-
-参数：hwnd
-
-#### win.setTopmost()
-
-取消置顶窗口。
-
-参数：hwnd, false
 
 ### ws
 
@@ -393,16 +376,16 @@ node v18.19.0
 
 ``` bat
 rem 安装依赖
-yarn
+pnpm i
 
 rem 生成库文件 sys.js
-yarn sys
+pnpm sys
 
 rem 获取 main.exe，可以通过编译或下载得到
-yarn main:build
+pnpm main:build
 
 rem 调试 api
-yarn dev
+pnpm dev
 ```
 
 另外，任何程序，不管是浏览器还是 nodejs 都可以通过 main.exe 提供的 websocket api 来调用系统功能。
@@ -427,6 +410,62 @@ yarn dev
 ``` js
 require(`数据目录/res/node/main.js`)
 new Sys(`ws://localhost:7788`).then(async main => {
-  await main.win.msgbox(`hello`)
+  await main.native.msgbox(`hello`)
 })
 ```
+
+## todo
+
+- 可控制 loading 页面什么时候关闭，例如虽然 page 页面显示了，但并未满足可用状态，手动判断满足后，才关闭 loading，才显示 page
+
+
+## neutralinojs api 封装
+
+- Neutralino.app
+  - [x] app.exit -- 注：退出码暂未实现
+  - [x] app.killProcess
+  - [ ] app.restartProcess
+  - [x] app.getConfig
+  - [ ] app.broadcast
+  - [ ] app.readProcessInput
+  - [ ] app.writeProcessOutput
+  - [ ] app.writeProcessError
+- Neutralino.clipboard
+  - [x] clipboard.writeText
+  - [x] clipboard.readText
+- Neutralino.computer
+
+- Neutralino.debug
+
+- Neutralino.events
+  - [x] events.on
+  - [x] events.off
+  - [x] events.dispatch -- 注：暂不实现
+  - [x] events.broadcast
+
+- Neutralino.extensions
+
+- Neutralino.filesystem
+
+- Neutralino.init
+
+- Neutralino.os
+  - [x] os.execCommand
+  - [x] os.spawnProcess
+  - [ ] os.updateSpawnedProcess
+  - [ ] os.getSpawnedProcesses
+  - [x] os.getEnv
+  - [x] os.getEnvs
+  - [x] os.showOpenDialog
+  - [x] os.showSaveDialog
+  - [x] os.showFolderDialog
+  - [ ] os.showNotification
+  - [x] os.showMessageBox
+  - [ ] os.setTray
+  - [x] os.getPath
+  - [x] os.open
+- Neutralino.storage
+
+- Neutralino.updater
+
+- Neutralino.window
