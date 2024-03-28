@@ -209,7 +209,7 @@ sys 的参数:
 
 - string 时为 wsUrl
 - object 时为 {wsUrl, log}
-  - log 值可为函数或布尔值，函数接收 log 对象，为 true 时使用内置日志函数，log对象属性如何。
+  - log 值可为函数或布尔值，函数接收 log 对象，为 true 时使用内置日志函数，log对象属性如下：
     ``` js
     const getBaseLog = () => ({
       id: ``, // 当前运行的 id
