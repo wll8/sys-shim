@@ -205,41 +205,24 @@ new Sys().then(obj => {
 })
 ```
 
+sys 的参数:
+
+- string 时为 wsUrl
+- object 时为 {wsUrl, log}
+  - log 值可为函数或布尔值，函数接收 log 对象，为 true 时使用内置日志函数，log对象属性如何。
+    ``` js
+    const getBaseLog = () => ({
+      id: ``, // 当前运行的 id
+      action: ``, // 当前动作
+      startTime: ``, // 当前 id 开始时间
+      endTime: ``, // 当前 id 结束时间
+      reqRaw: [], // 待发送给服务器的，当 action 为 run 时，第一项为代码，其他项为参数
+      reqFormat: [], // 实际发送给服务器的，可能分片发送
+      resRaw: [], // 接收到的服务器响应，第一项为是否错误，其他项为返回值
+    })
+    ```
+
 初始化完成后，会得到对象 obj，属性为：
-
-### win
-
-窗口操作相关 api。
-
-#### win.msgbox()
-
-弹出对话框。
-
-参数："文本","标题",样式,所有者窗口句柄,显示时间
-
-#### win.quitMessage()
-
-退出消息循环。
-
-参数：loopMessage 退出代码。
-
-#### win.show()
-
-显示窗口。
-
-参数：hwnd, 显示参数
-
-#### win.setTopmost()
-
-置顶并显示窗口。
-
-参数：hwnd
-
-#### win.setTopmost()
-
-取消置顶窗口。
-
-参数：hwnd, false
 
 ### ws
 
