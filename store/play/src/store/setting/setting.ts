@@ -33,9 +33,9 @@ const useSettingStore = defineStore('setting', {
   state: (): ISettingState => ({
     settingInfo: {
       ws: '',
-      nodeV: '',
-      browserV: '',
-      appV: '',
+      nodeV: '0.0.1',
+      browserV: '0.0.1',
+      appV: '0.0.1',
       styleMode: 'light',
       logMode: 'simple',
     },
@@ -66,13 +66,19 @@ const useSettingStore = defineStore('setting', {
       node: [
         {
           label: 'node-sys.js@v0.01',
-          value: 'v0.01',
+          value: '0.0.1',
         },
       ],
       browser: [
         {
           label: 'browser-sys.js@v0.01',
-          value: 'v0.01',
+          value: '0.0.1',
+        },
+      ],
+      app: [
+        {
+          label: 'main.exe@v0.01',
+          value: '0.0.1',
         },
       ],
     },

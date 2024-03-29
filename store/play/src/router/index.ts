@@ -10,6 +10,10 @@ export default createRouter({
       path: '/home',
       component: () => import('@/views/home/index.vue'),
     },
+    {
+      path: '/home/:data',
+      component: () => import('@/views/home/index.vue'),
+    },
   ],
   history: createWebHashHistory(),
 })

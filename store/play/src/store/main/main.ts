@@ -31,9 +31,19 @@ const useMainStore = defineStore('Main', {
       execInfo.env['main.exe'] = settingInfo.appV
       // 设置代码
       const { type = 'node', code = '' } = options
-      execInfo.code[type] = code
+      execInfo.code = { [type]: code }
       // 设置到环境中
       this.execInfo = execInfo
+    },
+    urlDataToExecInfoAction(data: IExecInfo) {
+      this.execInfo = data
+      // 将data数据设置到settingStore
+      const settingStore = useSettingStore()
+      const settingInfo = settingStore.settingInfo
+      settingInfo.nodeV = data!.env['node-sys.js']!
+      settingInfo.browserV = data!.env['browser-sys.js']!
+      settingInfo.appV = data!.env['main.exe']!
+      settingStore.changeSettingInfoAction(settingInfo)
     },
   },
 })

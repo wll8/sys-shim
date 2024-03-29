@@ -86,7 +86,7 @@ function onConfirm() {
             label="app版本"
             name="appV"
           >
-            <a-input v-model:value="formState.appV" />
+            <a-select v-model:value="formState.appV" :options="versionOptions.app" />
           </a-form-item>
           <a-form-item
             label="风格"

@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import useMainStore from '@/store/main/main'
+import { objectToBase64 } from '@/utils/base64'
+
 interface NavType {
   text: string
   icon: string
@@ -30,11 +33,25 @@ const navList: NavType[] = [
   },
 ]
 const settingShow = ref(false)
+const mainStore = useMainStore()
+
+async function fetchShareLink() {
+  const path = '#/home'
+  const baseURL = import.meta.env.VITE_WEB_BASE_URL + path
+  const link = `${baseURL}/${objectToBase64(mainStore.execInfo)}`
+  await window.navigator.clipboard.writeText(link)
+  alert('Sharable URL has been copied to clipboard')
+}
+
 // onNavClick
 function onNavClick(item: NavType) {
   // 打开设置框
   if (item.index === 'setting')
     settingShow.value = true
+  // 生成分享链接
+  if (item.index === 'share')
+    fetchShareLink()
+
   // 跳转外部链接
   if (item.index === 'externalLink' && item.link)
     window.location.href = item.link
