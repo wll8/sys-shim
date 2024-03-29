@@ -16,10 +16,10 @@ function runCode() {
       cursor: pointer;
       transition: opacity 0.4s;
       display: flex;
-      opacity: 0;
       align-items: center;
       justify-content: center;
       background-color: transparent;
+      opacity: 0;
     }
     .exec {
       right: 3.5em;
@@ -31,15 +31,32 @@ function runCode() {
       opacity: 1;
       background-color: #d8e9f6;
     }
+    .code-common-btn:hover .icon {
+      background: transparent;
+    }
     .code-common-btn .icon {
+      width: 1.8rem;
+      height: 1.8rem;
+      border-radius: 0.2rem;
+      background: #ecf4fa;
+      position: relative;
+    }
+    .code-common-btn .icon::after {
+      position: absolute;
+      content: "";
       width: 1.25rem;
       height: 1.25rem;
       background-size: 100% 100%;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      margin: auto;
     }
-    .exec-icon {
+    .exec-icon::after {
       background: url(/sys-shim-doc/assets/icon/run.svg);
     }
-    .share-icon {
+    .share-icon::after {
       background: url(/sys-shim-doc/assets/icon/share.svg);
     }
   `
