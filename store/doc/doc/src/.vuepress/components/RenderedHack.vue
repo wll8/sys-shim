@@ -2,12 +2,16 @@
   <!-- RenderedHack -->
 </template>
 <script>
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 export default {
    setup () {
+    let removeEvents = null
      onMounted(() => {
-       window.RenderedHack && window.RenderedHack()
+       if(window.RenderedHack) removeEvents = window.RenderedHack()
      })
-   }
+     onUnmounted(()=>{
+      removeEvents && removeEvents()
+     })
+   },
 }
 </script>

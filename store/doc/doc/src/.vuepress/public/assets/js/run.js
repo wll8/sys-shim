@@ -67,7 +67,13 @@ function runCode() {
     styleEl.innerHTML = execBtnCss
     body.append(styleEl)
   }
-
+ 
+  const events  = []
+  function removeEvents(){
+    for(const item of events){
+      item.el.removeEventListener(item.eventName, item.fn)
+    }
+  }
   function addExecDiv(el){
     const execDiv = document.createElement("div")
     execDiv.innerHTML = `
@@ -80,8 +86,10 @@ function runCode() {
       `
     const execBtn =  execDiv.querySelector(".exec")
     const shareBtn = execDiv.querySelector(".share")
+  
+    const eventName = "click"
     // 执行代码
-    execBtn.addEventListener("click", function(){
+    function execCode(){
       if(!globalThis.Sys) {
         alert(`此功能需连接到 sys-shim`)
         return undefined
@@ -89,23 +97,32 @@ function runCode() {
       eval(`(async () => {
         ${el.innerText}
       })()`)
-    })
+    }
     // 分享代码
-    shareBtn.addEventListener("click", function(){
+    function shareCode(){
       console.log("生成分享链接", el.innerText)
-    })
+    }
+    // 执行代码点击
+    execBtn.addEventListener(eventName, execCode)
+    // 分享代码
+    shareBtn.addEventListener(eventName, shareCode)
+    // 添加到里面好移除事件
+    events.push({el: execBtn, eventName, fn: execCode})
+    events.push({el: execBtn, eventName, fn: execCode})
     el.appendChild(execDiv)
   }  
-
   createStyleEl()
   const list = document.querySelectorAll(`div.language-javascript`)
   list.forEach(item => addExecDiv(item))
+  return {
+    removeEvents
+  }
 }
 
 {
   const old = window.RenderedHack || new Function();
-  window.RenderedHack = () => {
+  window.RenderedHack = function () {
     old()
-    runCode()
+    return runCode().removeEvents
   }
 }
