@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { basicSetup } from 'codemirror'
-import { EditorState, type EditorStateConfig } from '@codemirror/state'
-import { EditorView, type EditorViewConfig } from '@codemirror/view'
+import type { EditorView } from 'codemirror'
+
+import type { EditorState, EditorStateConfig } from '@codemirror/state'
+import { creatEditorState, createEditorView, getEditorTools } from './utils'
 
 interface IProps {
   modelValue?: string
@@ -11,37 +12,43 @@ const props = withDefaults(defineProps<IProps>(), {
   modelValue: '',
 })
 const emit = defineEmits(['update:modelValue'])
-// 创建配置
-const createEditorView = (config: EditorViewConfig) => new EditorView(config)
-// 生成状态
-const creatEditorState = (config: EditorStateConfig) => EditorState.create(config)
+
 const el = ref<HTMLDivElement>()
-const editor = ref<EditorView>()
+const editorView = ref<EditorView>()
+const editorState = ref<EditorState>()
+// 获取工具方法
+const editorTools = ref<ReturnType<typeof getEditorTools>>()
+
 onMounted(() => {
   const codeEl = el!.value!
   const config = props.config ?? {}
   const state = creatEditorState({
     doc: props.modelValue,
     ...config,
-    extensions: [
-      basicSetup,
-
-      ...(Array.isArray(config.extensions) ? config.extensions : [config.extensions]),
-      // 添加时间监听
-      EditorView.updateListener.of((viewUpdate) => {
-        // 监听代码变化并绑定
-        if (viewUpdate.docChanged)
-          emit('update:modelValue', viewUpdate.startState.doc.toString())
-      }),
-    ],
+    // 指自定义封装绑定事件
+    onChange: (value) => {
+      emit('update:modelValue', value)
+    },
   })
-  editor.value = createEditorView({
+  editorState.value = state
+  const view = createEditorView({
     state,
     parent: codeEl,
   })
+  editorTools.value = getEditorTools(view)
+  editorView.value = view
 })
+
+// 监听代码变化更新代码内容
+watch(() => props.modelValue, () => {
+  if (editorTools.value)
+    editorTools.value.setDoc(props.modelValue)
+})
+// 抛出方法
 defineExpose({
-  editor,
+  editorView,
+  editorState,
+  editorTools,
 })
 </script>
 
