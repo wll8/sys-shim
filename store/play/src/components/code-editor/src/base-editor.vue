@@ -27,7 +27,8 @@ onMounted(() => {
     ...config,
     // 指自定义封装绑定事件
     onChange: (value) => {
-      emit('update:modelValue', value)
+      if (value !== props.modelValue)
+        emit('update:modelValue', value)
     },
   })
   editorState.value = state
@@ -41,7 +42,7 @@ onMounted(() => {
 
 // 监听代码变化更新代码内容
 watch(() => props.modelValue, () => {
-  if (editorTools.value)
+  if (editorTools.value && editorTools.value.getDoc() !== props.modelValue)
     editorTools.value.setDoc(props.modelValue)
 })
 // 抛出方法

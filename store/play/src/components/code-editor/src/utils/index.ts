@@ -20,13 +20,14 @@ export function creatEditorState(config: WEditorStateConfig) {
     ...config,
     extensions: [
       basicSetup,
-      ...(Array.isArray(config.extensions) ? config.extensions : [config.extensions]),
-      // 添加时间监听
+      // 添加事件监听
       EditorView.updateListener.of((viewUpdate) => {
         // 监听代码变化并绑定
         if (viewUpdate.docChanged)
-          config.onChange && config.onChange(viewUpdate.startState.doc.toString(), viewUpdate)
+          config.onChange && config.onChange(viewUpdate.state.doc.toString(), viewUpdate)
       }),
+      ...(Array.isArray(config.extensions) ? config.extensions : [config.extensions]),
+
     ],
   })
 }
