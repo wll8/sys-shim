@@ -7,6 +7,24 @@
   --card-shadow: rgba(0, 0, 0, 0.15);
   // 公共边框颜色
   --border-color: #ccc;
+
+  /* 代码编辑器相关颜色*/
+  // 字体大小
+  --code-size: 13px;
+  // 边框线
+  --code-outline: none;
+  // 激活行颜色
+  --code-activeLine-color: #fafafa;
+  // 左侧数字槽颜色
+  --code-gutters-bg-color: #fff;
+  // 左侧数字文本颜色
+  --code-gutters-color: rgb(35, 120, 147);
+  // 左侧槽gutters右侧边框颜色
+  --code-gutters-border-right: none;
+  // 激活左侧槽gutters文本颜色
+  --code-gutters-activeLine-color: #000;
+  // 激活左侧槽gutters背景颜色
+  --code-gutters-activeLine-bg-color: #fdfdfd;
 }
 
 .wrapper {

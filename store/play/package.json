@@ -14,10 +14,14 @@
     "commit": "cz"
   },
   "dependencies": {
+    "@codemirror/lang-javascript": "^6.2.2",
+    "@codemirror/state": "^6.4.1",
+    "@codemirror/view": "^6.26.1",
     "@vue/reactivity": "^3.4.20",
     "@vue/shared": "^3.4.20",
     "ant-design-vue": "^4.1.2",
     "axios": "^1.6.7",
+    "codemirror": "^6.0.1",
     "normalize.css": "^8.0.1",
     "pinia": "^2.1.7",
     "sass": "^1.71.0",
