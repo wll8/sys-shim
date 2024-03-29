@@ -57,7 +57,6 @@ export default hopeTheme({
     blog: {
       excerpt: false,
       filter(page){
-        console.log(page.path)
         return true
       },
     },
