@@ -36,9 +36,8 @@ const settingShow = ref(false)
 const mainStore = useMainStore()
 
 async function fetchShareLink() {
-  const path = '#/home'
-  const baseURL = import.meta.env.VITE_WEB_BASE_URL + path
-  const link = `${baseURL}/${objectToBase64(mainStore.execInfo)}`
+  const baseURL = import.meta.env.VITE_SHARE_BASE_URL
+  const link = `${baseURL}${objectToBase64(mainStore.execInfo)}`
   await window.navigator.clipboard.writeText(link)
   alert('Sharable URL has been copied to clipboard')
 }
