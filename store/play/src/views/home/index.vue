@@ -19,6 +19,15 @@ function onTabChange(tabInfo: IChoiceTabChangeValue) {
 watch(() => runOption.code, () => {
   mainStore.changeExecInfoAction(runOption)
 })
+// 监听变化修改代码
+watch(() => mainStore.execInfo, () => {
+  const execInfo = mainStore.execInfo
+  const type = Object.keys(execInfo.code)[0] as RunCodeType
+  if (type !== runOption.type)
+    runOption.type = type
+  if (execInfo.code[type] !== runOption.code)
+    runOption.code = execInfo.code[type]
+})
 /**
  * 加载代码
  */

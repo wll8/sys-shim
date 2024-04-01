@@ -5,19 +5,25 @@ import type { IExecInfo, IExecInfoActionOptions } from './type'
 interface IMainState {
   execInfo: IExecInfo
 }
+interface IInitInfo {
+  execInfo: IExecInfo
+}
+const initInfo: IInitInfo = {
+  execInfo: {
+    env: {
+      'node-sys.js': '0.0.1',
+      'browser-sys.js': '0.0.1',
+      'main.exe': '0.0.1',
+    },
+    code: {
+      browser: '',
+    },
+  },
+}
 
 const useMainStore = defineStore('Main', {
   state: (): IMainState => ({
-    execInfo: {
-      env: {
-        'node-sys.js': '0.0.1',
-        'browser-sys.js': '0.0.1',
-        'main.exe': '0.0.1',
-      },
-      code: {
-        browser: '',
-      },
-    },
+    execInfo: initInfo.execInfo,
   }),
   actions: {
     changeExecInfoAction(options: IExecInfoActionOptions) {
@@ -44,6 +50,12 @@ const useMainStore = defineStore('Main', {
       settingInfo.browserV = data!.env['browser-sys.js']!
       settingInfo.appV = data!.env['main.exe']!
       settingStore.changeSettingInfoAction(settingInfo)
+    },
+    // 重置信息
+    resetAction() {
+      this.execInfo = initInfo.execInfo
+      const settingStore = useSettingStore()
+      settingStore.resetAction()
     },
   },
 })

@@ -28,17 +28,23 @@ interface ISettingState {
     app?: IPublicOption<string>[]
   }
 }
+interface IInitInfo {
+  settingInfo: ISettingInfo
+}
+const initInfo: IInitInfo = {
+  settingInfo: {
+    ws: '',
+    nodeV: '0.0.1',
+    browserV: '0.0.1',
+    appV: '0.0.1',
+    styleMode: 'light',
+    logMode: 'simple',
+  },
+}
 
 const useSettingStore = defineStore('setting', {
   state: (): ISettingState => ({
-    settingInfo: {
-      ws: '',
-      nodeV: '0.0.1',
-      browserV: '0.0.1',
-      appV: '0.0.1',
-      styleMode: 'light',
-      logMode: 'simple',
-    },
+    settingInfo: initInfo.settingInfo,
     // 风格模式
     styleModeOptions: [
       {
@@ -95,6 +101,10 @@ const useSettingStore = defineStore('setting', {
       const settingInfo = localCache.getCache(CACHE_SETTING_INFO)
       if (settingInfo)
         this.settingInfo = settingInfo
+    },
+    // 重置
+    resetAction() {
+      this.changeSettingInfoAction(initInfo.settingInfo)
     },
   },
 })

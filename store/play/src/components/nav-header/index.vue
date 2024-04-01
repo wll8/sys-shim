@@ -28,7 +28,7 @@ const navList: NavType[] = [
   {
     text: '源码',
     icon: 'i-carbon-logo-github',
-    link: '',
+    link: 'https://github.com/wll8/sys-shim-play',
     index: 'externalLink', // 外部链接
   },
 ]
@@ -50,10 +50,13 @@ function onNavClick(item: NavType) {
   // 生成分享链接
   if (item.index === 'share')
     fetchShareLink()
+  // 重置
+  if (item.index === 'reset')
+    mainStore.resetAction()
 
   // 跳转外部链接
   if (item.index === 'externalLink' && item.link)
-    window.location.href = item.link
+    window.open(item.link)
 }
 </script>
 
