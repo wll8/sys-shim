@@ -323,6 +323,71 @@ export default {
             console.log(`res`, res)
           },
         },
+        {
+          name: `耗时操作，搜索文件`,
+          async fn(){
+            const res = await main.native.fsys.searchFile(`*.no-file`, `C:/Users/`, true)
+            console.log(`res`, res)
+          },
+        },
+        {
+          name: `耗时操作，卡顿`,
+          async fn(){
+            const res = await main.ws.call(`run`, [`
+              sleep(5000)
+            `])
+            console.log(`res`, res)
+          },
+        },
+        {
+          name: `线程 invoke`,
+          async fn(){
+            const res = await main.ws.call(`run`, [`
+              return thread.invoke( 
+                function(){
+                  sleep(5000)
+                  return 'invoke'
+                }
+              )
+            `])
+            console.log(`res`, res)
+          },
+        },
+        {
+          name: `线程 invokeAndWait 等待返回`,
+          async fn(){
+            const res = await main.ws.call(`run`, [`
+              return thread.invokeAndWait( 
+                function(){
+                  sleep(5000)
+                  return 'invokeAndWait'
+                }
+              )
+            `])
+            console.log(`res`, res)
+          },
+        },
+        {
+          name: `订阅`,
+          async fn(){
+            await main.ws.call(`run`, [`
+              ..subscribe('testabc', function(arg){
+                import console
+                console.log('testabc', arg)
+              })
+            `])
+            console.log(`res`)
+          },
+        },
+        {
+          name: `发布`,
+          async fn(){
+            await main.ws.call(`run`, [`
+              ..publish('testabc', 12345)
+            `])
+            console.log(`res`)
+          },
+        },
 
       ],
     }
