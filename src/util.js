@@ -124,3 +124,97 @@ export function binaryArrayToBuffer(binaryArray) {
   }
   return buffer
 }
+
+/**
+ * 删除左边空格
+ * @param {*} str
+ * @returns
+ */
+export function removeLeft(str) {
+  const lines = str.split(`\n`)
+  // 获取应该删除的空白符数量
+  const minSpaceNum = lines.filter(item => item.trim())
+    .map(item => item.match(/(^\s+)?/)[0].length)
+    .sort((a, b) => a - b)[0]
+  // 删除空白符
+  const newStr = lines
+    .map(item => item.slice(minSpaceNum))
+    .join(`\n`)
+  return newStr
+}
+
+/**
+ * 获取 uuid
+ * @returns
+ */
+export function getUuid () {
+  if (typeof crypto === `object`) {
+    if (typeof crypto.randomUUID === `function`) {
+      return crypto.randomUUID()
+    }
+    if (typeof crypto.getRandomValues === `function` && typeof Uint8Array === `function`) {
+      const callback = (c) => {
+        const num = Number(c)
+        return (num ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (num / 4)))).toString(16)
+      }
+      return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, callback)
+    }
+  }
+  let timestamp = new Date().getTime()
+  let perforNow = (typeof performance !== `undefined` && performance.now && performance.now() * 1000) || 0
+  return `xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx`.replace(/[xy]/g, (c) => {
+    let random = Math.random() * 16
+    if (timestamp > 0) {
+      random = (timestamp + random) % 16 | 0
+      timestamp = Math.floor(timestamp / 16)
+    } else {
+      random = (perforNow + random) % 16 | 0
+      perforNow = Math.floor(perforNow / 16)
+    }
+    return (c === `x` ? random : (random & 0x3) | 0x8).toString(16)
+  })
+}
+
+export function isUTF8MultiByteStart(byte) {
+  // 如果字节的高位为11，则是多字节字符的起始字节
+  return (byte & 0xC0) === 0xC0
+}
+
+export function isUTF8MultiByteContinuation(byte) {
+  // 如果字节的高位为10，则是多字节字符的延续字节
+  return (byte & 0xC0) === 0x80
+}
+
+
+/**
+ * 根据字节长度分割字符串
+ * @param {*} param0
+ * @returns
+ */
+export function sliceStringByBytes({lib, str, sliceLength}) {
+  const uint8Array = lib.encoder.encode(str)
+  let slices = []
+  let start = 0
+
+  while (start < uint8Array.length) {
+    let end = start + sliceLength
+    if (end > uint8Array.length) {
+      end = uint8Array.length
+    } else {
+      // 确保不在多字节字符中间断开
+      while (end > start && isUTF8MultiByteContinuation(uint8Array[end - 1])) {
+        end--
+      }
+      // 如果我们在多字节字符的起始处中止，则再次前移
+      if (end > start && isUTF8MultiByteStart(uint8Array[end - 1])) {
+        end--
+      }
+    }
+
+    const slice = uint8Array.subarray(start, end)
+    slices.push(lib.decoder.decode(slice))
+    start = end // 设置下次分片的起始位置
+  }
+
+  return slices
+}
