@@ -14,6 +14,45 @@ let lib = {
 }
 let ws = undefined
 
+class CodeObj extends String {
+  constructor(arg, { id }) {
+    let [code, ...codeArg] = arg
+    code = removeLeft(code).trim()
+    function simpleTemplate(template, data) {
+      return template.replace(/#\{(\w+)\}/g, (match, key) => data[key] || ``)
+    }
+    const template = removeLeft(`
+      var runid = "#{id}"
+      var code = /**
+      #{code}
+      **/
+      var arg = {...}
+      thread.invoke(function(runid, code, ...){
+        import lib;
+        import thread.command;
+        var arg = {...}
+        var res = null
+        var err = false
+        try {
+          res = {loadcode(code)(table.unpack(arg))}
+        }
+        catch (e) {
+          err = tostring(e);
+        }
+        thread.command.publish(runid, err, table.unpack(res));
+      }, runid, code, table.unpack(arg))
+    `).trim()
+    const threadCode = simpleTemplate(template, {
+      id,
+      code,
+    })
+    super(code)
+    this.id = id
+    this.threadCode = threadCode
+    this.codeArg = codeArg
+  }
+}
+
 class Base {
   constructor() {
     this.native = deepProxy({cb: (list) => {
@@ -98,7 +137,7 @@ class Msg extends Base {
   emit(...arg) {
     return ws.call(`run`, [
       `
-      global.G.rpcServer.publish(...);
+      thread.command.publish(...);
       `,
       ...arg,
     ])
@@ -108,8 +147,8 @@ class Sys extends Base {
   constructor(cfg) {
     cfg.log = cfg.log === true ? (log) => {
       log.startTime && console.group(log.id)
-      let [code = ``, ...codeArg] = log.reqRaw
-      const [err, ...resArg] = log.resRaw
+      let [code = ``, ...codeArg] = Array.from(log.reqRaw)
+      const [err, ...resArg] =  Array.from(log.resRaw)
       if(log.startTime) {
         code = code.trim().replace(/^return\s+/, ``)
         console.log(code)
@@ -142,6 +181,7 @@ class Sys extends Base {
     const call = ws.call
     ws.call = async (action, arg = []) => {
       const id = `fn${getUuid().replace(/-/g, ``)}`
+      const codeObj = new CodeObj(arg, { id })
       let log = {
         ...getBaseLog(),
         id,
@@ -151,16 +191,20 @@ class Sys extends Base {
       }
       this.log.emit(`log`, log)
       return new Promise(async (res) => {
-        const resRaw = await call.bind(ws)(action, arg)
+        call.bind(ws)(action, [codeObj.threadCode, ...codeObj.codeArg])
         let log = {
           ...getBaseLog(),
           id,
           action,
           endTime: Date.now(),
-          resRaw,
+          resRaw: [],
         }
-        this.log.emit(`log`, log)
-        res(resRaw)
+        this.msg.on(id, (...resRaw) => {
+          this.msg.off(id)
+          log.resRaw = resRaw
+          this.log.emit(`log`, log)
+          res(resRaw)
+        })
       })
     }
     return new Promise(async (resolve, reject) => {

@@ -390,6 +390,50 @@ export default {
             console.log(`res`)
           },
         },
+        {
+          name: `不多线程异步 sleep`,
+          async fn(){
+            await main.native.sleep(5000)
+          },
+        },
+        {
+          name: `多线程异步 sleep`,
+          async fn(){
+            await main.native2.sleep(5000)
+          },
+        },
+        {
+          name: `多线程异步取值`,
+          async fn(){
+            const runid = String(Date.now())
+            main.msg.on(runid, (...res) => {
+              console.log(runid, res)
+              main.msg.off(runid)
+            })
+            await main.ws.call(`run`, [`
+            var runid = "${runid}"
+            var code = /**
+            var arg = {...}
+            var res = {win.getPos(${main.hwnd}, true)}
+            return arg, res
+            **/
+            var arg = {...}
+            thread.invoke(function(runid, code, ...){
+              import thread.command;
+              var arg = {...}
+              var res = null
+              var err = false
+              try {
+                res = {loadcode(code)(table.unpack(arg))}
+              }
+              catch (e) {
+                err = tostring(e);
+              }
+              thread.command.publish(runid, table.unpack({err, table.unpack(res)}));
+            }, runid, code, table.unpack(arg))
+            `, 1, 2, 3])
+          },
+        },
 
       ],
     }
