@@ -130,7 +130,6 @@ class Sys extends Base {
       startTime: ``, // 当前 id 开始时间
       endTime: ``, // 当前 id 结束时间
       reqRaw: [], // 待发送给服务器的，当 action 为 run 时，第一项为代码，其他项为参数
-      reqFormat: [], // 实际发送给服务器的，可能分片发送
       resRaw: [], // 接收到的服务器响应，第一项为是否错误，其他项为返回值
     })
     /**
@@ -141,7 +140,6 @@ class Sys extends Base {
     const call = ws.call
     ws.call = async (action, arg = []) => {
       const id = `fn${getUuid().replace(/-/g, ``)}`
-      let newArg = []
       let log = {
         ...getBaseLog(),
         id,
@@ -149,45 +147,9 @@ class Sys extends Base {
         startTime: Date.now(),
         reqRaw: arg,
       }
-      if(action === `run`) {
-        const strArg = JSON.stringify(arg)
-        // chrome 分片大小
-        const chromeWsSize = 131000 / 2
-        // 预留空间，例如 rpc 协议包装
-        const reserved = 1000
-        const limit = Math.floor(chromeWsSize) - reserved
-        const chunkList = sliceStringByBytes({lib, str: strArg, sliceLength: limit})
-        log.reqFormat = chunkList
-        !this.ignoreLog.includes(arg[1]) && this.msg.emit(`log`, log)
-        const chunkListSize = chunkList.length
-        // 否则分段发送
-        for (let index = 0; index < chunkListSize; index++) {
-          const chunk = chunkList[index]
-          await call.bind(ws)(`run`, [
-            `
-            var arg = ...
-            var uuid = arg[1]
-            var chunk = arg[2]
-            global.G[uuid] = global.G[uuid] || ""
-            global.G[uuid] ++= chunk
-            `,
-            [id, chunk],
-          ])
-        }
-        // 函数拦截参考 lib/util/_.aardio apply 的实现
-        newArg = [
-          `
-            var arg = global.G["${id}"] ? web.json.parse(global.G["${id}"]) : null;
-            global.G["${id}"] = null
-
-            var code = table.unpack(arg)
-            var fnArg = {table.unpack(arg, 2, -1)}
-            return loadcode(code)(table.unpack(fnArg))
-          `,
-        ]
-      }
+      !this.ignoreLog.includes(arg[1]) && this.msg.emit(`log`, log)
       return new Promise(async (res) => {
-        const resRaw = await call.bind(ws)(action, newArg)
+        const resRaw = await call.bind(ws)(action, arg)
         let log = {
           ...getBaseLog(),
           id,
