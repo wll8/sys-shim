@@ -79,7 +79,7 @@ export default {
           name: `大体积参数`,
           fn: async function () {
             const arg = `👨‍👩‍👦‍👦`.repeat(9e5)
-            const res = await ws.call(
+            const [, res] = await ws.call(
               `run`,
               [
                 `
@@ -88,6 +88,7 @@ export default {
                 arg,
               ],
             )
+            await main.native.win.msgbox(JSON.stringify(res).length)
             console.log(111, res)
           },
         },
@@ -95,7 +96,7 @@ export default {
           name: `大体积代码`,
           fn: async function () {
             const x = `中文`.repeat(9e5)
-            const res = await ws.call(
+            const [, res] = await ws.call(
               `run`,
               [
                 ` 
@@ -106,6 +107,7 @@ export default {
                 3,
               ],
             )
+            await main.native.win.msgbox(JSON.stringify(res).length)
             console.log(111, res)
           },
         },

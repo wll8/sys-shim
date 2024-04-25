@@ -1,3 +1,4 @@
+import mitt from 'mitt'
 import {
   deepProxy,
   removeLeft,
@@ -123,7 +124,8 @@ class Sys extends Base {
     ws = cfg.ws
     super()
     this.ws = cfg.ws
-    this.ignoreLog = [`log`] // 不要被推送到日志记录器的事件标志
+    this.log = mitt()
+    cfg.log && this.log.on(`log`, cfg.log)
     const getBaseLog = () => ({
       id: ``, // 当前运行的 id
       action: ``, // 当前动作
@@ -147,7 +149,7 @@ class Sys extends Base {
         startTime: Date.now(),
         reqRaw: arg,
       }
-      !this.ignoreLog.includes(arg[1]) && this.msg.emit(`log`, log)
+      this.log.emit(`log`, log)
       return new Promise(async (res) => {
         const resRaw = await call.bind(ws)(action, arg)
         let log = {
@@ -157,8 +159,8 @@ class Sys extends Base {
           endTime: Date.now(),
           resRaw,
         }
-          !this.ignoreLog.includes(arg[1]) && this.msg.emit(`log`, log)
-          res(resRaw)
+        this.log.emit(`log`, log)
+        res(resRaw)
       })
     }
     return new Promise(async (resolve, reject) => {
