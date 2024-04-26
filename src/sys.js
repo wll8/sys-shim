@@ -24,12 +24,12 @@ class CodeObj extends String {
     const template = removeLeft(`
       var runid = "#{id}"
       var code = /**
+      var runid = "#{id}"
       #{code}
       **/
       var arg = {...}
       thread.invoke(function(runid, code, ...){
         import lib;
-        import thread.command;
         var arg = {...}
         var res = null
         var err = false
