@@ -14,14 +14,14 @@ let lib = {
 }
 let ws = undefined
 
-class CodeObj extends String {
-  constructor(arg, { id }) {
+class CodeObj {
+  constructor(arg, { id, thread }) {
     let [code, ...codeArg] = arg
     code = removeLeft(code).trim()
     function simpleTemplate(template, data) {
       return template.replace(/#\{(\w+)\}/g, (match, key) => data[key] || ``)
     }
-    const template = removeLeft(`
+    const template = thread ? removeLeft(`
       var runid = "#{id}"
       var code = /**
       var runid = "#{id}"
@@ -41,14 +41,29 @@ class CodeObj extends String {
         }
         thread.command.publish(runid, err, table.unpack(res));
       }, runid, code, table.unpack(arg))
+    `).trim() : removeLeft(`
+      var runid = "#{id}"
+      var code = /**
+      var runid = "#{id}"
+      #{code}
+      **/
+      var arg = {...}
+      var res = null
+      var err = false
+      try {
+        res = {loadcode(code)(table.unpack(arg))}
+      }
+      catch (e) {
+        err = tostring(e);
+      }
+      global.G.rpcServer.publish(runid, err, table.unpack(res))
     `).trim()
-    const threadCode = simpleTemplate(template, {
+    const codeStr = simpleTemplate(template, {
       id,
       code,
     })
-    super(code)
     this.id = id
-    this.threadCode = threadCode
+    this.code = codeStr
     this.codeArg = codeArg
   }
 }
@@ -179,9 +194,9 @@ class Sys extends Base {
      * https://github.com/wll8/sys-shim/issues/3
      */
     const call = ws.call
-    ws.call = async (action, arg = []) => {
+    ws.call = async (action, arg = [], runOpt = { thread: true }) => {
       const id = `fn${getUuid().replace(/-/g, ``)}`
-      const codeObj = new CodeObj(arg, { id })
+      const codeObj = new CodeObj(arg, { id, ...runOpt })
       let log = {
         ...getBaseLog(),
         id,
@@ -191,7 +206,7 @@ class Sys extends Base {
       }
       this.log.emit(`log`, log)
       return new Promise(async (res) => {
-        call.bind(ws)(action, [codeObj.threadCode, ...codeObj.codeArg])
+        call.bind(ws)(action, [codeObj.code, ...codeObj.codeArg])
         let log = {
           ...getBaseLog(),
           id,
