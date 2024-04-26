@@ -151,3 +151,64 @@ thread.invoke(function(runid, code, ...){
 
 win.loopMessage()
 ```
+
+## sys-shim 逻辑
+
+- 有 page.html 时则使用 webview 运行它
+- 有 sys.js 则使用 nodejs 运行它
+- 如果都没有则创建一个 page.html
+
+## todo
+
+- [ ] feat: 优化不显示某监听的日志的方法
+  - 校验 code 为仅 global.G.rpcServer.publish 并且参数为 log 时才不显示日志
+
+
+## chrome.webview.hostObjects
+
+该方法支持挂载三方语言的 com 对象到 chrome 上，支持解构。
+
+- https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2?view=webview2-1.0.705.50#addhostobjecttoscript
+
+- 目前有以下问题：
+  - 不知道如何传结构体，例如 `sys.cpu.getInfo(0, {_struct: 'INT eax;BYTE ebx[4];BYTE ecx[4];BYTE edx[4]' })`
+  - 不知道得到多个返回值
+  - 如何获取一个对象返回值，例如 `await native.sys.cpu.getInfoByWmi()` 想得到一个 json
+
+示例:
+
+``` txt
+winform.wb.exportHostObject("aar", global);
+```
+
+
+``` js
+// 同步获取
+native = chrome.webview.hostObjects.sync.aar
+native.sys.cpu.getBrand()
+native.sys.getComputerName()
+```
+
+``` js
+// 异步获取
+native = chrome.webview.hostObjects.aar
+await native.sys.cpu.getBrand()
+await native.sys.getComputerName()
+```
+
+``` js
+native = chrome.webview.hostObjects.aar
+
+// 同步获取
+native.sys.cpu.getBrand().sync()
+await native.sys.getComputerName()
+```
+
+``` js
+// 获取对象的属性
+await native.sys.cpu.getInfoByWmi().AddressWidth
+// 打印值
+await native.console.log(`hello`)
+// 大体积
+await native.string.save(`C:/sys-shim-test/xxx.txt`, `👨‍👩‍👦‍👦`.repeat(9e5*2))
+```
