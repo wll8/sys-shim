@@ -250,7 +250,7 @@ export default {
         {
           name: `退出`,
           async fn() {
-            main.native.G.killAll()
+            main.nativeMain.G.killAll()
           },
         },
         /* test the writeText method of Api.clipboard */
