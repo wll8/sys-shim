@@ -25,6 +25,7 @@ class CodeObj {
       var runid = "#{id}"
       var code = /**
       var runid = "#{id}"
+      var arg = {...}
       #{code}
       **/
       var arg = {...}
@@ -45,6 +46,7 @@ class CodeObj {
       var runid = "#{id}"
       var code = /**
       var runid = "#{id}"
+      var arg = {...}
       #{code}
       **/
       var arg = {...}
@@ -75,19 +77,26 @@ class Base {
         function strFix (str) {
           return /^\d+$/.test(str) ? `[${str}]` : `.${str}`
         }
-        let code = list.reduce((acc, {type, key, arg = []}) => {
+        let argList = []
+        let argListIndex = -1
+        let code = list.reduce((acc, {type, key, arg = []}, argIndex) => {
           if(type === `get`) {
             acc = acc + strFix(key)
           }
           if(type === `apply`) {
-            acc = acc + `${strFix(key)}(${arg.map(_ => JSON.stringify(_)).join(`, `)})`
+            argListIndex = argListIndex + 1
+            argList[argListIndex] = arg
+            acc = acc + `${strFix(key)}(${arg.map((item, itemIndex) => {
+              // 如果是引用类型参数，则使用引用方式传递，否则使用字面量方式
+              return typeof(item) === `object` ? `arg[${argListIndex + 1}][${itemIndex + 1}]` : JSON.stringify(item)
+            }).join(`, `)})`
           }
           return acc
         }, ``).slice(1)
-        code = `
+        code = removeLeft(`
           return ${code}
-        `
-        let runRes = await ws.call(`run`, [code])
+        `)
+        let runRes = await ws.call(`run`, [code, ...argList])
         res(runRes)
       })
     }})
