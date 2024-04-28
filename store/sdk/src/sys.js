@@ -72,34 +72,38 @@ class CodeObj {
 
 class Base {
   constructor() {
-    this.native = deepProxy({cb: (list) => {
-      return new Promise(async (res) => {
-        function strFix (str) {
-          return /^\d+$/.test(str) ? `[${str}]` : `.${str}`
-        }
-        let argList = []
-        let argListIndex = -1
-        let code = list.reduce((acc, {type, key, arg = []}, argIndex) => {
-          if(type === `get`) {
-            acc = acc + strFix(key)
+    const createProxy = (cfg) => {
+      return deepProxy({cb: (list) => {
+        return new Promise(async (res) => {
+          function strFix (str) {
+            return /^\d+$/.test(str) ? `[${str}]` : `.${str}`
           }
-          if(type === `apply`) {
-            argListIndex = argListIndex + 1
-            argList[argListIndex] = arg
-            acc = acc + `${strFix(key)}(${arg.map((item, itemIndex) => {
-              // 如果是引用类型参数，则使用引用方式传递，否则使用字面量方式
-              return typeof(item) === `object` ? `arg[${argListIndex + 1}][${itemIndex + 1}]` : JSON.stringify(item)
-            }).join(`, `)})`
-          }
-          return acc
-        }, ``).slice(1)
-        code = removeLeft(`
-          return ${code}
-        `)
-        let runRes = await ws.call(`run`, [code, ...argList])
-        res(runRes)
-      })
-    }})
+          let argList = []
+          let argListIndex = -1
+          let code = list.reduce((acc, {type, key, arg = []}, argIndex) => {
+            if(type === `get`) {
+              acc = acc + strFix(key)
+            }
+            if(type === `apply`) {
+              argListIndex = argListIndex + 1
+              argList[argListIndex] = arg
+              acc = acc + `${strFix(key)}(${arg.map((item, itemIndex) => {
+                // 如果是引用类型参数，则使用引用方式传递，否则使用字面量方式
+                return typeof(item) === `object` ? `arg[${argListIndex + 1}][${itemIndex + 1}]` : JSON.stringify(item)
+              }).join(`, `)})`
+            }
+            return acc
+          }, ``).slice(1)
+          code = removeLeft(`
+            return ${code}
+          `)
+          let runRes = await ws.call(`run`, [code, ...argList], cfg)
+          res(runRes)
+        })
+      }})
+    }
+    this.native = createProxy()
+    this.nativeMain = createProxy({thread: false})
   }
   get api() {
     return {

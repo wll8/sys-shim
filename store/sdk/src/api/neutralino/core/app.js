@@ -6,16 +6,16 @@ class Api {
     this.killProcess()
   }
   async killProcess () {
-    this.base.native.G.killAll()
+    this.base.nativeMain.G.killAll()
   }
   async restartProcess () {
     console.warn(`// todo`)
   }
   async getConfig () {
-    return (await this.base.native.G)[1].config
+    return (await this.base.nativeMain.G)[1].config
   }
   async broadcast (eventName, ...arg) {
-    return await this.base.native.G.rpcServer.publish(eventName, ...arg)
+    return await this.base.nativeMain.G.rpcServer.publish(eventName, ...arg)
   }
   async readProcessInput (readAll) {
     console.warn(`// todo`)
