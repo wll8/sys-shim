@@ -33,8 +33,9 @@ class CodeObj {
         #{code}
         **/
         var arg = {...}
-        var tHnd, tId = thread.create(function(runid, code, ...){
+        thread.create(function(runid, code, ...){
           import lib;
+          var tid = thread.getId()
           var arg = {...}
           var res = null
           var err = false
@@ -45,10 +46,12 @@ class CodeObj {
           catch (e) {
             err = err || tostring(e);
           }
-          thread.command.publish(runid, err, table.unpack(res));
+          var data = {type: err ? "err" : "return", err: err, res: res, tid: tid}
+          thread.command.publish(runid, data)
         }, runid, code, table.unpack(arg))
       `,
       main: `
+        var tid = thread.getId()
         var runid = "#{id}"
         var code = /**
         var runid = "#{id}"
@@ -65,7 +68,8 @@ class CodeObj {
         catch (e) {
           err = err || tostring(e);
         }
-        global.G.rpcServer.publish(runid, err, table.unpack(res))
+        var data = {type: err ? "err" : "return", err: err, res: res, tid: tid}
+        global.G.rpcServer.publish(runid, data)
       `,
       raw: code,
     }[runType]).trim()
@@ -232,7 +236,7 @@ class Sys extends Base {
         reqRaw: [codeObj.codeClean, ...codeObj.codeArg],
       }
       this.log.emit(`log`, log)
-      return new Promise(async (res) => {
+      return new Promise(async (resolve) => {
         call.bind(ws)(action, codeObj.newArg)
         let log = {
           ...getBaseLog(),
@@ -241,11 +245,14 @@ class Sys extends Base {
           endTime: Date.now(),
           resRaw: [],
         }
-        this.msg.on(id, (...resRaw) => {
+        this.msg.on(id, (data) => {
+          let {tid, type, err, res = []} = data
+          res = Array.from(res)
           this.msg.off(id)
+          const resRaw = [err, ...res]
           log.resRaw = resRaw
           this.log.emit(`log`, log)
-          res(resRaw)
+          resolve(resRaw)
         })
       })
     }
