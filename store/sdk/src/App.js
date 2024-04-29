@@ -15,7 +15,7 @@ export default {
     globalThis.ws = ws
     const vm = this
     return {
-      res: ``,
+      code: `win.msgbox(runid)`,
       list: [
         {
           name: `管道`,
@@ -49,7 +49,7 @@ export default {
         {
           name: `调用原生方法`,
           fn: async function () {
-            vm.res = await main.native.win.msgbox(1234, null, 3)
+            await main.native.win.msgbox(1234, null, 3)
           },
         },
         {
@@ -154,14 +154,13 @@ export default {
           name: `创建目录`,
           async fn() {
             const dir = `C:/my/`
-            vm.res = await ws.call(`run`, [
+            await ws.call(`run`, [
               `
                         var arg = ...
                         fsys.createDir(arg)
                         `,
               dir,
             ])
-            console.log(`vm.res`, vm.res)
           },
         },
         {
@@ -169,7 +168,7 @@ export default {
           async fn() {
             const url =
               `https://download.microsoft.com/download/7/4/A/74A33AB3-B6F3-435D-8E3E-0A9FD574347F/services-on-server-install-worksheet.xlsx`
-            vm.res = await ws.call(`run`, [
+            await ws.call(`run`, [
               `
                         var arg = ...
                         var remoteFile = inet.httpFile(arg ,"C:/my/")
@@ -183,7 +182,7 @@ export default {
           name: `定位文件`,
           async fn() {
             const url = `C:/my/services-on-server-install-worksheet.xlsx`
-            vm.res = await ws.call(`run`, [
+            await ws.call(`run`, [
               `
                         var arg = ...
                         process.exploreSelect(arg);
@@ -195,7 +194,7 @@ export default {
         {
           name: `上传文件`,
           async fn() {
-            vm.res = await ws.call(`run`, [
+            await ws.call(`run`, [
               `
                         var http = inet.http(); 
                         http.addHeaders = "Name1:value1";  
@@ -213,7 +212,7 @@ export default {
         {
           name: `打开文件`,
           async fn() {
-            vm.res = await ws.call(`run`, [
+            await ws.call(`run`, [
               `
                         process.execute("C:/my/services-on-server-install-worksheet.xlsx")
                         `,
@@ -223,7 +222,7 @@ export default {
         {
           name: `打开记事本`,
           async fn() {
-            vm.res = await ws.call(`run`, [
+            await ws.call(`run`, [
               `
                         process.execute("notepad")
                         `,
@@ -233,7 +232,7 @@ export default {
         {
           name: `删除目录`,
           async fn() {
-            vm.res = await ws.call(`run`, [
+            await ws.call(`run`, [
               `
                         import process.popen
                         process.popen("cmd /k rd /s /q C:\\my")
@@ -344,12 +343,11 @@ export default {
       ],
     }
   },
-  watch: {
-    res(newVal, oldVal) {
-      if (typeof newVal === `object`) {
-        let [a, b] = newVal
-        this.res = [`是否执行失败: ${a}`, `返回值: ${b}`].join(`\n`)
-      }
+  methods: {
+    runCode() {
+      globalThis.ws.call(`run`, [this.code], {runType: `main`})
     },
+  },
+  watch: {
   },
 }
