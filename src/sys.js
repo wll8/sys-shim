@@ -17,23 +17,44 @@ let lib = {
 let ws = undefined
 
 class CodeObj {
-  constructor(arg, { id, thread }) {
+  constructor(arg, { id, runType = `thread` }) {
     let [code, ...codeArg] = arg
     code = removeLeft(code).trim()
     function simpleTemplate(template, data) {
       return template.replace(/#\{(\w+)\}/g, (match, key) => data[key] || ``)
     }
     // 注：线程中的代码运行完成后，线程会自动关闭的
-    const template = thread ? removeLeft(`
-      var runid = "#{id}"
-      var code = /**
-      var runid = "#{id}"
-      var arg = {...}
-      #{code}
-      **/
-      var arg = {...}
-      thread.invoke(function(runid, code, ...){
-        import lib;
+    const template = removeLeft({
+      thread: `
+        var runid = "#{id}"
+        var code = /**
+        var runid = "#{id}"
+        var arg = {...}
+        #{code}
+        **/
+        var arg = {...}
+        var tHnd, tId = thread.create(function(runid, code, ...){
+          import lib;
+          var arg = {...}
+          var res = null
+          var err = false
+          try {
+            var fn, err = loadcode(code)
+            res = {fn(table.unpack(arg))}
+          }
+          catch (e) {
+            err = err || tostring(e);
+          }
+          thread.command.publish(runid, err, table.unpack(res));
+        }, runid, code, table.unpack(arg))
+      `,
+      main: `
+        var runid = "#{id}"
+        var code = /**
+        var runid = "#{id}"
+        var arg = {...}
+        #{code}
+        **/
         var arg = {...}
         var res = null
         var err = false
@@ -44,27 +65,10 @@ class CodeObj {
         catch (e) {
           err = err || tostring(e);
         }
-        thread.command.publish(runid, err, table.unpack(res));
-      }, runid, code, table.unpack(arg))
-    `).trim() : removeLeft(`
-      var runid = "#{id}"
-      var code = /**
-      var runid = "#{id}"
-      var arg = {...}
-      #{code}
-      **/
-      var arg = {...}
-      var res = null
-      var err = false
-      try {
-        var fn, err = loadcode(code)
-        res = {fn(table.unpack(arg))}
-      }
-      catch (e) {
-        err = err || tostring(e);
-      }
-      global.G.rpcServer.publish(runid, err, table.unpack(res))
-    `).trim()
+        global.G.rpcServer.publish(runid, err, table.unpack(res))
+      `,
+      raw: code,
+    }[runType]).trim()
     const codeWrap = simpleTemplate(template, {
       id,
       code,
@@ -113,7 +117,7 @@ class Base {
       }})
     }
     this.native = createProxy()
-    this.nativeMain = createProxy({thread: false})
+    this.nativeMain = createProxy({runType: `main`})
   }
   get api() {
     return {
@@ -217,7 +221,7 @@ class Sys extends Base {
      * https://github.com/wll8/sys-shim/issues/3
      */
     const call = ws.call
-    ws.call = async (action, arg = [], runOpt = { thread: true }) => {
+    ws.call = async (action, arg = [], runOpt = { runType: `thread` }) => {
       const id = `fn${getUuid().replace(/-/g, ``)}`
       const codeObj = new CodeObj(arg, { id, ...runOpt })
       let log = {
