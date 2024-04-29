@@ -223,3 +223,28 @@ export function isType(data, type = undefined) { // 判断数据是否为 type, 
   const dataType = Object.prototype.toString.call(data).match(/\s(.+)]/)[1].toLowerCase()
   return type ? (dataType === type.toLowerCase()) : dataType
 }
+
+/**
+ * 判断是否为空值
+ * @param {*} value 要判断的值
+ */
+export function isEmpty(value) {
+  return [NaN, null, undefined, ``, [], {}].some((emptyItem) =>
+    typeof value === `string` && value
+      ? false
+      : JSON.stringify(value) === JSON.stringify(emptyItem),
+  )
+}
+
+/**
+ * 删除空值
+ * @param {object} obj 要处理的数据
+ */
+export function removeEmpty(obj) {
+  return JSON.parse(JSON.stringify(obj), (key, value) => {
+    if (isEmpty(value) === false && Array.isArray(value)) {
+      value = value.filter((v) => !isEmpty(v))
+    }
+    return isEmpty(value) ? undefined : value
+  })
+}
