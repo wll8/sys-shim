@@ -3,16 +3,23 @@ import type { ITabChangeValue } from './type'
 import useAntTheme from '@/hooks/useAntTheme'
 import type { IPublicOption } from '@/types'
 
-const props = defineProps<IProps>()
+interface IProps {
+  tabs: IPublicOption[]
+  index?: number
+}
+
+const props = withDefaults(defineProps<IProps>(), {
+  index: 0,
+})
 const emit = defineEmits(['change'])
 
 const { colorPrimary } = useAntTheme().fetchToken()
-
-interface IProps {
-  tabs: IPublicOption[]
-}
-
 const currentIndex = ref(0)
+
+// 监听index改变
+watchEffect(() => {
+  currentIndex.value = props.index
+})
 // 切换激活
 function changeActive(index: number) {
   currentIndex.value = index

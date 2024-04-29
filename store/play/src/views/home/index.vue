@@ -6,8 +6,13 @@ import { base64ToObject } from '@/utils/base64'
 
 const runOption = reactive<IExecInfoActionOptions>({
   type: 'node',
-  code: '',
+  code: {
+    browser: '',
+    native: '',
+    node: '',
+  },
 })
+
 const route = useRoute()
 const mainStore = useMainStore()
 // 改变代码执行类型
@@ -16,7 +21,13 @@ function onTabChange(tabInfo: IChoiceTabChangeValue) {
   mainStore.changeExecInfoAction(runOption)
 }
 // 当代码发生改变绑定回去
-watch(() => runOption.code, () => {
+watch(() => runOption.code.browser, () => {
+  mainStore.changeExecInfoAction(runOption)
+})
+watch(() => runOption.code.native, () => {
+  mainStore.changeExecInfoAction(runOption)
+})
+watch(() => runOption.code.node, () => {
   mainStore.changeExecInfoAction(runOption)
 })
 // 监听变化修改代码
@@ -26,7 +37,7 @@ watch(() => mainStore.execInfo, () => {
   if (type !== runOption.type)
     runOption.type = type
   if (execInfo.code[type] !== runOption.code)
-    runOption.code = execInfo.code[type]
+    runOption.code[type] = execInfo.code[type]
 })
 /**
  * 加载代码
@@ -38,9 +49,9 @@ function dataToExecInfo(data: string | string[]) {
     if (value && value.env) {
       mainStore.urlDataToExecInfoAction(value)
       // 得到渲染数据
-      const [type] = Object.keys(value.code)
+      const type = Object.keys(value.code)[0] as RunCodeType
       runOption.type = type as RunCodeType
-      runOption.code = value.code[type]
+      runOption.code[type] = value.code[type]
     }
   }
 }
@@ -59,9 +70,17 @@ function runCode() {
     <playground-layout-wrapper>
       <template #left>
         <div class="playground-left-wrap flex">
-          <EnvironmentalChoice @tab-change="onTabChange" @run="runCode" />
+          <EnvironmentalChoice v-model="runOption.type" @tab-change="onTabChange" @run="runCode" />
           <div class="code-content">
-            <node-editor v-model="runOption.code" />
+            <template v-if="runOption.type === 'node'">
+              <node-editor v-model="runOption.code.node" />
+            </template>
+            <template v-else-if="runOption.type === 'browser'">
+              <node-editor v-model="runOption.code.browser" />
+            </template>
+            <template v-else-if="runOption.type === 'native'">
+              <node-editor v-model="runOption.code.native" />
+            </template>
           </div>
         </div>
       </template>

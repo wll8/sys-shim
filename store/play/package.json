@@ -56,5 +56,6 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  }
+  },
+  "page": "http://192.168.58.1:5173/"
 }

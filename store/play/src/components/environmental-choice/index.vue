@@ -2,8 +2,11 @@
 import type { IChoiceTabChangeValue, TabOptionType } from './type'
 import { Run } from '@/assets/svg'
 
-const emit = defineEmits(['run', 'tabChange'])
-
+interface IProps {
+  modelValue?: string
+}
+const props = defineProps<IProps>()
+const emit = defineEmits(['run', 'tabChange', 'update:modelValue'])
 const tabs = ref<TabOptionType[]>([
   {
     label: 'nodejs',
@@ -18,6 +21,12 @@ const tabs = ref<TabOptionType[]>([
     value: 'native',
   },
 ])
+const currentIndex = ref(0)
+watchEffect(() => {
+  // 设置激活
+  const index = tabs.value.findIndex(item => item.value === props.modelValue)
+  currentIndex.value = index
+})
 // 切换tab栏
 function tabChange(value: IChoiceTabChangeValue) {
   emit('tabChange', value)

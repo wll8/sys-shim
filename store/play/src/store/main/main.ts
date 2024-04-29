@@ -27,7 +27,6 @@ const useMainStore = defineStore('Main', {
   }),
   actions: {
     changeExecInfoAction(options: IExecInfoActionOptions) {
-      // 获取环境信息
       const settingStore = useSettingStore()
       const settingInfo = settingStore.settingInfo
       const execInfo = { ...this.execInfo }
@@ -36,8 +35,9 @@ const useMainStore = defineStore('Main', {
       execInfo.env['browser-sys.js'] = settingInfo.browserV
       execInfo.env['main.exe'] = settingInfo.appV
       // 设置代码
-      const { type = 'node', code = '' } = options
-      execInfo.code = { [type]: code }
+      const { type = 'node', code } = options
+      const runCode = code[type]
+      execInfo.code = { [type]: runCode }
       // 设置到环境中
       this.execInfo = execInfo
     },
