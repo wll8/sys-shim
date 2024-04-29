@@ -6,6 +6,7 @@ import {
   isUTF8MultiByteStart,
   getUuid,
   sliceStringByBytes,
+  isType,
  } from '@/util.js'
 import Neutralino from '@/api/neutralino/index.js'
 let lib = {
@@ -89,7 +90,7 @@ class Base {
               argList[argListIndex] = arg
               acc = acc + `${strFix(key)}(${arg.map((item, itemIndex) => {
                 // 如果是引用类型参数，则使用引用方式传递，否则使用字面量方式
-                return typeof(item) === `object` ? `arg[${argListIndex + 1}][${itemIndex + 1}]` : JSON.stringify(item)
+                return [`object`, `array`].includes(isType(item)) ? `arg[${argListIndex + 1}][${itemIndex + 1}]` : JSON.stringify(item)
               }).join(`, `)})`
             }
             return acc
