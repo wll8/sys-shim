@@ -7,6 +7,7 @@ import {
   getUuid,
   sliceStringByBytes,
   isType,
+  removeEmpty,
  } from '@/util.js'
 import Neutralino from '@/api/neutralino/index.js'
 let lib = {
@@ -64,13 +65,15 @@ class CodeObj {
       }
       global.G.rpcServer.publish(runid, err, table.unpack(res))
     `).trim()
-    const codeStr = simpleTemplate(template, {
+    const codeWrap = simpleTemplate(template, {
       id,
       code,
     })
     this.id = id
-    this.code = codeStr
+    this.codeClean = code
+    this.codeWrap = codeWrap
     this.codeArg = codeArg
+    this.newArg = [codeWrap, ...codeArg]
   }
 }
 
@@ -84,6 +87,7 @@ class Base {
           }
           let argList = []
           let argListIndex = -1
+          let hasReference = false // 如果参数中没有任何引用类型，则直接移除参数，因为参数已被直接转换成 code
           let code = list.reduce((acc, {type, key, arg = []}, argIndex) => {
             if(type === `get`) {
               acc = acc + strFix(key)
@@ -92,8 +96,10 @@ class Base {
               argListIndex = argListIndex + 1
               argList[argListIndex] = arg
               acc = acc + `${strFix(key)}(${arg.map((item, itemIndex) => {
+                const isReference = [`object`, `array`].includes(isType(item))
+                hasReference = hasReference || isReference
                 // 如果是引用类型参数，则使用引用方式传递，否则使用字面量方式
-                return [`object`, `array`].includes(isType(item)) ? `arg[${argListIndex + 1}][${itemIndex + 1}]` : JSON.stringify(item)
+                return isReference ? `arg[${argListIndex + 1}][${itemIndex + 1}]` : JSON.stringify(item)
               }).join(`, `)})`
             }
             return acc
@@ -101,7 +107,7 @@ class Base {
           code = removeLeft(`
             return ${code}
           `)
-          let runRes = await ws.call(`run`, [code, ...argList], cfg)
+          let runRes = await ws.call(`run`, [code, ...(hasReference ? argList : [])], cfg)
           res(runRes)
         })
       }})
@@ -184,7 +190,7 @@ class Sys extends Base {
       if(log.startTime) {
         code = code.trim().replace(/^return\s+/, ``)
         console.log(code)
-        codeArg.length && console.table(codeArg)
+        removeEmpty(codeArg) && console.table(codeArg)
       }
       if(log.endTime) {
         err ? console.error(err) : console.log(...resArg)
@@ -219,11 +225,11 @@ class Sys extends Base {
         id,
         action,
         startTime: Date.now(),
-        reqRaw: arg,
+        reqRaw: [codeObj.codeClean, ...codeObj.codeArg],
       }
       this.log.emit(`log`, log)
       return new Promise(async (res) => {
-        call.bind(ws)(action, [codeObj.code, ...codeObj.codeArg])
+        call.bind(ws)(action, codeObj.newArg)
         let log = {
           ...getBaseLog(),
           id,
