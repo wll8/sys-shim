@@ -249,7 +249,6 @@ class Sys extends Base {
         this.View = View
         this.Msg = Msg
         this.msg = await new Msg()
-        cfg.log && this.msg.on(`log`, cfg.log)
         resolve(this)
       })
     })
