@@ -22,6 +22,7 @@ class CodeObj {
     function simpleTemplate(template, data) {
       return template.replace(/#\{(\w+)\}/g, (match, key) => data[key] || ``)
     }
+    // 注：线程中的代码运行完成后，线程会自动关闭的
     const template = thread ? removeLeft(`
       var runid = "#{id}"
       var code = /**
@@ -36,10 +37,11 @@ class CodeObj {
         var res = null
         var err = false
         try {
-          res = {loadcode(code)(table.unpack(arg))}
+          var fn, err = loadcode(code)
+          res = {fn(table.unpack(arg))}
         }
         catch (e) {
-          err = tostring(e);
+          err = err || tostring(e);
         }
         thread.command.publish(runid, err, table.unpack(res));
       }, runid, code, table.unpack(arg))
@@ -54,10 +56,11 @@ class CodeObj {
       var res = null
       var err = false
       try {
-        res = {loadcode(code)(table.unpack(arg))}
+        var fn, err = loadcode(code)
+        res = {fn(table.unpack(arg))}
       }
       catch (e) {
-        err = tostring(e);
+        err = err || tostring(e);
       }
       global.G.rpcServer.publish(runid, err, table.unpack(res))
     `).trim()
