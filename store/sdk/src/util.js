@@ -218,3 +218,8 @@ export function sliceStringByBytes({lib, str, sliceLength}) {
 
   return slices
 }
+
+export function isType(data, type = undefined) { // 判断数据是否为 type, 或返回 type
+  const dataType = Object.prototype.toString.call(data).match(/\s(.+)]/)[1].toLowerCase()
+  return type ? (dataType === type.toLowerCase()) : dataType
+}
