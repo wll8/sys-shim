@@ -196,7 +196,7 @@ class Sys extends Base {
       let [code = ``, ...codeArg] = Array.from(log.reqRaw)
       const [err, ...resArg] =  Array.from(log.resRaw)
       if(log.startTime) {
-        code = code.trim().replace(/^return\s+/, ``)
+        code = code.trim()
         console.log(code)
         removeEmpty(codeArg) && console.table(codeArg)
       }
