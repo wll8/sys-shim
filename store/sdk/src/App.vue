@@ -7,14 +7,7 @@
       {{ item.name }}
     </button>
     <hr />
-    <textarea
-      @keydown.ctrl.e.prevent="runCode"
-      v-model="code"
-      placeholder="ctrl+e 运行">
-    </textarea>
-    <br />
-    <button @click="runCode">运行代码</button>
-
+    <Run />
   </div>
 </template>
 

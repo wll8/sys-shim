@@ -2,7 +2,13 @@
 // / <reference path="../types/typings.d.ts" />
 
 const sleep = time => new Promise(resolve => setTimeout(resolve,time))
+import Run from '@/Run.vue'
+
 export default {
+  name: `App`,
+  components: {
+    Run,
+  },
   created() {
     const msg = new window.main.Msg()
     msg.on(`pipe`, (out, err) => {
