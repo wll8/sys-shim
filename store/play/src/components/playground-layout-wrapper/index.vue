@@ -1,15 +1,23 @@
 <script lang="ts" setup>
+const emit = defineEmits<{
+  (e: 'update:leftWidth', width: number): void
+}>()
 const leftWidth = ref('50%')
 const scrollAreaEl = ref<HTMLDivElement>()
 const isDragging = ref(false)
-
 function dragStart() {
   isDragging.value = true
 }
-
+// 最小宽度
+const minWidth = ref(300)
+// const maxWidth = ref()
 function dragMove(e: MouseEvent) {
-  if (isDragging.value)
-    leftWidth.value = `${e.clientX}px`
+  if (isDragging.value) {
+    if (e.clientX >= minWidth.value) {
+      leftWidth.value = `${e.clientX}px`
+      emit('update:leftWidth', e.clientX)
+    }
+  }
 }
 
 function dragEnd() {

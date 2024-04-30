@@ -3,6 +3,7 @@ import type { IChoiceTabChangeValue } from '@/components/environmental-choice/ty
 import type { IExecInfoActionOptions, RunCodeType } from '@/store/main/type'
 import useMainStore from '@/store/main/main'
 import { base64ToObject } from '@/utils/base64'
+import MonacoEditorVue3 from '@/components/monaco-editor-vue3/index'
 
 const runOption = reactive<IExecInfoActionOptions>({
   type: 'node',
@@ -63,23 +64,30 @@ dataToExecInfo(route.params.data)
 function runCode() {
 
 }
+const editWidth = ref('100%')
+function changeEditWidth(width: number) {
+  editWidth.value = `${width - 2}px`
+}
+setTimeout(() => {
+  runOption.code.node = 'console.log(1)'
+}, 5000)
 </script>
 
 <template>
   <div class="home">
-    <playground-layout-wrapper>
+    <playground-layout-wrapper @update:left-width="changeEditWidth">
       <template #left>
         <div class="playground-left-wrap flex">
           <EnvironmentalChoice v-model="runOption.type" @tab-change="onTabChange" @run="runCode" />
           <div class="code-content">
             <template v-if="runOption.type === 'node'">
-              <node-editor v-model="runOption.code.node" />
+              <node-editor v-model="runOption.code.node" :is-dark="true" :width="editWidth" />
             </template>
             <template v-else-if="runOption.type === 'browser'">
-              <node-editor v-model="runOption.code.browser" />
+              <!-- <BasicEdit v-model="runOption.code.browser" /> -->
             </template>
             <template v-else-if="runOption.type === 'native'">
-              <node-editor v-model="runOption.code.native" />
+              <!-- <BasicEdit v-model="runOption.code.native" /> -->
             </template>
           </div>
         </div>
@@ -94,6 +102,7 @@ function runCode() {
 <style lang="scss" scoped>
 .playground-left-wrap {
   flex-direction: column;
+  height: 100%;
 }
 .code-content {
   width: 100%;

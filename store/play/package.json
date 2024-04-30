@@ -23,9 +23,11 @@
     "ant-design-vue": "^4.1.2",
     "axios": "^1.6.7",
     "codemirror": "^6.0.1",
+    "monaco-editor": "^0.48.0",
     "normalize.css": "^8.0.1",
     "pinia": "^2.1.7",
     "sass": "^1.71.0",
+    "vite-plugin-monaco-editor": "^1.1.0",
     "vue": "^3.4.15",
     "vue-router": "4"
   },
