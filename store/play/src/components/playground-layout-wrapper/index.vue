@@ -33,11 +33,13 @@ function dragEnd() {
     @mouseup="dragEnd"
     @mouseleave="dragEnd"
   >
-    <div class="wrapper-left flex playground" :style="`width: ${leftWidth}`">
-      <div class="wrapper-content-wrap">
-        <slot name="left" />
+    <div class="wrapper-left  playground" :style="`width: ${leftWidth}`">
+      <div class="playground-content" flex>
+        <div class="wrapper-content-wrap">
+          <slot name="left" />
+        </div>
+        <div ref="scrollAreaEl" class="scroll-area" @mousedown.prevent="dragStart" />
       </div>
-      <div ref="scrollAreaEl" class="scroll-area" @mousedown.prevent="dragStart" />
     </div>
     <div class="wrapper-right playground flex-1">
       <slot name="right" />
@@ -47,21 +49,35 @@ function dragEnd() {
 
 <style lang="scss" scoped>
 .playground-layout-wrapper {
-  height: 100vh;
   overflow: auto;
   position: fixed;
   padding-top: 50px;
-  top: 0;
+  top: 0px;
   left: 0;
   right: 0;
   bottom: 0;
 }
-.wrapper-content-wrap {
-  flex: 1;
+.playground {
+  height: 100%;
+}
+
+.wrapper-left {
+  min-width: 300px;
+}
+
+.playground-content {
+  display: flex;
+  width: 100%;
+  height: 100%;
 }
 .dragging {
   cursor: ew-resize;
 }
+.wrapper-content-wrap {
+  flex: 1;
+  width: 100%;
+}
+
 .scroll-area {
   width: 2px;
   cursor: ew-resize;

@@ -126,8 +126,17 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
-.monaco-editor-wrapper, .monaco-editor {
+.monaco-editor {
   resize: vertical;
   overflow: auto;
+}
+.no-suggestion {
+  .suggest-widget {
+    display: none !important;
+  }
+}
+.editor-scrollable .lines-content {
+  width: 100% !important;
+  height: 100% !important;
 }
 </style>
