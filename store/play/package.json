@@ -19,6 +19,7 @@
     "@codemirror/view": "^6.26.1",
     "@vue/reactivity": "^3.4.20",
     "@vue/shared": "^3.4.20",
+    "@vueuse/core": "^10.9.0",
     "@wll8/process-manager": "^1.0.2",
     "ant-design-vue": "^4.1.2",
     "axios": "^1.6.7",
