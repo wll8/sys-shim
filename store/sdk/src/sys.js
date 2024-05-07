@@ -26,21 +26,21 @@ class CodeObj {
     // 注：线程中的代码运行完成后，线程会自动关闭的
     const template = removeLeft({
       thread: `
-        var runid = "#{id}"
-        var code = /**
-        var runid = "#{id}"
         var arg = {...}
-        #{code}
-        **/
-        var arg = {...}
-        thread.create(function(runid, code, ...){
+        thread.create(function(...){
           import lib;
           var tid = thread.getId()
+          var runid = "#{id}"
           var arg = {...}
           var res = null
           var err = false
           try {
-            var fn, err = loadcode(code)
+            var code = /**
+            var runid = "#{id}"
+            var arg = {...}
+            #{code}
+            **/
+            fn, err = loadcode(code)
             res = {fn(table.unpack(arg))}
           }
           catch (e) {
@@ -48,21 +48,21 @@ class CodeObj {
           }
           var data = {type: err ? "err" : "return", err: err, res: res, tid: tid}
           thread.command.publish(runid, data)
-        }, runid, code, table.unpack(arg))
+        }, table.unpack(arg))
       `,
       main: `
         var tid = thread.getId()
         var runid = "#{id}"
-        var code = /**
-        var runid = "#{id}"
-        var arg = {...}
-        #{code}
-        **/
         var arg = {...}
         var res = null
         var err = false
         try {
-          var fn, err = loadcode(code)
+          var code = /**
+          var runid = "#{id}"
+          var arg = {...}
+          #{code}
+          **/
+          fn, err = loadcode(code)
           res = {fn(table.unpack(arg))}
         }
         catch (e) {
