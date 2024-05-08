@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { CACHE_SETTING_INFO } from './constants'
 import { localCache } from '@/utils/cache'
 import type { IPublicOption } from '@/types'
+import { useTheme } from '@/hooks/useTheme'
 
 export interface ISettingInfo {
   ws: string
@@ -98,9 +99,12 @@ const useSettingStore = defineStore('setting', {
 
     // 加载本地settingInfo数据
     loadLocalSettingInfoAction() {
+      const { isDark } = useTheme()
       const settingInfo = localCache.getCache(CACHE_SETTING_INFO)
       if (settingInfo)
         this.settingInfo = settingInfo
+      // 通过useTheme获取当前主题
+      this.settingInfo.styleMode = isDark.value ? 'dark' : 'light'
     },
     // 重置
     resetAction() {

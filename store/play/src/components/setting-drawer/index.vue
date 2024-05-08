@@ -8,9 +8,13 @@ import { useTheme } from '@/hooks/useTheme'
 interface IProps {
   modelValue?: boolean
 }
-defineProps<IProps>()
+const props = withDefaults(defineProps<IProps>(), {
+  modelValue: false,
+})
 
 const emit = defineEmits(['update:modelValue'])
+// 设置背景主题
+const { toggleDark } = useTheme()
 const settingStore = useSettingStore()
 const formState = reactive<ISettingInfo>({
   ws: '',
@@ -29,15 +33,19 @@ function initFormStateValue() {
   for (const key of keys)
     (formState[key] as any) = settingInfo[key]
 }
+// 监听打开，重置表单的值
+watch(() => props.modelValue, () => {
+  if (props.modelValue)
+    initFormStateValue()
+}, {
+  immediate: true,
+})
 
 // 改变抽屉是否展开值
 function changeModelValue(value: boolean) {
   emit('update:modelValue', value)
 }
-// 初始化formState的值
-initFormStateValue()
-// 设置背景主题
-const { toggleDark } = useTheme()
+
 // 设置选择版本
 function onConfirm() {
   // 关闭模态框
