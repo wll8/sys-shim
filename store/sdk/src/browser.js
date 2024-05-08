@@ -2,12 +2,8 @@ import * as RPCWebSocket from 'rpc-websockets/dist/index.browser-bundle.js'
 import SysRef from '@/sys.js'
 
 globalThis.ext = globalThis.ext || new Promise(async (resolve) => {
-  try {
-    globalThis.ext = JSON.parse(await globalThis._ext)
-    delete globalThis._ext
-  } catch (error) {
-    // ...
-  }
+  globalThis.ext = JSON.parse((await globalThis._ext) || `{}`)
+  delete globalThis._ext
   resolve(globalThis.ext)
 })
 
@@ -28,6 +24,7 @@ class Sys extends SysRef {
         ws,
         lib,
       })
+      // todo 只有通过 exe 加载时才会有，应在后面的版本中删除
       that.hwnd = globalThis.ext.hwnd
       resolve(that)
     })
