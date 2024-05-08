@@ -64,18 +64,11 @@ dataToExecInfo(route.params.data)
 function runCode() {
 
 }
-const editWidth = ref('100%')
-function changeEditWidth(width: number) {
-  editWidth.value = `${width - 2}px`
-}
-setTimeout(() => {
-  runOption.code.node = 'console.log(1)'
-}, 5000)
 </script>
 
 <template>
   <div class="home">
-    <playground-layout-wrapper @update:left-width="changeEditWidth">
+    <playground-layout-wrapper>
       <template #left>
         <div class="playground-left-wrap flex">
           <EnvironmentalChoice v-model="runOption.type" @tab-change="onTabChange" @run="runCode" />
