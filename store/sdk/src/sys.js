@@ -36,6 +36,7 @@ class CodeObj {
           var err = false
           try {
             var code = /**
+            var tid = thread.getId()
             var runid = "#{id}"
             var arg = {...}
             #{code}
@@ -58,6 +59,7 @@ class CodeObj {
         var err = false
         try {
           var code = /**
+          var tid = thread.getId()
           var runid = "#{id}"
           var arg = {...}
           #{code}
@@ -87,7 +89,7 @@ class CodeObj {
 
 class Base {
   constructor() {
-    const createProxy = (cfg) => {
+    const createProxy = (cfg = {}) => {
       return deepProxy({cb: (list) => {
         return new Promise(async (res) => {
           function strFix (str) {
@@ -104,10 +106,19 @@ class Base {
               argListIndex = argListIndex + 1
               argList[argListIndex] = arg
               acc = acc + `${strFix(key)}(${arg.map((item, itemIndex) => {
-                const isReference = [`object`, `array`].includes(isType(item))
+                const type = isType(item)
+                const isReference = [`object`, `array`].includes(type)
                 hasReference = hasReference || isReference
+                const argId = [argListIndex, itemIndex].join(`,`) // 参数 id
                 // 如果是引用类型参数，则使用引用方式传递，否则使用字面量方式
-                return isReference ? `arg[${argListIndex + 1}][${itemIndex + 1}]` : JSON.stringify(item)
+                if(type === `function`) {
+                  return removeLeft(`function(...){
+                    var arg = {...}
+                    thread.command.publish(runid, {type: "cb-arg", res: arg, argId: "${argId}", tid: tid});
+                  }`)
+                } else {
+                  return isReference ? `arg[${argListIndex + 1}][${itemIndex + 1}]` : JSON.stringify(item)
+                }
               }).join(`, `)})`
             }
             return acc
@@ -115,6 +126,7 @@ class Base {
           code = removeLeft(`
             return ${code}
           `)
+          cfg._argList = argList
           let runRes = await ws.call(`run`, [code, ...(hasReference ? argList : [])], cfg)
           res(runRes)
         })
@@ -225,8 +237,12 @@ class Sys extends Base {
      * https://github.com/wll8/sys-shim/issues/3
      */
     const call = ws.call
-    ws.call = async (action, arg = [], runOpt = { runType: `thread` }) => {
-      const id = `fn${getUuid().replace(/-/g, ``)}`
+    ws.call = async (action, arg = [], runOpt = {}) => {
+      runOpt = {
+        runType: `thread`,
+        ...runOpt,
+      }
+      const id = `code-${getUuid()}`
       const codeObj = new CodeObj(arg, { id, ...runOpt })
       let log = {
         ...getBaseLog(),
@@ -245,14 +261,21 @@ class Sys extends Base {
           endTime: Date.now(),
           resRaw: [],
         }
+        // todo 线程退出后应取消监听
         this.msg.on(id, (data) => {
           let {tid, type, err, res = []} = data
+          if(type === `cb-arg`) {
+            const fn = data.argId.split(`,`).reduce((acc, cur) => acc[cur], runOpt._argList)
+            fn(...res)
+          }
           res = Array.from(res)
-          this.msg.off(id)
           const resRaw = [err, ...res]
           log.resRaw = resRaw
-          this.log.emit(`log`, log)
-          resolve(resRaw)
+          if([`return`, `err`].includes(type)) {
+            this.log.emit(`log`, log)
+            resolve(resRaw)
+            this.msg.off(id)
+          }
         })
       })
     }
@@ -266,6 +289,7 @@ class Sys extends Base {
         this.View = View
         this.Msg = Msg
         this.msg = await new Msg()
+        this.msg.on(`native:log`, console.debug)
         resolve(this)
       })
     })

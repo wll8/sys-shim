@@ -345,6 +345,16 @@ export default {
             console.timeEnd()
           },
         },
+        {
+          name: `遍历文件`,
+          fn: async function () {
+            await main.native.fsys.enum( `C:/`, `*.sys`, function (dir, filename, fullpath, findData) {
+              alert(fullpath)
+              },
+              false,
+            )
+          },
+        },
 
       ],
     }
