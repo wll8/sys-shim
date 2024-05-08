@@ -1,42 +1,42 @@
 :root {
   // 定义css变量
   --nav-header-bg: #fff;
-  --nav-header-text-color: #8a8a8a;
-  --nav-header-hover-color: #333;
+  // 背景色
+  --bg: #fff;
+  // 基础文字颜色
+  --base: #444;
+  // 高亮颜色
+  --highlight: #333;
+  // 导航按钮颜色
+  --nav-btn-color: #666;
   // 卡片阴影颜色
   --card-shadow: rgba(0, 0, 0, 0.15);
   // 公共边框颜色
   --border-color: #ccc;
-
-  /* 代码编辑器相关颜色*/
-  // 字体大小
-  --code-size: 13px;
-  // 边框线
-  --code-outline: none;
-  // 激活行颜色
-  --code-activeLine-color: #fafafa;
-  // 左侧数字槽颜色
-  --code-gutters-bg-color: #fff;
-  // 左侧数字文本颜色
-  --code-gutters-color: rgb(35, 120, 147);
-  // 左侧槽gutters右侧边框颜色
-  --code-gutters-border-right: none;
-  // 激活左侧槽gutters文本颜色
-  --code-gutters-activeLine-color: #000;
-  // 激活左侧槽gutters背景颜色
-  --code-gutters-activeLine-bg-color: #fdfdfd;
 }
-
+.dark {
+  --bg: #1f1f1f;
+  --nav-header-bg: #1f1f1f;
+  --base: #ddd;
+  --highlight: #fff;
+  --nav-header-bg: #1f1f1f;
+}
+body {
+  color: var(--base);
+}
 .wrapper {
   width: 1200px;
   margin: 0 auto;
+
 }
 
 // 重置ul, li列表样式
 .reset-list-style {
+  ul {
+    list-style: none;
+  }
   ul, li {
     padding: 0;
     margin: 0;
-    list-style: none;
   }
 }

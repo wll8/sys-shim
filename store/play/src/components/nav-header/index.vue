@@ -92,12 +92,18 @@ function onNavClick(item: NavType) {
   nav {
     height: 100%;
   }
-  color: var(--nav-header-text-color);
-  a {
+  color: var(--base);
+  .nav-left {
+    a {
+      text-decoration: none;
+      color: var(--base);
+    }
+  }
+  .nav-right a {
     text-decoration: none;
     display: flex;
     align-items: center;
-    color: var(--nav-header-text-color);
+    color: var(--nav-btn-color);
     padding: 0 2px;
     .item-icon {
       width: 20px;
@@ -105,7 +111,7 @@ function onNavClick(item: NavType) {
       margin-right: 2px;
     }
     &:hover {
-      color: var(--nav-header-hover-color);
+      color: var(--highlight);
     }
   }
   box-shadow: 0 2px 8px var(--card-shadow);

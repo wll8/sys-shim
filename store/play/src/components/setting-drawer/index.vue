@@ -3,6 +3,7 @@ import { reactive } from 'vue'
 import { storeToRefs } from 'pinia'
 import useSettingStore from '@/store/setting/setting'
 import type { ISettingInfo } from '@/store/setting/setting'
+import { useTheme } from '@/hooks/useTheme'
 
 interface IProps {
   modelValue?: boolean
@@ -35,11 +36,14 @@ function changeModelValue(value: boolean) {
 }
 // 初始化formState的值
 initFormStateValue()
-
+// 设置背景主题
+const { toggleDark } = useTheme()
 // 设置选择版本
 function onConfirm() {
   // 关闭模态框
   changeModelValue(false)
+  // 设置背景风格
+  formState.styleMode === 'dark' ? toggleDark(true) : toggleDark(false)
   // 设置数据
   settingStore.changeSettingInfoAction(formState)
 }
@@ -123,10 +127,14 @@ function onConfirm() {
 </template>
 
 <style lang="scss" scoped>
+.setting-drawer {
+  background: var(--bg);
+}
 .setting-footer {
   position: absolute;
   right: 20px;
   bottom: 40px;
+
   .confirm-btn {
     margin-left: 10px;
   }

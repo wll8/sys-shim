@@ -14,6 +14,7 @@ interface IProps {
   options?: monaco.editor.IStandaloneEditorConstructionOptions
   width?: number | string
   height?: number | string
+  theme?: string
 }
 defineOptions({
   name: 'MonacoEditor',
@@ -22,13 +23,12 @@ defineOptions({
 const props = withDefaults(defineProps<IProps>(), {
   modelValue: '',
   options: () => ({
-    theme: 'vs',
     // 默认值为false
     automaticLayout: true,
-
   }),
   width: '100%',
   height: '100%',
+  theme: 'vs',
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -45,7 +45,6 @@ const codeEditor = ref<monaco.editor.IStandaloneCodeEditor>()
 function getCodeEditorOrigin() {
   if (codeEditor.value)
     return toRaw(codeEditor.value)
-  return undefined
 }
 // 值发生变化
 function changeModelValue() {
@@ -80,6 +79,7 @@ onMounted(() => {
   codeEditor.value = monaco.editor.create(el.value!, {
     language: 'javascript',
     value: props.modelValue,
+    theme: 'vs',
     ...props.options,
   })
   // 监听内容变化
@@ -100,17 +100,22 @@ const editorCodeWrapperStyle = computed(() => {
 watch(() => props.modelValue, (newValue) => {
   if (codeEditor.value) {
     const codeEditorOrigin = getCodeEditorOrigin()!
-    if (codeEditorOrigin.getValue() === newValue)
-      return
-    // 设置编辑器内容
-    codeEditorOrigin
-      .setValue(newValue)
+    if (codeEditorOrigin.getValue() !== newValue) {
+      codeEditorOrigin
+        .setValue(newValue)
+    }
   }
 })
 
+// 更新主题
+watchEffect(() => {
+  if (codeEditor.value)
+    monaco.editor.setTheme(props.theme)
+})
 onUnmounted(() => {
   // 注销编辑器实例
-  codeEditor.value!.dispose()
+  if (codeEditor.value)
+    getCodeEditorOrigin()!.dispose()
 })
 
 defineExpose({

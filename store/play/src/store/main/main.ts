@@ -8,6 +8,7 @@ interface IMainState {
 interface IInitInfo {
   execInfo: IExecInfo
 }
+
 const initInfo: IInitInfo = {
   execInfo: {
     env: {
