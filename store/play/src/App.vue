@@ -2,6 +2,9 @@
 import { useTheme } from './hooks/useTheme'
 
 const { antTheme } = useTheme()
+onMounted(() => {
+
+})
 </script>
 
 <template>

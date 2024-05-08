@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AardioEditor: typeof import('./src/components/code-editor/src/aardio-editor.vue')['default']
     AButton: typeof import('ant-design-vue/es')['Button']
     ACheckboxGroup: typeof import('ant-design-vue/es')['CheckboxGroup']
     AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
@@ -25,6 +26,7 @@ declare module 'vue' {
     Filter: typeof import('./src/components/LogFilter/components/filter.vue')['default']
     LogFilter: typeof import('./src/components/LogFilter/index.vue')['default']
     Native: typeof import('./src/components/LogFilter/components/native.vue')['default']
+    NativeEditor: typeof import('./src/components/code-editor/src/native-editor.vue')['default']
     NavHeader: typeof import('./src/components/nav-header/index.vue')['default']
     NodeEditor: typeof import('./src/components/code-editor/src/node-editor.vue')['default']
     PlaygroundLayoutWrapper: typeof import('./src/components/playground-layout-wrapper/index.vue')['default']

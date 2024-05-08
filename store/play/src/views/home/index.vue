@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { execCode } from '@/utils/exec-code'
 import type { IChoiceTabChangeValue } from '@/components/environmental-choice/type'
 import type { IExecInfoActionOptions, RunCodeType } from '@/store/main/type'
 import useMainStore from '@/store/main/main'
@@ -62,7 +63,23 @@ dataToExecInfo(route.params.data)
  * 运行代码
  */
 function runCode() {
-
+  // 1. 得到代码
+  const code = runOption.code[runOption.type]
+  // 2. 执行代码
+  if (main && code) {
+    switch (runOption.type) {
+      case 'node':
+        // node执行
+        return
+      case 'browser':
+        // 浏览器执行
+        execCode(code, true)
+        return
+      // native执行
+      case 'native':
+        main.ws.call('run', [code])
+    }
+  }
 }
 </script>
 
@@ -80,7 +97,7 @@ function runCode() {
               <node-editor v-model="runOption.code.browser" />
             </template>
             <template v-else-if="runOption.type === 'native'">
-              <node-editor v-model="runOption.code.native" />
+              <native-editor v-model="runOption.code.native" />
             </template>
           </div>
         </div>
