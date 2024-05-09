@@ -12,7 +12,7 @@
   // 卡片阴影颜色
   --card-shadow: rgba(0, 0, 0, 0.15);
   // 公共边框颜色
-  --border-color: #ccc;
+  --border-color: #ddd;
 }
 .dark {
   --bg: #1f1f1f;
@@ -20,6 +20,12 @@
   --base: #ddd;
   --highlight: #fff;
   --nav-header-bg: #1f1f1f;
+  --border-color: #383838;
+
+  .nav-header {
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: none;
+  }
 }
 body {
   color: var(--base);

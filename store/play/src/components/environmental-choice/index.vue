@@ -51,7 +51,6 @@ function runClick() {
 
 <style lang="scss" scoped>
 .environmental-choice {
-  border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
   padding: 5px 10px;
   background: var(--bg);

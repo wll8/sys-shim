@@ -44,7 +44,7 @@ function changeActive(index: number) {
 <style lang="scss" scoped>
   .tab {
     padding: 5px 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     line-height: 20px;
     font-size: 13px;
     cursor: pointer;

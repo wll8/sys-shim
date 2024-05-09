@@ -70,9 +70,11 @@ function dragEnd() {
 }
 .wrapper-content-wrap {
   flex: 1;
-  width: 100%;
+  width: 99%;
 }
-
+.wrapper-right {
+  background-color: var(--bg);
+}
 .scroll-area {
   width: 2px;
   cursor: ew-resize;
