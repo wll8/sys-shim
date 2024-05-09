@@ -248,3 +248,30 @@ export function removeEmpty(obj) {
     return isEmpty(value) ? undefined : value
   })
 }
+
+/**
+ * 函数缓存器，相同参数只会执行一次
+ * @param {*} fn
+ * @returns
+ */
+export function memoize(fn) {
+  const cache = new Map() // 使用Map来存储缓存结果
+
+  function memoized(...args) {
+    const key = JSON.stringify(args) // 将参数转换为字符串作为缓存的键
+    if (cache.has(key)) {
+      return cache.get(key) // 如果缓存中已存在，直接返回缓存的结果
+    }
+
+    const result = fn.apply(this, args) // 否则，调用函数并存储结果
+    cache.set(key, result)
+    return result
+  }
+
+  // 添加一个方法来清除缓存
+  memoized.clearCache = function() {
+    cache.clear()
+  }
+
+  return memoized
+}
