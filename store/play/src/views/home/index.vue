@@ -103,9 +103,12 @@ function runCode() {
         </div>
       </template>
       <template #right>
-        <section class="playground-right-content">
+        <section class="playground-right-content h-full flex flex-col">
           <section class="right-content-header flex justify-end">
             <LogFilter />
+          </section>
+          <section class="log-content h-full flex-1">
+            <LogConsole />
           </section>
         </section>
       </template>

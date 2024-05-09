@@ -24,6 +24,7 @@ declare module 'vue' {
     BasicEditor: typeof import('./src/components/monaco-editor-vue3/src/basic-editor.vue')['default']
     EnvironmentalChoice: typeof import('./src/components/environmental-choice/index.vue')['default']
     Filter: typeof import('./src/components/LogFilter/components/filter.vue')['default']
+    LogConsole: typeof import('./src/components/log-console/index.vue')['default']
     LogFilter: typeof import('./src/components/LogFilter/index.vue')['default']
     Native: typeof import('./src/components/LogFilter/components/native.vue')['default']
     NativeEditor: typeof import('./src/components/code-editor/src/native-editor.vue')['default']

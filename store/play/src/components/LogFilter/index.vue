@@ -34,9 +34,9 @@ process.popen('node --version')
       <a-button @click="open('filter')">
         筛选
       </a-button>
-      <a-button @click="open('showCode')">
+      <!-- <a-button @click="open('showCode')">
         native
-      </a-button>
+      </a-button> -->
     </a-space>
     <a-drawer v-model:open="visible" :title="type === 'filter' ? '筛选' : 'native'">
       <component :is="component" :code-text="codeText" />
