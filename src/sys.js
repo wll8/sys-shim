@@ -109,12 +109,23 @@ class Base {
                 const type = isType(item)
                 const isReference = [`object`, `array`].includes(type)
                 hasReference = hasReference || isReference
-                const argId = [argListIndex, itemIndex].join(`,`) // 参数 id
+                const argId = [argListIndex, itemIndex].join(`_`) // 参数 id
                 // 如果是引用类型参数，则使用引用方式传递，否则使用字面量方式
-                if(type === `function`) {
+                if([`function`, `asyncfunction`].includes(type)) {
                   return removeLeft(`function(...){
                     var arg = {...}
-                    thread.command.publish(runid, {type: "cb-arg", res: arg, argId: "${argId}", tid: tid});
+                    var argId = "${argId}"
+                    var cmd = thread.command()
+                    var id = runid ++ tid ++ argId
+                    var cbRes
+                    thread.command.publish(runid, {type: "cb-arg", res: arg, argId: argId, tid: tid});
+                    cmd[id] = function(arg2){
+                      cbRes = arg2
+                      win.quitMessage()
+                    }
+                    win.loopMessage() 
+                    cmd[id] = null
+                    return cbRes
                   }`)
                 } else {
                   return isReference ? `arg[${argListIndex + 1}][${itemIndex + 1}]` : JSON.stringify(item)
@@ -242,7 +253,7 @@ class Sys extends Base {
         runType: `thread`,
         ...runOpt,
       }
-      const id = `code-${getUuid()}`
+      const id = `code-${getUuid()}`.replace(/-/g, `_`)
       const codeObj = new CodeObj(arg, { id, ...runOpt })
       let log = {
         ...getBaseLog(),
@@ -261,12 +272,14 @@ class Sys extends Base {
           endTime: Date.now(),
           resRaw: [],
         }
-        // todo 线程退出后应取消监听
-        this.msg.on(id, (data) => {
+        this.msg.on(id, async (data) => {
           let {tid, type, err, res = []} = data
           if(type === `cb-arg`) {
-            const fn = data.argId.split(`,`).reduce((acc, cur) => acc[cur], runOpt._argList)
-            fn(...res)
+            const { argId, tid } = data
+            const fn = argId.split(`_`).reduce((acc, cur) => acc[cur], runOpt._argList)
+            const fnRes = await fn(...res)
+            const cmd = id + tid + argId
+            this.native.thread.command[cmd](fnRes)
           }
           res = Array.from(res)
           const resRaw = [err, ...res]
