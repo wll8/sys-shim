@@ -6,7 +6,7 @@ import useMainStore from '@/store/main/main'
 import { base64ToObject } from '@/utils/base64'
 
 const runOption = reactive<IExecInfoActionOptions>({
-  type: 'browser',
+  type: 'node',
   code: {
     browser: '',
     native: '',
@@ -32,7 +32,7 @@ watch(() => runOption.code.native, () => {
 watch(() => runOption.code.node, () => {
   mainStore.changeExecInfoAction(runOption)
 })
-// 监听变化修改代码
+// 监听变化修改代码，代码重置时修改显示内容
 watch(() => mainStore.execInfo, () => {
   const execInfo = mainStore.execInfo
   const type = Object.keys(execInfo.code)[0] as RunCodeType

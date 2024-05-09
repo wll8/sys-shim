@@ -17,7 +17,7 @@ const initInfo: IInitInfo = {
       'main.exe': '0.0.1',
     },
     code: {
-      browser: '',
+      node: '',
     },
   },
 }
