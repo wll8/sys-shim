@@ -348,11 +348,18 @@ export default {
         {
           name: `遍历文件`,
           fn: async function () {
-            await main.native.fsys.enum( `C:/`, `*.sys`, function (dir, filename, fullpath, findData) {
-              alert(fullpath)
+            let num = 0
+            let list = []
+            await main.native.fsys.enum( `C:/`, `*.*`, async function (dir, filename, fullpath, findData) {
+                num = num + 1
+                list.push(fullpath || dir)
+                if(num >= 20) {
+                  return false
+                }
               },
-              false,
+              true,
             )
+            console.log(list)
           },
         },
 
