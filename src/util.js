@@ -3,6 +3,39 @@ const KEYS_MAP = new Map()
 export function get([key]) {
   return KEYS_MAP.get(key) || key
 }
+
+/**
+ * 获取 `/**` 中 `*` 号的数量
+ * @param {*} inputStr
+ * @returns
+ */
+export function getCodeLine(inputStr) {
+  // 使用正则表达式匹配以 `/` 开头，后面跟着连续的 `*` 号的模式，使用贪婪匹配
+  const pattern = /\/\*{1,}/g
+  const matches = inputStr.match(pattern)
+
+  // 如果没有匹配到任何 '/**'，返回0或者其他默认值
+  if (!matches) {
+    return 0
+  }
+
+  // 初始化最大 '**' 数量和对应的 '/**' 字符串
+  let maxAsterisks = 0
+  let maxAsterisksMatch = ``
+
+  // 遍历所有匹配结果，找出包含最多 '*' 号的那一个
+  for (const match of matches) {
+    const asterisksCount = match.length - 1 // 减去前面的 '/'
+    if (asterisksCount > maxAsterisks) {
+      maxAsterisks = asterisksCount
+      maxAsterisksMatch = match
+    }
+  }
+
+  // 返回最多的 '*' 号数量
+  return maxAsterisks
+}
+
 export function deepProxy({
   keys = [`then`, `catch`],
   cb = (records) => {
@@ -139,6 +172,82 @@ export function removeLeft(str) {
   // 删除空白符
   const newStr = lines
     .map(item => item.slice(minSpaceNum))
+    .join(`\n`)
+  return newStr
+}
+
+/**
+ * 简单的模板功能
+ * @param {*} template
+ * @param {*} data
+ * @returns
+ */
+export function simpleTemplate(template, data) {
+  return template.replace(/#\{(\w+)\}/g, (match, key, pos) => {
+    const lineStr = getLineContainingChar(template, pos)
+    const spaceNum = getMinSpaceNum(lineStr)
+    const val = data[key] || ``
+    const newVal = addSpace(val, {num: spaceNum})
+    return newVal
+  })
+}
+
+/**
+ * 返回字符所在位置的整行文本
+ * @param {*} text
+ * @param {*} charPosition
+ * @returns
+ */
+export function getLineContainingChar(text, charPosition) {
+  // 将多行文本分割成行数组
+  const lines = text.split(`\n`)
+
+  // 遍历行数组，找到包含给定字符位置的行
+  for (let i = 0; i < lines.length; i++) {
+      // 计算当前行的字符位置
+      const lineLength = lines[i].length
+      if (charPosition < lineLength) {
+          // 如果字符位置在当前行内，返回该行
+          return lines[i]
+      } else {
+          // 否则，减去当前行的长度，继续检查下一行
+          charPosition -= lineLength + 1 // +1 是为了减去换行符
+      }
+  }
+
+  // 如果没有找到包含给定字符位置的行，返回null或适当的错误信息
+  return null
+}
+
+/**
+ * 获取最小空白符数量
+ * @param {*} str
+ * @returns
+ */
+export function getMinSpaceNum(str) {
+  const lines = str.split(`\n`)
+  const minSpaceNum = lines.filter(item => item.trim())
+    .map(item => item.match(/(^\s+)?/)[0].length)
+    .sort((a, b) => a - b)[0]
+  return minSpaceNum
+}
+
+/**
+ * 添加空白符
+ * @param {*} str
+ * @param {*} opt
+ * @returns
+ */
+export function addSpace(str, opt = {}) {
+  opt = {
+    num: 0, // 字符符数量
+    space: ` `,
+    skip: 0, // 要跳过设置的索引
+    ...opt,
+  }
+  const lines = str.split(`\n`)
+  const newStr = lines
+    .map((item, index) => index <= opt.skip ? item : opt.space.repeat(opt.num) + item)
     .join(`\n`)
   return newStr
 }
