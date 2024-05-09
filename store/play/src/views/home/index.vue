@@ -103,7 +103,11 @@ function runCode() {
         </div>
       </template>
       <template #right>
-        <LogFilter />
+        <section class="playground-right-content">
+          <section class="right-content-header flex justify-end">
+            <LogFilter />
+          </section>
+        </section>
       </template>
     </playground-layout-wrapper>
   </div>
@@ -119,5 +123,14 @@ function runCode() {
   width: 100%;
   flex: 1;
   background: transparent;
+}
+
+/*
+ * playground-right-content
+ */
+// right-content-header
+.right-content-header {
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--border-color);
 }
 </style>
