@@ -25,3 +25,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# ignore ts types
+# unplugin-auto-import 生成的类型文件
+auto-imports.d.ts
+# unplugin-vue-components 生成的类型文件
+components.d.ts
