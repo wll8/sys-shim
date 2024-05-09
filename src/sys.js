@@ -272,7 +272,6 @@ class Sys extends Base {
       }
       this.log.emit(`log`, log)
       return new Promise(async (resolve) => {
-        call.bind(ws)(action, codeObj.newArg)
         let log = {
           ...getBaseLog(),
           id,
@@ -281,7 +280,7 @@ class Sys extends Base {
           reqRaw: [codeObj.codeClean, ...codeObj.codeArg],
           resRaw: [],
         }
-        this.msg.on(id, async (data) => {
+        const onIdFn = async (data) => {
           let {tid, type, err, res = []} = data
           if(type === `cb-arg`) {
             const { argPath, id: cbId } = data
@@ -297,7 +296,12 @@ class Sys extends Base {
             resolve(resRaw)
             this.msg.off(id)
           }
+        }
+        call.bind(ws)(action, codeObj.newArg).then(([err, ...res]) => {
+          // 整个线程的代码运行报错时，不会运行线程内的消息回调，所以需要在这里接收主线程的消息
+          err && onIdFn({tid: 0, type: `err`, err, res: []})
         })
+        this.msg.on(id, onIdFn)
       })
     }
     return new Promise(async (resolve, reject) => {
