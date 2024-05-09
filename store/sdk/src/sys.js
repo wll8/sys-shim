@@ -9,6 +9,8 @@ import {
   isType,
   removeEmpty,
   memoize,
+  getCodeLine,
+  simpleTemplate,
  } from '@/util.js'
 import Neutralino from '@/api/neutralino/index.js'
 let lib = {
@@ -21,9 +23,7 @@ class CodeObj {
   constructor(arg, { id, runType = `thread` }) {
     let [code, ...codeArg] = arg
     code = removeLeft(code).trim()
-    function simpleTemplate(template, data) {
-      return template.replace(/#\{(\w+)\}/g, (match, key) => data[key] || ``)
-    }
+    const codeLine = `*`.repeat((getCodeLine(code) || 0) + 1)
     // 注：线程中的代码运行完成后，线程会自动关闭的
     const template = removeLeft({
       thread: `
@@ -36,12 +36,12 @@ class CodeObj {
           var res = null
           var err = false
           try {
-            var code = /**
+            var code = /#{codeLine}
             var tid = thread.getId()
             var runid = "#{id}"
             var arg = {...}
             #{code}
-            **/
+            #{codeLine}/
             fn, err = loadcode(code)
             res = {fn(table.unpack(arg))}
           }
@@ -59,12 +59,12 @@ class CodeObj {
         var res = null
         var err = false
         try {
-          var code = /**
+          var code = /#{codeLine}
           var tid = thread.getId()
           var runid = "#{id}"
           var arg = {...}
           #{code}
-          **/
+          #{codeLine}/
           fn, err = loadcode(code)
           res = {fn(table.unpack(arg))}
         }
@@ -79,6 +79,7 @@ class CodeObj {
     const codeWrap = simpleTemplate(template, {
       id,
       code,
+      codeLine,
     })
     this.id = id
     this.codeClean = code
