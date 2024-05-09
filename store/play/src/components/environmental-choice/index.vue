@@ -23,9 +23,11 @@ const tabs = ref<TabOptionType[]>([
 ])
 const currentIndex = ref(0)
 watchEffect(() => {
-  // 设置激活
-  const index = tabs.value.findIndex(item => item.value === props.modelValue)
-  currentIndex.value = index
+  if (props.modelValue) {
+    // 设置激活
+    const index = tabs.value.findIndex(item => item.value === props.modelValue)
+    currentIndex.value = index
+  }
 })
 // 切换tab栏
 function tabChange(value: IChoiceTabChangeValue) {
@@ -40,7 +42,7 @@ function runClick() {
 <template>
   <div class="environmental-choice flex justify-between items-center">
     <div class="choice-left">
-      <w-easy-tabs :tabs="tabs" @change="tabChange" />
+      <w-easy-tabs :tabs="tabs" :index="currentIndex" @change="tabChange" />
     </div>
     <div class="choice-right flex items-center run" @click="runClick">
       运行

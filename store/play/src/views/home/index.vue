@@ -6,7 +6,7 @@ import useMainStore from '@/store/main/main'
 import { base64ToObject } from '@/utils/base64'
 
 const runOption = reactive<IExecInfoActionOptions>({
-  type: 'node',
+  type: 'browser',
   code: {
     browser: '',
     native: '',
@@ -52,7 +52,7 @@ function dataToExecInfo(data: string | string[]) {
       mainStore.urlDataToExecInfoAction(value)
       // 得到渲染数据
       const type = Object.keys(value.code)[0] as RunCodeType
-      runOption.type = type as RunCodeType
+      runOption.type = type
       runOption.code[type] = value.code[type]
     }
   }
