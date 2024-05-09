@@ -8,6 +8,7 @@ import {
   sliceStringByBytes,
   isType,
   removeEmpty,
+  memoize,
  } from '@/util.js'
 import Neutralino from '@/api/neutralino/index.js'
 let lib = {
@@ -109,23 +110,23 @@ class Base {
                 const type = isType(item)
                 const isReference = [`object`, `array`].includes(type)
                 hasReference = hasReference || isReference
-                const argId = [argListIndex, itemIndex].join(`_`) // 参数 id
+                const argPath = [argListIndex, itemIndex].join(`_`) // 参数 id
                 // 如果是引用类型参数，则使用引用方式传递，否则使用字面量方式
                 if([`function`, `asyncfunction`].includes(type)) {
                   return removeLeft(`function(...){
                     var arg = {...}
-                    var argId = "${argId}"
+                    var argPath = "${argPath}"
                     var cmd = thread.command()
-                    var id = runid ++ tid ++ argId
-                    var cbRes
-                    thread.command.publish(runid, {type: "cb-arg", res: arg, argId: argId, tid: tid});
-                    cmd[id] = function(arg2){
-                      cbRes = arg2
+                    var id = "cb_arg_" ++ runid ++ "_" ++ tid ++ "_" ++ argPath
+                    var res
+                    thread.command.publish(runid, {type: "cb-arg", res: arg, argPath: argPath, id: id, tid: tid});
+                    cmd[id] = function(...){
+                      res = ...
                       win.quitMessage()
                     }
                     win.loopMessage() 
                     cmd[id] = null
-                    return cbRes
+                    return res
                   }`)
                 } else {
                   return isReference ? `arg[${argListIndex + 1}][${itemIndex + 1}]` : JSON.stringify(item)
@@ -215,17 +216,18 @@ class Msg extends Base {
 class Sys extends Base {
   constructor(cfg) {
     cfg.log = cfg.log === true ? (log) => {
-      log.startTime && console.group(log.id)
+      const id = String(log.id)
       let [code = ``, ...codeArg] = Array.from(log.reqRaw)
-      const [err, ...resArg] =  Array.from(log.resRaw)
+      code = code.trim()
       if(log.startTime) {
-        code = code.trim()
+        console.group(id)
         console.log(code)
         removeEmpty(codeArg) && console.table(codeArg)
       }
       if(log.endTime) {
+        const [err, ...resArg] =  Array.from(log.resRaw)
         err ? console.error(err) : console.log(...resArg)
-        console.groupEnd(log.id)
+        console.groupEnd(id)
       }
     } : cfg.log
     lib = cfg.lib
@@ -253,7 +255,13 @@ class Sys extends Base {
         runType: `thread`,
         ...runOpt,
       }
-      const id = `code-${getUuid()}`.replace(/-/g, `_`)
+      const id = (() => {
+        const code = (arg[0] || ``).trim()
+        const runId = `code_${getUuid()}`.replace(/-/g, `_`)
+        const str = new String(runId)
+        str.cbTag = code.startsWith(`return thread.command.cb_arg_code_`) ? code.match(/^return thread.command.cb_arg_(.{41})/)[1] : ``
+        return str
+      })()
       const codeObj = new CodeObj(arg, { id, ...runOpt })
       let log = {
         ...getBaseLog(),
@@ -270,16 +278,16 @@ class Sys extends Base {
           id,
           action,
           endTime: Date.now(),
+          reqRaw: [codeObj.codeClean, ...codeObj.codeArg],
           resRaw: [],
         }
         this.msg.on(id, async (data) => {
           let {tid, type, err, res = []} = data
           if(type === `cb-arg`) {
-            const { argId, tid } = data
-            const fn = argId.split(`_`).reduce((acc, cur) => acc[cur], runOpt._argList)
+            const { argPath, id: cbId } = data
+            const fn = argPath.split(`_`).reduce((acc, cur) => acc[cur], runOpt._argList)
             const fnRes = await fn(...res)
-            const cmd = id + tid + argId
-            this.native.thread.command[cmd](fnRes)
+            this.native.thread.command[cbId](fnRes)
           }
           res = Array.from(res)
           const resRaw = [err, ...res]
