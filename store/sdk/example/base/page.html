@@ -6,12 +6,13 @@
     <script type="text/javascript"></script>
   </head>
   <script>
-    new Sys().then(async main => {
+    new Sys({log: true}).then(async main => {
       globalThis.native = main.native
+      globalThis.nativeMain = main.nativeMain
     })
   </script>
   <body>
     <button onclick="native.win.msgbox(`hello`, `title`)">msgbox</button>
-    <button onclick="native.win.quitMessage()">exit</button>
+    <button onclick="nativeMain.win.quitMessage()">exit</button>
   </body>
 </html>
