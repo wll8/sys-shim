@@ -7,9 +7,15 @@
       {{ item.name }}
     </button>
     <hr />
-    <textarea disabled id="" cols="50" rows="10" :value="res"></textarea>
+    <Run />
   </div>
 </template>
 
 <style scoped>
+textarea {
+  width: 100%;
+  min-height: 10em;
+  resize: vertical;
+  box-sizing: border-box;
+}
 </style>
