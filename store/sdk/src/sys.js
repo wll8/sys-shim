@@ -1,144 +1,160 @@
-import proxy from './proxy.js'
-import Neutralino from './api/neutralino/index.js'
+import mitt from 'mitt'
+import {
+  deepProxy,
+  removeLeft,
+  isUTF8MultiByteContinuation,
+  isUTF8MultiByteStart,
+  getUuid,
+  sliceStringByBytes,
+  isType,
+  removeEmpty,
+  memoize,
+  getCodeLine,
+  simpleTemplate,
+ } from '@/util.js'
+import Neutralino from '@/api/neutralino/index.js'
 let lib = {
   encoder: undefined,
   decoder: undefined,
 }
 let ws = undefined
 
-/**
- * 获取 uuid
- * @returns 
- */
-function getUuid () {
-  if (typeof crypto === 'object') {
-    if (typeof crypto.randomUUID === 'function') {
-      return crypto.randomUUID();
-    }
-    if (typeof crypto.getRandomValues === 'function' && typeof Uint8Array === 'function') {
-      const callback = (c) => {
-        const num = Number(c);
-        return (num ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (num / 4)))).toString(16);
-      };
-      return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, callback);
-    }
+class CodeObj {
+  constructor(arg, { id, runType = `thread` }) {
+    let [code, ...codeArg] = arg
+    code = removeLeft(code).trim()
+    const codeLine = `*`.repeat((getCodeLine(code) || 0) + 1)
+    // 注：线程中的代码运行完成后，线程会自动关闭的
+    const template = removeLeft({
+      thread: `
+        var arg = {...}
+        thread.create(function(...){
+          import lib;
+          var tid = thread.getId()
+          var runid = "#{id}"
+          var arg = {...}
+          var res = null
+          var err = false
+          try {
+            var code = /#{codeLine}
+            var tid = thread.getId()
+            var runid = "#{id}"
+            var arg = {...}
+            #{code}
+            #{codeLine}/
+            fn, err = loadcode(code)
+            res = {fn(table.unpack(arg))}
+          }
+          catch (e) {
+            err = err || tostring(e);
+          }
+          var data = {type: err ? "err" : "return", err: err, res: res, tid: tid}
+          thread.command.publish(runid, data)
+        }, table.unpack(arg))
+      `,
+      main: `
+        var tid = thread.getId()
+        var runid = "#{id}"
+        var arg = {...}
+        var res = null
+        var err = false
+        try {
+          var code = /#{codeLine}
+          var tid = thread.getId()
+          var runid = "#{id}"
+          var arg = {...}
+          #{code}
+          #{codeLine}/
+          fn, err = loadcode(code)
+          res = {fn(table.unpack(arg))}
+        }
+        catch (e) {
+          err = err || tostring(e);
+        }
+        var data = {type: err ? "err" : "return", err: err, res: res, tid: tid}
+        global.G.rpcServer.publish(runid, data)
+      `,
+      raw: code,
+    }[runType]).trim()
+    const codeWrap = simpleTemplate(template, {
+      id,
+      code,
+      codeLine,
+    })
+    this.id = id
+    this.codeClean = code
+    this.codeWrap = codeWrap
+    this.codeArg = codeArg
+    this.newArg = [codeWrap, ...codeArg]
   }
-  let timestamp = new Date().getTime();
-  let perforNow = (typeof performance !== 'undefined' && performance.now && performance.now() * 1000) || 0;
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    let random = Math.random() * 16;
-    if (timestamp > 0) {
-      random = (timestamp + random) % 16 | 0;
-      timestamp = Math.floor(timestamp / 16);
-    } else {
-      random = (perforNow + random) % 16 | 0;
-      perforNow = Math.floor(perforNow / 16);
-    }
-    return (c === 'x' ? random : (random & 0x3) | 0x8).toString(16);
-  });
-};
-
-/**
- * 转换路径数组为字符串
- * 例如： ["a", "2", "b"] 为 a[2]["b"]
- * 注意： 在 js 中，proxy a[2]["b"] 时等到的 2 依然是字符串，所以只能通过正则处理
- * // todo 有知道访问路径的具体类型的方式吗？
- */
-function pathToStr (key) {
-  let [root, ...path] = key
-  return `${root}${path.map(item => /^\d+$/.test(item) ? `[${item}]` : `["${item}"]`).join(``)}`
-}
-
-/**
- * 获取字符串的字节长度
- * @param {*} str 
- * @returns 
- */
-function getStringByteLength(str) {
-  return lib.encoder.encode(str).length;
-}
-
-function isUTF8MultiByteStart(byte) {
-  // 如果字节的高位为11，则是多字节字符的起始字节
-  return (byte & 0xC0) === 0xC0;
-}
-
-function isUTF8MultiByteContinuation(byte) {
-  // 如果字节的高位为10，则是多字节字符的延续字节
-  return (byte & 0xC0) === 0x80;
-}
-
-function sliceStringByBytes(str, sliceLength) {
-  const uint8Array = lib.encoder.encode(str);
-  let slices = [];
-  let start = 0;
-
-  while (start < uint8Array.length) {
-    let end = start + sliceLength;
-    if (end > uint8Array.length) {
-      end = uint8Array.length;
-    } else {
-      // 确保不在多字节字符中间断开
-      while (end > start && isUTF8MultiByteContinuation(uint8Array[end - 1])) {
-        end--;
-      }
-      // 如果我们在多字节字符的起始处中止，则再次前移
-      if (end > start && isUTF8MultiByteStart(uint8Array[end - 1])) {
-        end--;
-      }
-    }
-
-    const slice = uint8Array.subarray(start, end);
-    slices.push(lib.decoder.decode(slice));
-    start = end; // 设置下次分片的起始位置
-  }
-
-  return slices;
 }
 
 class Base {
   constructor() {
-    this.native = proxy(``, {
-      deep: {
-        async set(key, val) {
-          let [root, ...path] = key
-          await ws.call(`${root}.setVal`, [...path, val])
-          let code = `
-            var val = ...
-            ${pathToStr(key)} = val
-            return ${pathToStr(key)}
-          `
-          let res = await ws.call(`run`, [code, val])
-          return res
-        },
-        async get(key) {
-          let code = `
-            return ${pathToStr(key)}
-          `
-          let res = await ws.call(`run`, [code])
-          return res
-        },
-        async call(key, ...arg) {
-          let code = `
-            var arg = {...}
-            return ${pathToStr(key)}(...)
-          `
-          let res = await ws.call(`run`, [code, ...arg])
-          return res
-        }
-      }
-    })
-    this.win = this.native.win
-    this.fsys = this.native.fsys
-  }
-  api = {
-    neutralino: async () => {
-      const res = await new Neutralino(this)
-      return res
+    const createProxy = (cfg = {}) => {
+      return deepProxy({cb: (list) => {
+        return new Promise(async (res) => {
+          function strFix (str) {
+            return /^\d+$/.test(str) ? `[${str}]` : `.${str}`
+          }
+          let argList = []
+          let argListIndex = -1
+          let hasReference = false // 如果参数中没有任何引用类型，则直接移除参数，因为参数已被直接转换成 code
+          let code = list.reduce((acc, {type, key, arg = []}, argIndex) => {
+            if(type === `get`) {
+              acc = acc + strFix(key)
+            }
+            if(type === `apply`) {
+              argListIndex = argListIndex + 1
+              argList[argListIndex] = arg
+              acc = acc + `${strFix(key)}(${arg.map((item, itemIndex) => {
+                const type = isType(item)
+                const isReference = [`object`, `array`].includes(type)
+                hasReference = hasReference || isReference
+                const argPath = [argListIndex, itemIndex].join(`_`) // 参数 id
+                // 如果是引用类型参数，则使用引用方式传递，否则使用字面量方式
+                if([`function`, `asyncfunction`].includes(type)) {
+                  return removeLeft(`function(...){
+                    var arg = {...}
+                    var argPath = "${argPath}"
+                    var cmd = thread.command()
+                    var id = "cb_arg_" ++ runid ++ "_" ++ tid ++ "_" ++ argPath
+                    var res
+                    thread.command.publish(runid, {type: "cb-arg", res: arg, argPath: argPath, id: id, tid: tid});
+                    cmd[id] = function(...){
+                      res = ...
+                      win.quitMessage()
+                    }
+                    win.loopMessage() 
+                    cmd[id] = null
+                    return res
+                  }`)
+                } else {
+                  return isReference ? `arg[${argListIndex + 1}][${itemIndex + 1}]` : JSON.stringify(item)
+                }
+              }).join(`, `)})`
+            }
+            return acc
+          }, ``).slice(1)
+          code = removeLeft(`
+            return ${code}
+          `)
+          cfg._argList = argList
+          let runRes = await ws.call(`run`, [code, ...(hasReference ? argList : [])], cfg)
+          res(runRes)
+        })
+      }})
     }
+    this.native = createProxy()
+    this.nativeMain = createProxy({runType: `main`})
   }
-  get form() {
-    return this.native.win.form._forms[this.hwnd]
+  get api() {
+    return {
+      neutralino: async () => {
+        const res = await new Neutralino(this)
+        return res
+      },
+    }
   }
 }
 
@@ -192,62 +208,102 @@ class Msg extends Base {
   emit(...arg) {
     return ws.call(`run`, [
       `
-      global.G.rpcServer.publish(...);
+      thread.command.publish(...);
       `,
       ...arg,
     ])
   }
 }
 class Sys extends Base {
-  constructor(_ws, _lib) {
-    lib = _lib
-    ws = _ws
+  constructor(cfg) {
+    cfg.log = cfg.log === true ? (log) => {
+      const id = String(log.id)
+      let [code = ``, ...codeArg] = Array.from(log.reqRaw)
+      code = code.trim()
+      if(log.startTime) {
+        console.group(id)
+        console.log(code)
+        removeEmpty(codeArg) && console.table(codeArg)
+      }
+      if(log.endTime) {
+        const [err, ...resArg] =  Array.from(log.resRaw)
+        err ? console.error(err) : console.log(...resArg)
+        console.groupEnd(id)
+      }
+    } : cfg.log
+    lib = cfg.lib
+    ws = cfg.ws
     super()
-    this.ws = _ws
+    this.ws = cfg.ws
+    this.log = mitt()
+    cfg.log && this.log.on(`log`, cfg.log)
+    const getBaseLog = () => ({
+      id: ``, // 当前运行的 id
+      action: ``, // 当前动作
+      startTime: ``, // 当前 id 开始时间
+      endTime: ``, // 当前 id 结束时间
+      reqRaw: [], // 待发送给服务器的，当 action 为 run 时，第一项为代码，其他项为参数
+      resRaw: [], // 接收到的服务器响应，第一项为是否错误，其他项为返回值
+    })
     /**
      * hack
      * 以分步传输的形式避免传参过大的错误
      * https://github.com/wll8/sys-shim/issues/3
      */
     const call = ws.call
-    ws.call = async (action, arg) => {
-      if(action === `run`) {
-        const strArg = JSON.stringify(arg)
-        const uuid = `fn${getUuid().replace(/-/g, ``)}`
-        // chrome 分片大小
-        const chromeWsSize = 131000 / 2
-        // 预留空间，例如 rpc 协议包装
-        const reserved = 1000
-        const limit = Math.floor(chromeWsSize) - reserved
-        const chunkList = sliceStringByBytes(strArg, limit)
-        const chunkListSize = chunkList.length
-        // 否则分段发送
-        for (let index = 0; index < chunkListSize; index++) {
-          const chunk = chunkList[index]
-          await call.bind(ws)(`run`, [
-            `
-            var arg = ...
-            var uuid = arg[1]
-            var chunk = arg[2]
-            global.G[uuid] = global.G[uuid] || ""
-            global.G[uuid] ++= chunk
-            `,
-            [uuid, chunk]
-          ])
-        }
-        // 函数拦截参考 lib/util/_.aardio apply 的实现
-        arg = [
-          `
-            var arg = global.G["${uuid}"] ? web.json.parse(global.G["${uuid}"]) : null;
-            global.G["${uuid}"] = null
-
-            var code = table.unpack(arg)
-            var fnArg = {table.unpack(arg, 2, -1)}
-            return loadcode(code)(table.unpack(fnArg))
-          `
-        ]
+    ws.call = async (action, arg = [], runOpt = {}) => {
+      runOpt = {
+        runType: `thread`,
+        ...runOpt,
       }
-      return call.bind(ws)(action, arg)
+      const id = (() => {
+        const code = (arg[0] || ``).trim()
+        const runId = `code_${getUuid()}`.replace(/-/g, `_`)
+        const str = new String(runId)
+        str.cbTag = code.startsWith(`return thread.command.cb_arg_code_`) ? code.match(/^return thread.command.cb_arg_(.{41})/)[1] : ``
+        return str
+      })()
+      const codeObj = new CodeObj(arg, { id, ...runOpt })
+      let log = {
+        ...getBaseLog(),
+        id,
+        action,
+        startTime: Date.now(),
+        reqRaw: [codeObj.codeClean, ...codeObj.codeArg],
+      }
+      this.log.emit(`log`, log)
+      return new Promise(async (resolve) => {
+        let log = {
+          ...getBaseLog(),
+          id,
+          action,
+          endTime: Date.now(),
+          reqRaw: [codeObj.codeClean, ...codeObj.codeArg],
+          resRaw: [],
+        }
+        const onIdFn = async (data) => {
+          let {tid, type, err, res = []} = data
+          if(type === `cb-arg`) {
+            const { argPath, id: cbId } = data
+            const fn = argPath.split(`_`).reduce((acc, cur) => acc[cur], runOpt._argList)
+            const fnRes = await fn(...res)
+            this.native.thread.command[cbId](fnRes)
+          }
+          res = Array.from(res)
+          const resRaw = [err, ...res]
+          log.resRaw = resRaw
+          if([`return`, `err`].includes(type)) {
+            this.log.emit(`log`, log)
+            resolve(resRaw)
+            this.msg.off(id)
+          }
+        }
+        call.bind(ws)(action, codeObj.newArg).then(([err, ...res]) => {
+          // 整个线程的代码运行报错时，不会运行线程内的消息回调，所以需要在这里接收主线程的消息
+          err && onIdFn({tid: 0, type: `err`, err, res: []})
+        })
+        this.msg.on(id, onIdFn)
+      })
     }
     return new Promise(async (resolve, reject) => {
       if (typeof Sys.instance === `object`) {
@@ -258,6 +314,8 @@ class Sys extends Base {
         this.Tray = Tray
         this.View = View
         this.Msg = Msg
+        this.msg = await new Msg()
+        this.msg.on(`native:log`, console.debug)
         resolve(this)
       })
     })

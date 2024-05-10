@@ -1,5 +1,11 @@
+import Clipboard from "@/api/neutralino/core/clipboard.js"
+import Filesystem from "@/api/neutralino/core/filesystem.js"
+import Os from "@/api/neutralino/core/os.js"
+import Computer from "@/api/neutralino/core/computer.js"
+import App from "@/api/neutralino/core/app.js"
+import Events from "@/api/neutralino/core/events.js"
+
 async function init() {
-  console.log(`this`, this)
   Object.assign(globalThis, {
     NL_OS: `Windows`,
     NL_ARCH: `// tdo`, // 报错
@@ -39,79 +45,18 @@ async function init() {
 class Api {
   constructor(base) {
     this.base = base
+
+    this.clipboard = new Clipboard(base)
+    this.filesystem = new Filesystem(base)
+    this.os = new Os(base)
+    this.computer = new Computer(base)
+    this.app = new App(base)
+    this.events = new Events(base)
+
     return new Promise(async (resolve) => {
       await init.apply(this)
       resolve(this)
     })
-  }
-  app = {
-    exit: async (exitCode) => {
-      this.app.killProcess()
-    },
-    killProcess: async () => {
-      this.base.native.G.killAll()
-    },
-    restartProcess: async () => {
-      console.warn(`// todo`)
-    },
-    getConfig: async () => {
-      return (await this.base.native.G)[1].config
-    },
-    broadcast: async (eventName, ...arg) => {
-      return await this.base.native.G.rpcServer.publish(eventName, ...arg)
-    },
-    readProcessInput: async (readAll) => {
-      console.warn(`// todo`)
-    },
-    writeProcessOutput: async (data) => {
-      console.warn(`// todo`)
-    },
-    writeProcessError: async (data) => {
-      console.warn(`// todo`)
-    },
-  }
-  clipboard = {
-  }
-  os = {
-    // win.versionEx
-    execCommand: async (command, options) => {
-      const [err, res] = await main.ws.call(`run`, [`
-        var cmd = ...
-        var options = table.unpack({...}, 2)
-        var proc = process.popen(cmd)
-        return {
-          stdOut = proc.read(-1),
-          stdErr = proc.readErr(-1),
-          exitCode = proc,
-          pid = proc.process.id,
-          exitCode = proc.getExitCode(),
-          proc = proc,
-        }
-      `, command, options])
-      return res
-    },
-    getEnv: async (key) => {
-      return (await this.base.native.string.getenv(key))[1]
-    },
-    getEnvs: async () => {
-      const { stdOut } = await this.os.execCommand(`cmd /c set`)
-      return stdOut.split(`\r\n`).reduce((acc, cur) => {
-        let [key, ...val] = cur.split(`=`)
-        acc[key] = val.join(``)
-        return acc
-      }, {})
-    },
-  }
-  computer = {
-    getOSInfo: async () => {
-      // todo
-      // aar win.versionEx
-      return {
-        "description": "Microsoft Windows 10 专业版",
-        "name": "Windows NT",
-        "version": "10.0.19045-4046"
-      }
-    }
   }
 }
 export default Api

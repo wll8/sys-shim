@@ -1,8 +1,5 @@
 {
   "debug": true,
-  "socket": {
-    "port": 7788
-  },
   "main": "dev.sys.js",
   "browserArguments": "--disable-web-security --kiosk-printing --allow-running-insecure-content --no-displaying-insecure-content --ignore-certificate-errors",
   "nodeArguments": "--trace-deprecation",
@@ -10,8 +7,10 @@
   "page": "http://localhost:5173/",
   "name": "sys-shim",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "scripts": {
+    "lint": "eslint ./ --format unix",
+    "lint-fix": "eslint ./ --fix --format unix",
     "dev": "run-p main:run vite:run",
     "main:run": "yarn main:run-shim",
     "main:run-shim": "win-api/dist/main.exe a b c d=1 /e 3",
@@ -20,9 +19,15 @@
     "vite": "vite",
     "preview": "vite preview",
     "sys": "node -r esm build.js",
-    "sys:dev": "node -r esm build.js development"
+    "sys:dev": "node -r esm build.js development",
+    "prepare": "husky"
+  },
+  "env": {
+    "node": "18.19.0"
   },
   "dependencies": {
+    "@guolao/vue-monaco-editor": "^1.5.1",
+    "mitt": "^3.0.1",
     "npm-run-all": "^4.1.5",
     "proxy-deep": "^3.1.1",
     "rpc-websockets": "^7.6.0"
@@ -30,7 +35,9 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.0",
     "download-cli": "^1.1.1",
+    "eslint": "8.57.0",
     "esm": "^3.2.25",
+    "husky": "^9.0.11",
     "shx": "^0.3.4",
     "vite": "^5.0.0",
     "vue": "^3.3.8",

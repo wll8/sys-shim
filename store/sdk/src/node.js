@@ -1,20 +1,30 @@
 import * as RPCWebSocket from 'rpc-websockets'
 import util from 'util'
-import SysRef from './sys.js'
+import SysRef from '@/sys.js'
 
-globalThis.ext = globalThis.ext || JSON.parse(globalThis.process.env.ext || `{}`)
+try {
+  globalThis.ext = globalThis.ext || JSON.parse(globalThis.process.env._ext)
+  delete globalThis.process.env._ext
+} catch (error) {
+  // ...
+}
 
 const lib = {
-  encoder: new (util.TextEncoder)('utf-8'),
-  decoder: new (util.TextDecoder)('utf-8'),
+  encoder: new (util.TextEncoder)(`utf-8`),
+  decoder: new (util.TextDecoder)(`utf-8`),
 }
 
 class Sys extends SysRef {
-  constructor(wsUrl) {
+  constructor(user = {}) {
+    user = typeof(user) === `string` ? {wsUrl: user} : user
     return new Promise(async (resolve) => {
-      wsUrl = wsUrl || `${await globalThis.ext.wsUrl}?token=${await globalThis.ext.token }`
-      const ws = new RPCWebSocket.Client(await wsUrl)
-      const that = await super(ws, lib)
+      user.wsUrl = user.wsUrl || `${globalThis.ext.wsUrl}?token=${globalThis.ext.token }`
+      const ws = new RPCWebSocket.Client(user.wsUrl)
+      const that = await super({
+        ...user,
+        ws,
+        lib,
+      })
       resolve(that)
     })
   }
