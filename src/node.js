@@ -29,4 +29,4 @@ class Sys extends SysRef {
     })
   }
 }
-globalThis.Sys = Sys
+export default Sys

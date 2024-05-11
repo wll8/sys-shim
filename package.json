@@ -1,36 +1,34 @@
 {
-  "debug": true,
-  "main": "dev.sys.js",
-  "browserArguments": "--disable-web-security --kiosk-printing --allow-running-insecure-content --no-displaying-insecure-content --ignore-certificate-errors",
-  "nodeArguments": "--trace-deprecation",
-  "pageShow": true,
-  "page": "http://localhost:5173/",
   "name": "sys-shim",
   "private": true,
+  "type": "module",
   "version": "0.1.0",
   "scripts": {
     "lint": "eslint ./ --format unix",
     "lint-fix": "eslint ./ --fix --format unix",
-    "dev": "run-p main:run vite:run",
-    "main:run": "yarn main:run-shim",
-    "main:run-shim": "win-api/dist/main.exe a b c d=1 /e 3",
-    "main:build": "npx download-cli https://github.com/wll8/sys-shim/releases/download/example/main.exe -o win-api/dist",
-    "vite:run": "vite",
+    "dev": "run-p vite run.shim",
+    "main:build": "npx download-cli https://github.com/wll8/sys-shim/releases/download/example/main.exe -o win-api/",
     "vite": "vite",
     "preview": "vite preview",
-    "sys": "node -r esm build.js",
-    "sys:dev": "node -r esm build.js development",
+    "gen.npm": "node script/gen.npm.mjs",
+    "gen.npm.push": "cross-env push=yes node script/gen.npm.mjs",
+    "gen.res": "node script/gen.res.mjs",
+    "run.shim": "node script/run.shim.mjs",
     "prepare": "husky"
-  },
-  "env": {
-    "node": "18.19.0"
   },
   "dependencies": {
     "@guolao/vue-monaco-editor": "^1.5.1",
+    "@rollup/plugin-alias": "^5.1.0",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "cross-env": "^7.0.3",
     "mitt": "^3.0.1",
     "npm-run-all": "^4.1.5",
     "proxy-deep": "^3.1.1",
-    "rpc-websockets": "^7.6.0"
+    "rollup": "^4.17.2",
+    "rpc-websockets": "^7.6.0",
+    "sys-shim": "link:script/npm-pkg"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.0",
