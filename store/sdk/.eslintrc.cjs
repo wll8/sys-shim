@@ -11,7 +11,7 @@ module.exports = {
     sourceType: `module`,
     ecmaVersion: 2021, // es 语法
   },
-  ignorePatterns: [`dist`, `win-api/res`],
+  ignorePatterns: [`dist`, `win-api/res`, `script/npm-pkg/browser`, `script/npm-pkg/node`],
   globals: {
     Neutralino: `writeable`,
     chrome: `writeable`,

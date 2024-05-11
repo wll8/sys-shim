@@ -1,8 +1,13 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import './browser.js'
 
-new globalThis.Sys({log: true}).then(async main => {
+// 从开发环境引入
+// import Sys from './browser.js'
+
+// 从发布的包里引入
+import Sys from 'sys-shim'
+
+new Sys({log: true}).then(async main => {
   console.log(`初始化完成`, main)
   // globalThis.Neutralino = await main.api.neutralino()
   globalThis.main = main

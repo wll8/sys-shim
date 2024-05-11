@@ -65,7 +65,7 @@ export default {
               `run`,
               [
                 `
-                var data = string.loadBuffer("D:/git2/sys-ui/win-api/favicon-48.ico")
+                var data = string.loadBuffer("./favicon-48.ico")
                 return data
                 `,
               ],
@@ -76,7 +76,7 @@ export default {
                 `
                 var data = ...
                 var buffer = raw.buffer(data)
-                string.save("D:/git2/sys-ui/win-api/dist/out-1.ico", buffer)
+                string.save("./dev.out-1.ico", buffer)
                 return buffer
                 `,
                 read,
@@ -141,7 +141,7 @@ export default {
                   [
                     `
                     var buffer = raw.buffer(...)
-                    string.save("D:/git2/sys-ui/win-api/dist/out-2.ico", buffer)
+                    string.save("./dev.out-2.ico", buffer)
                     return buffer
                     `,
                     json,
