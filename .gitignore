@@ -6,7 +6,6 @@ node_modules
 dev.*
 
 # npm 相关自动生成的文件
-/script/npm-pkg/readme.md
 /script/npm-pkg/node
 /script/npm-pkg/browser
 /script/npm-pkg/test/page.html
