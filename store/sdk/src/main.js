@@ -14,4 +14,6 @@ new Sys({log: true}).then(async main => {
   globalThis.native = main.native
   globalThis.msg = new main.Msg()
   createApp(App).mount(`#app`)
+}).catch(err => {
+  console.error(`初始化错误`, err)
 })
