@@ -12,4 +12,6 @@ const execOpt = {
   stdio: `inherit`,
 }
 
-cp.execSync(`main.exe a b c d=1 /e 3`, {...execOpt})
+cp.exec(`main.exe a b c d=1 /e 3`, {...execOpt}, (err) => {
+  process.exit(err.code)
+})
