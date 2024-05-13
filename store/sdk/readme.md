@@ -27,7 +27,22 @@
 - 第一步：下载 [main](https://github.com/wll8/sys-shim/releases/download/example/main.exe) 文件打开；
 - 第二步：当前目录生成了名为 page.html 的文件，你可以在这个文件里写界面或调用系统 API 。
 
-### 方式二：使用脚手架模板开发
+### 方式二：单独引用
+
+- 安装:  `npm i sys-shim`
+- 导入: 
+  - esm 方式 `import Sys from 'sys-shim'`
+  - cjs 方式 `const Sys = require('sys-shim')`
+  - umd 方式 `<script src="./node_modules/sys-shim/browser/main.umd.min.js"></script>`
+- 使用:
+
+``` js
+new Sys('ws://127.0.0.1:10005?token=tokentokentoken').then(main => {
+  main.native.win.msgbox(`hello`, `title`)
+})
+```
+
+### 方式三：使用脚手架模板开发(开发中)
 
 - 命令行
 - 服务
