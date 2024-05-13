@@ -17,29 +17,26 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "vue": "^3.3.8",
     "@guolao/vue-monaco-editor": "^1.5.1",
-    "@rollup/plugin-alias": "^5.1.0",
-    "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-terser": "^0.4.4",
-    "cross-env": "^7.0.3",
     "mitt": "^3.0.1",
-    "npm-run-all": "^4.1.5",
     "proxy-deep": "^3.1.1",
-    "rollup": "^4.17.2",
     "rpc-websockets": "^7.6.0",
     "sys-shim": "link:script/npm-pkg"
   },
   "devDependencies": {
+    "rollup": "^4.17.2",
+    "cross-env": "^7.0.3",
+    "npm-run-all": "^4.1.5",
+    "@rollup/plugin-alias": "^5.1.0",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
     "@vitejs/plugin-vue": "^4.5.0",
     "download-cli": "^1.1.1",
     "eslint": "8.57.0",
-    "esm": "^3.2.25",
     "husky": "^9.0.11",
     "shx": "^0.3.4",
-    "vite": "^5.0.0",
-    "vue": "^3.3.8",
-    "webpack": "^5.89.0",
-    "webpack-cli": "^5.1.4"
+    "vite": "^5.0.0"
   }
 }
