@@ -20,8 +20,6 @@ const talbe = {
     cp.execSync(`npx rollup --config rollup.config.mjs`, {...execOpt, env: {target: `browser`}})
     cp.execSync(`npx shx rm -rf ./npm-pkg/node/`, {...execOpt})
     cp.execSync(`npx rollup --config rollup.config.mjs`, {...execOpt, env: {target: `node`}})
-    // 使用主项目中的 readme 文件
-    cp.execSync(`npx shx cp ../readme.md ./npm-pkg/readme.md`, {...execOpt})
     // 修改 page.html 中的 wsUrl
     const text = fs.readFileSync(`${__dirname}/../win-api/res/page.html`, `utf8`)
     const newText = text
@@ -32,10 +30,10 @@ const talbe = {
     fs.writeFileSync(`${__dirname}/npm-pkg/test/page.html`, newText)
   },
   yes() {
-    cp.execSync(`npx shx rm -f *.tgz`, {...execOpt, cwd: `${__dirname}/npm-pkg/`})
-    cp.execSync(`npm version prerelease`, {...execOpt, cwd: `${__dirname}/npm-pkg/`})
-    const fileName = cp.execSync(`npm pack`, {cwd: `${__dirname}/npm-pkg/`}).toString()
-    cp.execSync(`npm publish ${fileName}`, {...execOpt, cwd: `${__dirname}/npm-pkg/`})
+    cp.execSync(`npx shx rm -f *.tgz`, {...execOpt, cwd: `${__dirname}/../`})
+    cp.execSync(`npm version prerelease`, {...execOpt, cwd: `${__dirname}/../`})
+    const fileName = cp.execSync(`npm pack`, {cwd: `${__dirname}/../`}).toString()
+    cp.execSync(`npm publish ${fileName}`, {...execOpt, cwd: `${__dirname}/../`})
   },
 }
 

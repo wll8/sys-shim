@@ -1,8 +1,25 @@
 {
   "name": "sys-shim",
-  "private": true,
+  "private": false,
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.0.1-4",
+  "main": "./script/npm-pkg/node/main.min.cjs",
+  "module": "./script/npm-pkg/node/main.min.mjs",
+  "browser": {
+    "./script/npm-pkg/node/main.min.cjs": "./script/npm-pkg/browser/main.umd.min.js",
+    "./script/npm-pkg/node/main.min.mjs": "./script/npm-pkg/browser/main.esm.min.js"
+  },
+  "bin": {
+    "sys-shim": "./script/bin/sys-shim.cjs"
+  },
+  "files": [
+    "./script/npm-pkg/shim",
+    "./script/npm-pkg/test",
+    "./script/npm-pkg/node/main.min.cjs",
+    "./script/npm-pkg/node/main.min.mjs",
+    "./script/npm-pkg/browser/main.umd.min.js",
+    "./script/npm-pkg/browser/main.esm.min.js"
+  ],
   "scripts": {
     "lint": "eslint ./ --format unix",
     "lint-fix": "eslint ./ --fix --format unix",
@@ -16,27 +33,25 @@
     "run.shim": "node script/run.shim.mjs",
     "prepare": "husky"
   },
-  "dependencies": {
-    "vue": "^3.3.8",
-    "@guolao/vue-monaco-editor": "^1.5.1",
-    "mitt": "^3.0.1",
-    "proxy-deep": "^3.1.1",
-    "rpc-websockets": "^7.6.0",
-    "sys-shim": "link:script/npm-pkg"
-  },
   "devDependencies": {
-    "rollup": "^4.17.2",
-    "cross-env": "^7.0.3",
-    "npm-run-all": "^4.1.5",
+    "@guolao/vue-monaco-editor": "^1.5.1",
     "@rollup/plugin-alias": "^5.1.0",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@vitejs/plugin-vue": "^4.5.0",
+    "cross-env": "^7.0.3",
     "download-cli": "^1.1.1",
     "eslint": "8.57.0",
     "husky": "^9.0.11",
+    "mitt": "^3.0.1",
+    "npm-run-all": "^4.1.5",
+    "proxy-deep": "^3.1.1",
+    "rollup": "^4.17.2",
+    "rpc-websockets": "^7.6.0",
     "shx": "^0.3.4",
-    "vite": "^5.0.0"
+    "sys-shim": "link:",
+    "vite": "^5.0.0",
+    "vue": "^3.3.8"
   }
 }
