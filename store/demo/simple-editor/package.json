@@ -1,0 +1,31 @@
+{
+  "main": "main.js",
+  "nodeArguments": "--trace-deprecation",
+  "page": "http://localhost:5173/",
+  "name": "sys-shim",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "node run.js",
+    "build": "node run.build.js",
+    "lint": "eslint ./ --format unix",
+    "lint-fix": "eslint ./ --fix --format unix",
+    "preview": "vite preview",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@guolao/vue-monaco-editor": "^1.5.1",
+    "luna-command-palette": "^0.1.0",
+    "monaco-editor": "0.43.0",
+    "sys-shim": "0.0.1-5",
+    "vue": "^3.3.8"
+  },
+  "devDependencies": {
+    "@wll8/process-manager": "^1.0.2",
+    "@vitejs/plugin-vue": "^4.5.0",
+    "eslint": "8.57.0",
+    "husky": "^9.0.11",
+    "vite": "^5.0.0"
+  }
+}

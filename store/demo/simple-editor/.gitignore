@@ -1,0 +1,23 @@
+# vite 和 node 相关
+dist
+node_modules
+
+# 调试阶段的配置文件
+dev.*
+
+# npm 相关自动生成的文件
+/script/npm-pkg/readme.md
+/script/npm-pkg/node
+/script/npm-pkg/browser
+/script/npm-pkg/test/page.html
+/script/npm-pkg/shim/win/page.html
+/script/npm-pkg/*.tgz
+
+# main.exe 相关自动生成的文件
+main.exe
+/win-api/.build
+/win-api/page.html
+/win-api/package.json
+/win-api/sys.js
+/win-api/res/browser
+/win-api/res/node
