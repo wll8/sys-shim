@@ -18,8 +18,8 @@ importers:
         specifier: 0.43.0
         version: 0.43.0
       sys-shim:
-        specifier: 0.0.1-5
-        version: 0.0.1-5
+        specifier: 0.0.1-6
+        version: 0.0.1-6
       vue:
         specifier: ^3.3.8
         version: 3.4.15
@@ -780,8 +780,8 @@ packages:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
     engines: {node: '>=8'}
 
-  sys-shim@0.0.1-5:
-    resolution: {integrity: sha512-nVkOeQFvIp3jfLZfw1FPGxp6SIl9Bk0VKhrMe4ovniCLFY56cPhy/iwc9h9+5afOBESGGOtuXa6ShNklF7vNbw==}
+  sys-shim@0.0.1-6:
+    resolution: {integrity: sha512-9u1azG0SYOE2UfzfqXx36xDDzW2kQ0DQhSGYfmZ+gmYsjDfB2RTaaMuT01i8QgYuED+dfjxfznhS1jaiUzj85g==}
     hasBin: true
 
   terser@5.27.0:
@@ -1562,7 +1562,7 @@ snapshots:
     dependencies:
       has-flag: 4.0.0
 
-  sys-shim@0.0.1-5: {}
+  sys-shim@0.0.1-6: {}
 
   terser@5.27.0:
     dependencies:

@@ -18,7 +18,7 @@
     "@guolao/vue-monaco-editor": "^1.5.1",
     "luna-command-palette": "^0.1.0",
     "monaco-editor": "0.43.0",
-    "sys-shim": "0.0.1-5",
+    "sys-shim": "0.0.1-6",
     "vue": "^3.3.8"
   },
   "devDependencies": {
