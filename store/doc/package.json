@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "node run.js",
+    "doc": "cd doc && npm run docs:dev",
     "main:build": "npx download-cli https://github.com/wll8/sys-shim/releases/download/example/main.exe -o ./"
   },
   "dependencies": {

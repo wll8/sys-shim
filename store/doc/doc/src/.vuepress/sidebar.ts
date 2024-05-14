@@ -16,8 +16,8 @@ export default sidebar({
           link: `your-first-app`,
         },
         {
-          text: `使用前端库`,
-          link: `using-frontend-libraries`,
+          text: `常见问答(FAQ)`,
+          link: `faq`,
         },
       ],
     },
