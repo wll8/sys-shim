@@ -10,7 +10,7 @@
     "./script/npm-pkg/node/main.min.mjs": "./script/npm-pkg/browser/main.esm.min.js"
   },
   "bin": {
-    "sys-shim": "./script/bin/sys-shim.cjs"
+    "sys-shim": "./script/npm-pkg/bin/sys-shim.cjs"
   },
   "files": [
     "./script/npm-pkg/shim",
