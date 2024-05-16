@@ -69,5 +69,21 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "命令行",
+      collapsible: true,
+      children: [
+        {
+          text: "sys-shim",
+          collapsible: true,
+          link: `docs/cli/sys-shim`,
+        },
+        {
+          text: "main.exe",
+          collapsible: true,
+          link: `docs/cli/main`,
+        },
+      ],
+    },
   ],
 });

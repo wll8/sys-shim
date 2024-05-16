@@ -18,7 +18,7 @@ export default navbar([
     link: "/docs/roadmap"
   },
   {
-    text: "贡献",
+    text: "贡献指南",
     link: "/docs/join/"
   },
 ]);

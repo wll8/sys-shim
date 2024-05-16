@@ -45,6 +45,6 @@ await native.process.execute("calc")
 
 ## 关于跨平台
 
-目前 sys-shim 的 core 层不支持跨平台，不过不过担心，sys-shim 会封装一套 electron/neutralino 这些跨平台框架的 api ，当你有跨平台的需求时，可以方便进行框架切换。
+目前 sys-shim 的 core 层不支持跨平台，不过不用担心，sys-shim 会封装一套 electron/neutralino 这些跨平台框架的 api ，当你有跨平台的需求时，可以方便进行框架切换。
 
 即使没有跨端兼容层，至少界面和交互也是可以跨平台的，只需做极少适配即可。
