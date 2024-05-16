@@ -58,14 +58,17 @@ async function getIcon(iconPath) {
   if(fs.existsSync(iconPath)) {
     return iconPath
   } else {
+    let icon
     try {
       const res = new url.URL(iconPath)
-      const icon = `${res.protocol}//${res.host}/favicon.ico`
+      icon = `${res.protocol}//${res.host}/favicon.ico`
       const tempIcon = `${os.tmpdir()}/${filenamify(icon)}`
       fs.writeFileSync(tempIcon, await download(icon))
       return tempIcon
     } catch (error) {
-      console.warn(`从 ${iconPath} 获取图标错误，将使用默认图标`, error)
+      console.warn(`从 ${icon} 获取图标错误：`)
+      console.warn(String(error))
+      console.warn(`将使用默认图标`)
       return `${pkgDir}/script/npm-pkg/shim/win/favicon.ico`
     }
   }
