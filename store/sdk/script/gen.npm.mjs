@@ -6,6 +6,7 @@ import process from 'node:process'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+const pkgDir = path.join(__dirname, `../`)
 const {push = `no`} = process.env
 
 const execOpt = {
@@ -18,6 +19,8 @@ const talbe = {
     // 打包 npm 包
     cp.execSync(`npx shx rm -rf ./npm-pkg/browser/`, {...execOpt})
     cp.execSync(`npx rollup --config rollup.config.mjs`, {...execOpt, env: {target: `browser`}})
+    cp.execSync(`npx shx cp -f ${pkgDir}/win-api/favicon-48.ico ${pkgDir}/script/npm-pkg/shim/win/favicon.ico`, {...execOpt})
+    cp.execSync(`npx shx cp -f ${pkgDir}/win-api/main.exe ${pkgDir}/script/npm-pkg/shim/win/main.exe`, {...execOpt})
     cp.execSync(`npx shx rm -rf ./npm-pkg/node/`, {...execOpt})
     cp.execSync(`npx rollup --config rollup.config.mjs`, {...execOpt, env: {target: `node`}})
     // 修改 page.html 中的 wsUrl

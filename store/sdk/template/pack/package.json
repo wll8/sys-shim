@@ -1,0 +1,4 @@
+{
+  "browserArguments": "--disable-web-security --allow-running-insecure-content",
+  "page": "#{page}"
+}

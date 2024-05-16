@@ -10,6 +10,7 @@ dev.*
 /script/npm-pkg/browser
 /script/npm-pkg/test/page.html
 /script/npm-pkg/shim/win/page.html
+/script/npm-pkg/shim/win/favicon.ico
 /*.tgz
 
 # main.exe 相关自动生成的文件

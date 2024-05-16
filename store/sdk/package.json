@@ -10,9 +10,14 @@
     "./script/npm-pkg/node/main.min.mjs": "./script/npm-pkg/browser/main.esm.min.js"
   },
   "bin": {
-    "sys-shim": "./script/npm-pkg/bin/sys-shim.cjs"
+    "sys-shim": "./script/npm-pkg/bin/index.mjs"
   },
   "files": [
+    "./src/proxy-deep.js",
+    "./src/util.js",
+    "./template",
+    "./script/npm-pkg/bin",
+    "./script/npm-pkg/lib",
     "./script/npm-pkg/shim",
     "./script/npm-pkg/test",
     "./script/npm-pkg/node/main.min.cjs",
@@ -21,6 +26,7 @@
     "./script/npm-pkg/browser/main.esm.min.js"
   ],
   "scripts": {
+    "sys-shim": "node ./script/npm-pkg/bin/index.mjs",
     "lint": "eslint ./ --format unix",
     "lint-fix": "eslint ./ --fix --format unix",
     "dev": "run-p vite run.shim",
@@ -49,9 +55,15 @@
     "proxy-deep": "^3.1.1",
     "rollup": "^4.17.2",
     "rpc-websockets": "^7.6.0",
-    "shx": "^0.3.4",
     "sys-shim": "link:",
     "vite": "^5.0.0",
     "vue": "^3.3.8"
+  },
+  "dependencies": {
+    "shx": "^0.3.4",
+    "download": "^8.0.0",
+    "filenamify": "^6.0.0",
+    "minimist": "^1.2.8",
+    "shelljs": "^0.8.5"
   }
 }
