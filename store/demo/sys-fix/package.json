@@ -1,0 +1,44 @@
+{
+  "name": "vue-project",
+  "version": "0.0.0",
+  "page": "http://127.0.0.1:5173/",
+  "private": true,
+  "type": "module",
+  "form": {
+    "right": "1000",
+    "border": "thin",
+    "bottom": "600"
+  },
+  "scripts": {
+    "dev": "node run.js",
+    "build": "node run.build.js",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "format": "prettier --write src/"
+  },
+  "dependencies": {
+    "alova": "^2.20.5",
+    "font-awesome": "^4.7.0",
+    "less": "^4.2.0",
+    "pinia": "^2.1.7",
+    "swiper": "^7.4.1",
+    "sys-shim": "0.0.1-8",
+    "unocss": "^0.60.2",
+    "vue": "^3.4.21",
+    "vue-awesome-swiper": "^5.0.1",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.8.0",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "@vue/eslint-config-prettier": "^9.0.0",
+    "@wll8/process-manager": "^1.0.2",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.23.0",
+    "mockm": "1.1.27-alpha.2",
+    "prettier": "^3.2.5",
+    "vite": "^5.2.8",
+    "vite-plugin-vue-devtools": "^7.0.25"
+  }
+}
