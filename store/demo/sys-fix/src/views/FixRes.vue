@@ -31,29 +31,104 @@
         </div>
       </div>
     </div>
-    <button class="repair-button mt-10px p-50px" @click="startRepair">立即修复</button>
+    <div class="log" v-show="log">修复中：{{ log }}</div>
+    <button :class="[`repair-button mt-10px p-50px`, {'g-disable': log}]" @click="startRepair">立即修复</button>
   </div>
 </template>
 
 <script>
+import { randomNumBoth, randomWithToken, removeLeft } from '@/util.js'
+
 export default {
   data() {
     return {
-      totalErrors: 2423,
-      systemErrors: 6,
+      log: ``,
+      totalErrors: 0,
+      systemErrors: 0,
       userErrors: 0,
       otherErrors: 0
     };
   },
+  created() {
+    console.log(`useDllStore()`, this.$route.params)
+    this.getErrDetailMock()
+  },
   methods: {
-    startRepair() {
-      // 实现修复逻辑
-    }
+    // 获取错误详情，模拟
+    getErrDetailMock() {
+      const {itemsOkListLength, fixNum} = this.$route.query
+      this.totalErrors = itemsOkListLength
+      this.systemErrors = randomWithToken(0, fixNum)
+      this.userErrors = randomWithToken(0, fixNum - this.systemErrors)
+      this.otherErrors = fixNum - this.systemErrors - this.userErrors
+    },
+    async startRepair() {
+      // this.$router.push(`/DoFix`)
+      this.regsvr32()
+    },
+    async regsvr32() {
+      //// fix: 以下代码不能运行
+      //// await sys.native.process.popen.cmd(`
+      ////   cd /d C:\\
+      ////   dir
+      //// `).readAll()
+      // const [, res] = await sys.ws.call(`run`, [`
+      //   var arg = ...
+      //   return process.popen.cmd(arg).readAll()
+      //   `, `
+      //   for %1 in (%windir%\\system32\\*.dll) do regsvr32.exe /s %1 
+      // `])
+      const msg = new globalThis.sys.Msg()
+      const onTag = `${Date.now()}`
+      msg.on(onTag, (out, err) => {
+        this.log = [out, err].join(``)
+        console.log(out)
+      })
+      const [, getSysDir] = await sys.native.fsys.getSysDir()
+      await sys.ws.call(`run`, [`
+        var prcs = process.popen.cmd(\`
+          for %1 in (${getSysDir}\\*.dll) do regsvr32.exe /s %1 
+        \`)
+        for( all,out,err in prcs.each() ){
+          thread.command.publish("${onTag}", out, err)
+        }
+      `])
+      this.log = ``
+      msg.off(onTag)
+      alert(`修复完成`)
+    },
+    async regsvr32Item() {
+      const msg = new globalThis.sys.Msg()
+      const onTag = `${Date.now()}`
+      msg.on(onTag, (out, err) => {
+        this.log = [out, err].join(``)
+        console.log(out)
+      })
+      const [, getSysDir] = await sys.native.fsys.getSysDir()
+      await sys.ws.call(`run`, [`
+        var prcs = process.popen.cmd(\`
+          for %1 in (${getSysDir}\\*.dll) do regsvr32.exe /s %1 
+        \`)
+        for( all,out,err in prcs.each() ){
+          thread.command.publish("${onTag}", out, err)
+        }
+      `])
+      this.log = ``
+      msg.off(onTag)
+      alert(`修复完成`)
+    },
   }
 };
 </script>
 
 <style scoped>
+.log {
+  box-sizing: border-box;
+  padding: 0 10px;
+  text-align: left;
+  color: #ccc;
+  width: 80%;
+}
 .result-container {
   display: flex;
   align-items: center;

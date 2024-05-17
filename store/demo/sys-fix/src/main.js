@@ -15,13 +15,21 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 
-await new Sys({log: true}).then(async main => {
-  console.log(`初始化完成`, main)
-  globalThis.main = main
-  globalThis.ws = main.ws
-  globalThis.native = main.native
-}).catch(err => {
-  console.error(`sys-shim 初始化失败`)
-})
+const fn = async sys => {
+  console.log(`初始化完成`, sys)
+  globalThis.sys = sys
+  globalThis.main = sys
+  globalThis.ws = sys.ws
+  globalThis.native = sys.native
+}
 
-app.mount('#app')
+new Promise(async () => {
+  if(globalThis.sys) {
+    await fn(globalThis.sys)
+  } else {
+    await new Sys({log: true}).then(fn).catch(err => {
+      console.error(`sys-shim 初始化失败`)
+    })
+  }
+  app.mount('#app')
+})

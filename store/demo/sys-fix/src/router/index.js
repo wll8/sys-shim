@@ -19,6 +19,11 @@ const router = createRouter({
       name: 'FixRes',
       component: () => import('../views/FixRes.vue')
     },
+    {
+      path: '/DoFix',
+      name: 'DoFix',
+      component: () => import('../views/DoFix.vue')
+    },
   ]
 })
 

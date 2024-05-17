@@ -21,6 +21,7 @@
     "font-awesome": "^4.7.0",
     "less": "^4.2.0",
     "pinia": "^2.1.7",
+    "pinia-plugin-persistedstate": "^3.2.1",
     "swiper": "^7.4.1",
     "sys-shim": "0.0.1-8",
     "unocss": "^0.60.2",

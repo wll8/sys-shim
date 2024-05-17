@@ -1,1 +1,6 @@
 @import "font-awesome/css/font-awesome.css";
+
+.g-disable {
+  pointer-events: none;
+  opacity: 0.5;
+}
