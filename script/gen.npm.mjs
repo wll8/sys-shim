@@ -19,7 +19,7 @@ const talbe = {
     // 打包 npm 包
     cp.execSync(`npx shx rm -rf ./npm-pkg/browser/`, {...execOpt})
     cp.execSync(`npx rollup --config rollup.config.mjs`, {...execOpt, env: {target: `browser`}})
-    cp.execSync(`npx shx cp -f ${pkgDir}/win-api/favicon-48.ico ${pkgDir}/script/npm-pkg/shim/win/favicon.ico`, {...execOpt})
+    cp.execSync(`npx shx cp -f ${pkgDir}/win-api/favicon.ico ${pkgDir}/script/npm-pkg/shim/win/favicon.ico`, {...execOpt})
     cp.execSync(`npx shx cp -f ${pkgDir}/win-api/main.exe ${pkgDir}/script/npm-pkg/shim/win/main.exe`, {...execOpt})
     cp.execSync(`npx shx rm -rf ./npm-pkg/node/`, {...execOpt})
     cp.execSync(`npx rollup --config rollup.config.mjs`, {...execOpt, env: {target: `node`}})

@@ -65,7 +65,7 @@ export default {
               `run`,
               [
                 `
-                var data = string.loadBuffer("./favicon-48.ico")
+                var data = string.loadBuffer("./favicon.ico")
                 return data
                 `,
               ],
