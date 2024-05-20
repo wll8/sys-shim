@@ -42,9 +42,9 @@ new Sys('ws://127.0.0.1:10005?token=tokentokentoken').then(main => {
 })
 ```
 
-### 方式三：使用脚手架模板开发(开发中)
+### 方式三：使用脚手架模板开发
 
-- 命令行
+- [命令行](https://wll8.github.io/sys-shim-doc/docs/cli/sys-shim.html)
 - 服务
 - 界面
 
