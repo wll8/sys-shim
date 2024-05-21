@@ -64,7 +64,11 @@ async function getIcon(iconPath) {
       icon = `${res.protocol}//${res.host}/favicon.ico`
       const tempIcon = `${os.tmpdir()}/${filenamify(icon)}`
       fs.writeFileSync(tempIcon, await download(icon))
-      return tempIcon
+      if(fs.readFileSync(tempIcon, `utf8`).match(/<html[\s\S]*<\/html/i)) {
+        throw new Error(`非图片文件`)
+      } else {
+        return tempIcon
+      }
     } catch (error) {
       console.warn(`从 ${icon} 获取图标错误：`)
       console.warn(String(error))
