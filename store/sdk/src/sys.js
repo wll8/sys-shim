@@ -108,7 +108,11 @@ class Base {
               argListIndex = argListIndex + 1
               argList[argListIndex] = arg
               acc = acc + `${strFix(key)}(${arg.map((item, itemIndex) => {
-                const type = isType(item)
+                const type = (() => {
+                  const t = isType(item)
+                  // 当字符串是多行时使用变量，因为不能直接使用 /* */ 以字面量的形式作为方法的参数： https://github.com/wll8/sys-shim/issues/6
+                  return t === `string` && /[\r\n]/.test(item) && `array` || t
+                })()
                 const isReference = [`object`, `array`].includes(type)
                 hasReference = hasReference || isReference
                 const argPath = [argListIndex, itemIndex].join(`_`) // 参数 id
