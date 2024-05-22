@@ -23,7 +23,7 @@
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "swiper": "^7.4.1",
-    "sys-shim": "0.0.1-8",
+    "sys-shim": "0.0.1-12",
     "unocss": "^0.60.2",
     "vue": "^3.4.21",
     "vue-awesome-swiper": "^5.0.1",

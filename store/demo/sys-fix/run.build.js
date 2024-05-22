@@ -12,6 +12,13 @@ const execOpt = {
 }
 
 cp.execSync(`npx vite build`, {...execOpt})
-fs.copyFileSync(`./node_modules/sys-shim/script/npm-pkg/shim/win/main.exe`, `./dist/main.exe`)
-fs.renameSync(`./dist/index.html`, `./dist/page.html`)
-cp.execSync(`start dist`, {...execOpt})
+fs.writeFileSync(`./dist/package.json`, JSON.stringify({
+  "browserArguments": "--disable-web-security --allow-running-insecure-content",
+  "form": {
+    "right": "1000",
+    "border": "thin",
+    "bottom": "600"
+  },
+  "page": "index.html"
+}, null, 2))
+cp.execSync(`npx sys-shim pack --input dist`, {...execOpt})

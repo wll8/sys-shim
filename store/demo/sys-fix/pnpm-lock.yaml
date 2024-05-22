@@ -27,8 +27,8 @@ importers:
         specifier: ^7.4.1
         version: 7.4.1
       sys-shim:
-        specifier: 0.0.1-8
-        version: 0.0.1-8
+        specifier: 0.0.1-12
+        version: 0.0.1-12
       unocss:
         specifier: ^0.60.2
         version: 0.60.2(postcss@8.4.38)(rollup@4.17.2)(vite@5.2.11(@types/node@20.12.12)(less@4.2.0))
@@ -3193,8 +3193,8 @@ packages:
     resolution: {integrity: sha512-HwOKAP7Wc5aRGYdKH+dw0PRRpbO841v2DENBtjnR5HFWoiNByAl7vrx3p0G/rCyYXQsrxqtX48TImFtPcIHSpQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
 
-  sys-shim@0.0.1-8:
-    resolution: {integrity: sha512-n1HYDcCXJvOwBk/lGQlt5eV7a5XfGj+XL/dex3SDZcJ+3XDGc7Sv8M+eSMgGzxWw2DoHIbm6bmzFi65NZwuZwA==}
+  sys-shim@0.0.1-12:
+    resolution: {integrity: sha512-bd0LVJy3h99Vk0vWDM/kYbdAaNfIZpIPNSMw+zoDn282Ry9cA/FPcl8Z3ZbzdOs0tR5V1WbzdWlIizD+ntU+HQ==}
     hasBin: true
 
   tar-stream@1.6.2:
@@ -7197,7 +7197,7 @@ snapshots:
       '@pkgr/core': 0.1.1
       tslib: 2.6.2
 
-  sys-shim@0.0.1-8:
+  sys-shim@0.0.1-12:
     dependencies:
       download: 8.0.0
       filenamify: 6.0.0

@@ -83,8 +83,7 @@ export default {
     const [, getSysDir] = await sys.native.fsys.getSysDir()
     const [, curDir] = await sys.native.io.curDir()
     let [, list] = await sys.native.fsys.list(getSysDir, `*?`, `*.dll`)
-    // this.items = list
-    this.items = list.slice(0, 200)
+    this.items = list
     this.items.forEach(async (item, index) => {
       const isErr = await this.checkErrMock(item)
       this.itemsOkList.unshift({
