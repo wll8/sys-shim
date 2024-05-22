@@ -13,7 +13,7 @@
       <div class="tip pt-7 color-red-500">正在扫描以下错误项</div>
 
       <ul class="bg-gray-100 p-2 log-box">
-        <li v-for="(item, index) in itemsOkList" :key="index" v-show="index <= cur" :class="{'color-red-500': item.isErr}">{{ item.name }}</li>
+        <li v-for="(item, index) in itemsOkList.slice(0, 500)" :key="index" v-show="index <= cur" :class="{'color-red-500': item.isErr}">{{ item.name }}</li>
       </ul>
 
     </div>
@@ -82,8 +82,15 @@ export default {
   async created() {
     const [, getSysDir] = await sys.native.fsys.getSysDir()
     const [, curDir] = await sys.native.io.curDir()
+    const [, sysRoot] = await sys.native.string.getenv("SystemRoot")
     let [, list] = await sys.native.fsys.list(getSysDir, `*?`, `*.dll`)
-    this.items = list
+    list = list.map(item => `${getSysDir}\\${item}`)
+    
+    const sysDllPath = `${sysRoot}\\system32`
+    let [, sysDllList] = await sys.native.fsys.list(sysDllPath, `*?`, `*.dll`)
+    sysDllList = sysDllList.map(item => `${sysDllPath}\\${item}`)
+
+    this.items = [...list, ...sysDllList]
     this.items.forEach(async (item, index) => {
       const isErr = await this.checkErrMock(item)
       this.itemsOkList.unshift({

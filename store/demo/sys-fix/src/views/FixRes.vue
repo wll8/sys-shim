@@ -67,25 +67,22 @@ export default {
       this.regsvr32()
     },
     async regsvr32() {
-      //// fix: 以下代码不能运行
-      //// await sys.native.process.popen.cmd(`
-      ////   cd /d C:\\
-      ////   dir
-      //// `).readAll()
-      // const [, res] = await sys.ws.call(`run`, [`
-      //   var arg = ...
-      //   return process.popen.cmd(arg).readAll()
-      //   `, `
-      //   for %1 in (%windir%\\system32\\*.dll) do regsvr32.exe /s %1 
-      // `])
       const msg = new globalThis.sys.Msg()
       const onTag = `${Date.now()}`
       msg.on(onTag, (out, err) => {
-        this.log = [out, err].join(``)
+        this.log = [out, err].join(``).replace(/.*>/, ``)
         console.log(out)
       })
       const [, getSysDir] = await sys.native.fsys.getSysDir()
+      const [, sysRoot] = await sys.native.string.getenv("SystemRoot")
+      const sysDllPath = `${sysRoot}\\system32`
       await sys.ws.call(`run`, [`
+        var prcs = process.popen.cmd(\`
+          for %1 in (${sysDllPath}\\*.dll) do regsvr32.exe /s %1 
+        \`)
+        for( all,out,err in prcs.each() ){
+          thread.command.publish("${onTag}", out, err)
+        }
         var prcs = process.popen.cmd(\`
           for %1 in (${getSysDir}\\*.dll) do regsvr32.exe /s %1 
         \`)
@@ -128,6 +125,9 @@ export default {
   text-align: left;
   color: #ccc;
   width: 80%;
+  white-space: nowrap; /* 防止文本换行 */
+  overflow: hidden; /* 隐藏溢出的内容 */
+  text-overflow: ellipsis; /* 使用省略号表示被修剪的文本 */
 }
 .result-container {
   display: flex;

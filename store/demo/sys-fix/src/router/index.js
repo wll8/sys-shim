@@ -10,9 +10,9 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/FixIng',
-      name: 'FixIng',
-      component: () => import('../views/FixIng.vue')
+      path: '/ScanIng',
+      name: 'ScanIng',
+      component: () => import('../views/ScanIng.vue')
     },
     {
       path: '/FixRes',

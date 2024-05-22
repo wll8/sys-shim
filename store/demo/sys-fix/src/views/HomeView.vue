@@ -26,7 +26,7 @@
       </div>
       <div class="buttons">
         <button class="btn btn-primary" @click="repairErrorCode">一键修复错误代码</button>
-        <button class="btn" @click="enterManualRepair">进入手动修复</button>
+        <button class="btn" @click="enterManualRepair" v-if="false">进入手动修复</button>
       </div>
     </div>
   </div>
@@ -67,7 +67,7 @@ export default {
   methods: {
     repairErrorCode() {
       // 这里编写一键修复错误代码的逻辑  
-      console.log('开始修复错误代码...', this.$router.push(`/FixIng`));
+      console.log('开始修复错误代码...', this.$router.push(`/ScanIng`));
     },
     enterManualRepair() {
       // 这里编写进入手动修复的逻辑  
