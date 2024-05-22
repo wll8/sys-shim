@@ -58,16 +58,20 @@ async function getIcon(iconPath) {
   if(fs.existsSync(iconPath)) {
     return iconPath
   } else {
-    let icon
+    let icon = iconPath
     try {
-      const res = new url.URL(iconPath)
-      icon = `${res.protocol}//${res.host}/favicon.ico`
-      const tempIcon = `${os.tmpdir()}/${filenamify(icon)}`
-      fs.writeFileSync(tempIcon, await download(icon))
-      if(fs.readFileSync(tempIcon, `utf8`).match(/<html[\s\S]*<\/html/i)) {
-        throw new Error(`非图片文件`)
-      } else {
-        return tempIcon
+      if(determinePathType(iconPath) === `url`) {
+        const res = new url.URL(iconPath)
+        icon = `${res.protocol}//${res.host}/favicon.ico`
+        const tempIcon = `${os.tmpdir()}/${filenamify(icon)}`
+        fs.writeFileSync(tempIcon, await download(icon))
+        if(fs.readFileSync(tempIcon, `utf8`).match(/<html[\s\S]*<\/html/i)) {
+          throw new Error(`非图片文件`)
+        } else {
+          return tempIcon
+        }
+      } else if(fs.existsSync(iconPath) === false) {
+        throw new Error(`文件不存在`)
       }
     } catch (error) {
       console.warn(`从 ${icon} 获取图标错误：`)
@@ -130,20 +134,33 @@ function zip(cfg) {
   cp.execSync(cmd, {stdio: `inherit`})
 }
 
+function getIndex(cfg) {
+  if(determinePathType(cfg.input) === `url`) {
+    return cfg.input
+  } else {
+    const indexFile = `index.html`
+    return fs.existsSync(`${cfg.input}/${indexFile}`) ? indexFile : `page.html`
+  }
+}
+
 function genFile(cfg) {
   const newCfg = {
     input: `${os.tmpdir()}/pack.temp`,
     icon: `${os.tmpdir()}/pack.temp/favicon.ico`,
   }
   shelljs.rm(`-fr`, newCfg.input)
-  shelljs.cp(`-fr`, `${pkgDir}/template/pack`, newCfg.input)
+  shelljs.mkdir(`-p`, newCfg.input)
+  shelljs.cp(`-fr`, `${pkgDir}/template/pack/*`, newCfg.input)
   shelljs.cp(`-f`, `${pkgDir}/script/npm-pkg/shim/win/main.exe`, newCfg.input)
   shelljs.cp(`-f`, `${pkgDir}/script/npm-pkg/shim/win/favicon.ico`, newCfg.input)
   shelljs.cp(`-f`, cfg.icon, `${newCfg.input}/favicon.ico`)
-  const newStr = simpleTemplate(fs.readFileSync(`${newCfg.input}/package.json`, `utf8`), {
-    page: determinePathType(cfg.input) === `url` ? cfg.input : `page.html`,
-  })
-  fs.writeFileSync(`${newCfg.input}/package.json`, newStr)
+  fs.statSync(cfg.input).isDirectory() && shelljs.cp(`-fr`, `${cfg.input}/*`, newCfg.input)
+  if(fs.existsSync(`${cfg.input}/package.json`) === false) {
+    const newStr = simpleTemplate(fs.readFileSync(`${newCfg.input}/package.json`, `utf8`), {
+      page: getIndex(cfg),
+    })
+    fs.writeFileSync(`${newCfg.input}/package.json`, newStr)
+  }
   return newCfg
 }
 
