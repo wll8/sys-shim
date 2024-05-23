@@ -6,7 +6,7 @@
           <i class="fa fa-check-circle color-green fa-5x"></i>
         </div>
         <h2>恭喜您，扫描检测完成</h2>
-        <p>异常资源库已准备就绪，还差一步即可完成修复，请点击“<span color-red-500>立即修复</span>”按钮</p>
+        <p v-show="totalErrors">异常资源库已准备就绪，还差一步即可完成修复，请点击“<span color-red-500>立即修复</span>”按钮</p>
       </div>
       <div class="w-300px text-left p-40px bg-gray-100 rounded-md pt-20px">
         <h3>扫描结果</h3>
@@ -31,8 +31,7 @@
         </div>
       </div>
     </div>
-    <div class="log" v-show="log">修复中：{{ log }}</div>
-    <button :class="[`repair-button mt-10px p-50px`, {'g-disable': log}]" @click="startRepair">立即修复</button>
+    <button class="repair-button mt-10px p-50px" v-show="totalErrors" @click="startRepair">立即修复</button>
   </div>
 </template>
 
@@ -42,93 +41,42 @@ import { randomNumBoth, randomWithToken, removeLeft } from '@/util.js'
 export default {
   data() {
     return {
-      log: ``,
-      totalErrors: 0,
       systemErrors: 0,
       userErrors: 0,
+      fixList: 0,
       otherErrors: 0
     };
   },
   created() {
-    console.log(`useDllStore()`, this.$route.params)
     this.getErrDetailMock()
+  },
+  computed: {
+    totalErrors() {
+      return this.systemErrors + this.userErrors + this.otherErrors
+    },
   },
   methods: {
     // 获取错误详情，模拟
-    getErrDetailMock() {
-      const {itemsOkListLength, fixNum} = this.$route.query
-      this.totalErrors = itemsOkListLength
-      this.systemErrors = randomWithToken(0, fixNum)
-      this.userErrors = randomWithToken(0, fixNum - this.systemErrors)
+    async getErrDetailMock() {
+      let [, cpuId] = await sys.native.sys.cpu.getInfoByWmi().ProcessorId
+      const {fixList, fixNum} = this.$route.query
+      this.fixList = JSON.parse(fixList)
+      this.systemErrors = randomWithToken(0, fixNum, cpuId)
+      this.userErrors = randomWithToken(0, fixNum - this.systemErrors, cpuId)
       this.otherErrors = fixNum - this.systemErrors - this.userErrors
     },
     async startRepair() {
-      // this.$router.push(`/DoFix`)
-      this.regsvr32()
-    },
-    async regsvr32() {
-      const msg = new globalThis.sys.Msg()
-      const onTag = `${Date.now()}`
-      msg.on(onTag, (out, err) => {
-        this.log = [out, err].join(``).replace(/.*>/, ``)
-        console.log(out)
+      this.$router.push({
+        path: `/FixIng`,
+        query: this.$route.query,
       })
-      const [, getSysDir] = await sys.native.fsys.getSysDir()
-      const [, sysRoot] = await sys.native.string.getenv("SystemRoot")
-      const sysDllPath = `${sysRoot}\\system32`
-      await sys.ws.call(`run`, [`
-        var prcs = process.popen.cmd(\`
-          for %1 in (${sysDllPath}\\*.dll) do regsvr32.exe /s %1 
-        \`)
-        for( all,out,err in prcs.each() ){
-          thread.command.publish("${onTag}", out, err)
-        }
-        var prcs = process.popen.cmd(\`
-          for %1 in (${getSysDir}\\*.dll) do regsvr32.exe /s %1 
-        \`)
-        for( all,out,err in prcs.each() ){
-          thread.command.publish("${onTag}", out, err)
-        }
-      `])
-      this.log = ``
-      msg.off(onTag)
-      alert(`修复完成`)
-    },
-    async regsvr32Item() {
-      const msg = new globalThis.sys.Msg()
-      const onTag = `${Date.now()}`
-      msg.on(onTag, (out, err) => {
-        this.log = [out, err].join(``)
-        console.log(out)
-      })
-      const [, getSysDir] = await sys.native.fsys.getSysDir()
-      await sys.ws.call(`run`, [`
-        var prcs = process.popen.cmd(\`
-          for %1 in (${getSysDir}\\*.dll) do regsvr32.exe /s %1 
-        \`)
-        for( all,out,err in prcs.each() ){
-          thread.command.publish("${onTag}", out, err)
-        }
-      `])
-      this.log = ``
-      msg.off(onTag)
-      alert(`修复完成`)
+      // this.regsvr32()
     },
   }
 };
 </script>
 
 <style scoped>
-.log {
-  box-sizing: border-box;
-  padding: 0 10px;
-  text-align: left;
-  color: #ccc;
-  width: 80%;
-  white-space: nowrap; /* 防止文本换行 */
-  overflow: hidden; /* 隐藏溢出的内容 */
-  text-overflow: ellipsis; /* 使用省略号表示被修剪的文本 */
-}
 .result-container {
   display: flex;
   align-items: center;

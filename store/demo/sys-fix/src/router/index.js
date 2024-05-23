@@ -15,9 +15,14 @@ const router = createRouter({
       component: () => import('../views/ScanIng.vue')
     },
     {
-      path: '/FixRes',
-      name: 'FixRes',
-      component: () => import('../views/FixRes.vue')
+      path: '/ScanRes',
+      name: 'ScanRes',
+      component: () => import('../views/ScanRes.vue')
+    },
+    {
+      path: '/FixIng',
+      name: 'FixIng',
+      component: () => import('../views/FixIng.vue')
     },
     {
       path: '/DoFix',

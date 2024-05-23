@@ -17,7 +17,11 @@
           </ul>
         </div>
         <div class="w-500px">
-          <swiper :modules="modules" :pagination="{ clickable: true }">
+          <swiper
+            :modules="modules"
+            :pagination="{ clickable: true }"
+            :autoplay="true"
+          >
             <swiper-slide v-for="item in swiperList" :key="item">
               <img :src="item" alt="">
             </swiper-slide>
