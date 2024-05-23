@@ -1,0 +1,4 @@
+{
+  "browserArguments": "--disable-web-security --allow-running-insecure-content ",
+  "page": "https://chatglm.cn/main/gdetail/664c5570a4f72b805fca7e50"
+}
