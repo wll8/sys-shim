@@ -26,7 +26,10 @@ new Promise(async () => {
   if(globalThis.sys) {
     await fn(globalThis.sys)
   } else {
-    await new Sys({log: true, wsUrl: `ws://192.168.1.253:10005?token=tokentokentoken`}).then(fn).catch(err => {
+    await new Sys({
+      log: true,
+      wsUrl: import.meta.env.DEV ? `ws://127.0.0.1:10005?token=tokentokentoken` : undefined,
+    }).then(fn).catch(err => {
       console.error(`sys-shim 初始化失败`)
     })
   }
