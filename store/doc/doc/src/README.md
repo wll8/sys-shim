@@ -41,4 +41,11 @@ desc: 有哪些 api 可以使用。
 link: /docs/api/
 ```
 
+```component VPCard
+logo: https://github.com/favicon.ico
+title: 源码
+desc: 你的 star 就是动力
+link: https://github.com/wll8/sys-shim
+```
+
 

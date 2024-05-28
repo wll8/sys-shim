@@ -42,7 +42,7 @@ npm i -g sys-shim
 **下一步 将网页转换为 sys-shim 应用**
 
 ``` sh
-sys-shim https://example.com/index.html
+sys-shim pack --input https://example.com/index.html
 ```
 
 运行该命令后，在当前目录会输出一个应用程序。运行后点击您的按钮，即可看到计算器被打开。

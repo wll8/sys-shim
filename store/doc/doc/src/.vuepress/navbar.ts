@@ -21,4 +21,9 @@ export default navbar([
     text: "贡献指南",
     link: "/docs/join/"
   },
+  {
+    text: "源码",
+    icon: "https://github.com/favicon.ico",
+    link: "https://github.com/wll8/sys-shim"
+  },
 ]);
