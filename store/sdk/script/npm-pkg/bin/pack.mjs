@@ -154,7 +154,7 @@ function genFile(cfg) {
   shelljs.cp(`-f`, `${pkgDir}/script/npm-pkg/shim/win/main.exe`, newCfg.input)
   shelljs.cp(`-f`, `${pkgDir}/script/npm-pkg/shim/win/favicon.ico`, newCfg.input)
   shelljs.cp(`-f`, cfg.icon, `${newCfg.input}/favicon.ico`)
-  fs.statSync(cfg.input).isDirectory() && shelljs.cp(`-fr`, `${cfg.input}/*`, newCfg.input)
+  determinePathType(cfg.input) !== `url` && fs.statSync(cfg.input).isDirectory() && shelljs.cp(`-fr`, `${cfg.input}/*`, newCfg.input)
   if(fs.existsSync(`${cfg.input}/package.json`) === false) {
     const newStr = simpleTemplate(fs.readFileSync(`${newCfg.input}/package.json`, `utf8`), {
       page: getIndex(cfg),
