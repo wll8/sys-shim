@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.1-14](/compare/v0.0.1-13...v0.0.1-14) (2024-06-05)
+
+
+### Features
+
+* Use the --no-nameSuffix parameter to cancel the suffix 284b7b7
+
 ## [0.0.1-13](/compare/v0.0.1-12...v0.0.1-13) (2024-05-30)
 
 
