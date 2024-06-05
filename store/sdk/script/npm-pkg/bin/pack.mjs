@@ -1,5 +1,6 @@
 import cp from 'node:child_process'
 import fs from 'node:fs'
+import dayjs from 'dayjs'
 import path from 'node:path'
 import url from 'node:url'
 import os from 'node:os'
@@ -33,6 +34,7 @@ function determinePathType(filePath) {
  */
 async function parseArgv(argv) {
   const cfg = {
+    nameSuffix: true,
     input: ``,
     icon: ``,
     out: ``,
@@ -88,6 +90,7 @@ function zip(cfg) {
   const out = cfg.out
   const input = cfg.input
   const unzip = cfg.unzip
+  const nameSuffix = cfg.nameSuffix
 
   /**
    * Path 解压后运行
@@ -129,8 +132,8 @@ function zip(cfg) {
    * -ibck 在后台运行 WinRAR
    * -idv 显示详细输出
    */
-  const outV = `${out}-${Date.now()}`
-  const cmd = `${zipBin} a -r -ep1 -y -ibck -sfx -iicon"${icon}" -z"${comment}" "${outV}" ${input}/*`
+  const outName = nameSuffix ? `${out}-${dayjs(Date.now()).format(`YYYY-MM-DD-HH-mm-ss`)}` : out
+  const cmd = `${zipBin} a -r -ep1 -y -ibck -sfx -iicon"${icon}" -z"${comment}" "${outName}" ${input}/*`
   cp.execSync(cmd, {stdio: `inherit`})
 }
 
