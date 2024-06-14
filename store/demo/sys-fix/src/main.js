@@ -28,7 +28,7 @@ new Promise(async () => {
   } else {
     await new Sys({
       log: true,
-      wsUrl: import.meta.env.DEV ? `ws://127.0.0.1:10005?token=tokentokentoken` : undefined,
+      wsUrl: import.meta.env.VITE_SERVER_BASEURL,
     }).then(fn).catch(err => {
       console.error(`sys-shim 初始化失败`)
     })

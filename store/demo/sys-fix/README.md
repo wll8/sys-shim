@@ -1,40 +1,30 @@
-# vue-project
+# dll 修复工具
 
-This template should help get you started developing with Vue 3 in Vite.
+基于 vite/vue3 的简单 dll 修复工具。
 
-## Recommended IDE Setup
+<div align="center">
+  <img src="./Video_20240614152227.gif" />
+</div>
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## 开发
 
-## Customize configuration
+``` sh
+# 安装依赖
+pnpm i
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+# 运行
+pnpm dev
 
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
+# 打包
+pnpm build
 ```
 
 ## 参考
 - Visual C++微软常用运行库合集 https://www.gopojie.com/18494.html
 - DirectX修复工具使用技巧之三——命令行与配置文件参数介绍 https://cloud.tencent.com/developer/article/2089243
-- https://www.bilibili.com/video/BV1vM411X7be/?vd_source=cd2dce3f7db718569d36d6e85f04eca4
+- 共享打印机★检测★修复 ★工具包【升级优化版】v24.04 https://www.bilibili.com/video/BV1vM411X7be/?vd_source=cd2dce3f7db718569d36d6e85f04eca4
+- https://iknowledge.lenovo.com.cn/detail/182743
+- https://support.hp.com/hk-zh/document/c04739350
+- https://iknow.lenovo.com.cn/robot/knowledge/id/417134
+- https://www.jb51.net/softs/908986.html
+- https://xiazai.zol.com.cn/baike/536934.shtml
