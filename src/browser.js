@@ -1,18 +1,37 @@
 import * as RPCWebSocket from 'rpc-websockets/dist/index.browser-bundle.js'
-import SysRef from './sys.js'
+import SysRef from '@/sys.js'
 
-// 当在 webview 中打开时, 有 ext 对象
-global.ext = global.ext || {}
+globalThis.ext = globalThis.ext || new Promise(async (resolve) => {
+  globalThis.ext = JSON.parse((await globalThis._ext) || `{}`)
+  delete globalThis._ext
+  resolve(globalThis.ext)
+})
+
+const lib = {
+  encoder: new globalThis.TextEncoder(),
+  decoder: new globalThis.TextDecoder(),
+}
+
 class Sys extends SysRef {
-  constructor(wsUrl) {
-    return new Promise(async (resolve) => {
-      wsUrl = wsUrl || `${await global.ext.wsUrl}?token=${await global.ext.token }`
-      const ws = new RPCWebSocket.Client(await wsUrl)
-      // 使用 await 等待 super 返回的 promise 结束, 否则 this 是一个 promise, 不能赋值
-      const that = await super(ws)
-      that.hwnd = await global.ext.hwnd
-      resolve(that)
+  constructor(user = {}) {
+    user = typeof(user) === `string` ? {wsUrl: user} : user
+    return new Promise(async (resolve, reject) => {
+      try {
+        globalThis.ext = await globalThis.ext
+        user.wsUrl = user.wsUrl || `${globalThis.ext.wsUrl}?token=${globalThis.ext.token }`
+        const ws = new RPCWebSocket.Client(user.wsUrl)
+        const that = await super({
+          ...user,
+          ws,
+          lib,
+        })
+        // todo 只有通过 exe 加载时才会有，应在后面的版本中删除
+        that.hwnd = globalThis.ext.hwnd
+        resolve(that)
+      } catch (error) {
+        reject(error)
+      }
     })
   }
 }
-global.Sys = Sys
+export default Sys
