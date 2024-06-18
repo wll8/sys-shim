@@ -73,7 +73,7 @@ export function deepProxy({
       let records = getRecords(this)
       setTimeout(() => {
         let recordsEnd = getRecords(this)
-        !recordsEnd.hackRun && cb(recordsEnd)
+        !recordsEnd.hackRun && (cb(recordsEnd), recordsEnd.hackRun = true)
       }, 0)
       const key = records[records.length - 1].key
       records[records.length - 1] = { type: `apply`, key, arg: args }
