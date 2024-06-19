@@ -65,7 +65,7 @@ function onNavClick(item: NavType) {
     <nav class="nav flex justify-between items-center">
       <div class="nav-left">
         <router-link to="/" class="flex items-center">
-          <img src="" alt="logo">
+          <img src="/favicon.ico" alt="logo">
           <span class="title text-xl font-bold flex-1">游乐场</span>
         </router-link>
       </div>
@@ -120,8 +120,8 @@ function onNavClick(item: NavType) {
 }
 .nav-left {
   img {
-    background-color: pink;
     margin-right: 10px;
+    width: 32px;
   }
 }
 .nav-right li {
