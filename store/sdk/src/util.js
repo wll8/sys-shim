@@ -284,6 +284,14 @@ export function getUuid () {
   })
 }
 
+/**
+ * 获取 uuid
+ * @returns
+ */
+export function getCodeId () {
+  return `c_${getUuid()}`.replace(/[_-]/g, ``)
+}
+
 export function isUTF8MultiByteStart(byte) {
   // 如果字节的高位为11，则是多字节字符的起始字节
   return (byte & 0xC0) === 0xC0

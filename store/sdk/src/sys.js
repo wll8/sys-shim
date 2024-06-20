@@ -1,6 +1,7 @@
 import mitt from 'mitt'
 import {
   deepProxy,
+  getCodeId,
   removeLeft,
   isUTF8MultiByteContinuation,
   isUTF8MultiByteStart,
@@ -262,7 +263,7 @@ class Sys extends Base {
       }
       const id = (() => {
         const code = (arg[0] || ``).trim()
-        const runId = `code_${getUuid()}`.replace(/-/g, `_`)
+        const runId = getCodeId()
         const str = new String(runId)
         str.cbTag = code.startsWith(`return thread.command.cb_arg_code_`) ? code.match(/^return thread.command.cb_arg_(.{41})/)[1] : ``
         return str
