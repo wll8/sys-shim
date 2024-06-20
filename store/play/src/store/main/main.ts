@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import useSettingStore from '../setting/setting'
-import type { IExecInfo, IExecInfoActionOptions } from './type'
+import type { IExecInfo } from './type'
 
 interface IMainState {
   execInfo: IExecInfo
@@ -19,32 +19,18 @@ const initInfo: IInitInfo = {
     },
     code: {
       node: '',
+      browser: '',
+      native: '',
     },
   },
 }
 
 const useMainStore = defineStore('Main', {
   state: (): IMainState => ({
-    execInfo: initInfo.execInfo,
+    execInfo: JSON.parse(JSON.stringify(initInfo.execInfo)),
   }),
   persist: true,
   actions: {
-    changeExecInfoAction(options: IExecInfoActionOptions) {
-      const settingStore = useSettingStore()
-      const settingInfo = settingStore.settingInfo
-      const execInfo = { ...this.execInfo }
-      // 设置环境
-      execInfo.env['node-sys.js'] = settingInfo.nodeV
-      execInfo.env['browser-sys.js'] = settingInfo.browserV
-      execInfo.env['main.exe'] = settingInfo.appV
-      // 设置代码
-      const { type = 'node', code } = options
-      const runCode = code[type]
-      execInfo.type = type
-      execInfo.code = { [type]: runCode }
-      // 设置到环境中
-      this.execInfo = execInfo
-    },
     urlDataToExecInfoAction(data: IExecInfo) {
       this.execInfo = data
       // 将data数据设置到settingStore
@@ -57,7 +43,8 @@ const useMainStore = defineStore('Main', {
     },
     // 重置信息
     resetAction() {
-      this.execInfo = initInfo.execInfo
+      const execInfo = JSON.parse(JSON.stringify(initInfo.execInfo))
+      this.execInfo = execInfo
       const settingStore = useSettingStore()
       settingStore.resetAction()
     },

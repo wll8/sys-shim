@@ -14,8 +14,3 @@ export interface IExecInfo {
   }
   code: ICode
 }
-
-export interface IExecInfoActionOptions {
-  type: RunCodeType // 执行代码类型
-  code: ICode
-}

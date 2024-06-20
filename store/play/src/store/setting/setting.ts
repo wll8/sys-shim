@@ -45,7 +45,7 @@ const initInfo: IInitInfo = {
 
 const useSettingStore = defineStore('setting', {
   state: (): ISettingState => ({
-    settingInfo: initInfo.settingInfo,
+    settingInfo: JSON.parse(JSON.stringify(initInfo.settingInfo)),
     // 风格模式
     styleModeOptions: [
       {
@@ -108,7 +108,7 @@ const useSettingStore = defineStore('setting', {
     },
     // 重置
     resetAction() {
-      this.changeSettingInfoAction(initInfo.settingInfo)
+      this.changeSettingInfoAction(JSON.parse(JSON.stringify(initInfo.settingInfo)))
     },
   },
 })
