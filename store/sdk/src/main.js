@@ -1,11 +1,11 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 
-// 从开发环境引入
-// import Sys from './browser.js'
-
-// 从发布的包里引入
-import Sys from 'sys-shim'
+globalThis.Sys = await {
+  dev: async () => await import(`./browser.js`).then(m => m.default),
+  prod: async () => await import(`sys-shim`).then(m => m.default),
+  none: async () => globalThis.Sys,
+}[import.meta.env.VITE_USE_PROD_SYS_SHIM]()
 
 const fn = async sys => {
   console.log(`初始化完成`, sys)
@@ -20,9 +20,9 @@ new Promise(async () => {
   if(globalThis.sys) {
     await fn(globalThis.sys)
   } else {
-    await new Sys({
+    await new globalThis.Sys({
       log: true,
-      wsUrl: `ws://127.0.0.1:10005?token=tokentokentoken`,
+      wsUrl: import.meta.env.VITE_SERVER_BASEURL,
     }).then(fn).catch(err => {
       console.error(`sys-shim 初始化失败`)
     })
