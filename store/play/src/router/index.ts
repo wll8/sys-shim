@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import Home from '@/views/home/index.vue'
 
 export default createRouter({
   routes: [
@@ -8,11 +9,11 @@ export default createRouter({
     },
     {
       path: '/home',
-      component: () => import('@/views/home/index.vue'),
+      component: Home,
     },
     {
       path: '/home/:data',
-      component: () => import('@/views/home/index.vue'),
+      component: Home,
     },
   ],
   history: createWebHashHistory(),

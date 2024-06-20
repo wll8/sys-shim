@@ -11,12 +11,3 @@ const app = createApp(App)
 app.use(router)
 app.use(store)
 app.mount('#app')
-
-if (globalThis.Sys) {
-  new globalThis.Sys({ log: true, wsUrl: import.meta.env.VITE_SERVER_BASEURL }).then(async (main: any) => {
-    // globalThis.Neutralino = await main.api.neutralino()
-    globalThis.main = main
-    globalThis.native = main.native
-    globalThis.msg = new main.Msg()
-  })
-}
