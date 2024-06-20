@@ -6,14 +6,12 @@ const { antTheme } = useTheme()
 onMounted(() => {
   // 注入
   if (globalThis.Sys) {
-    globalThis.onload = function () {
-      new globalThis.Sys({ log: true, wsUrl: import.meta.env.VITE_SERVER_BASEURL }).then(async (main: any) => {
-        // globalThis.Neutralino = await main.api.neutralino()
-        globalThis.main = main
-        globalThis.native = main.native
-        globalThis.msg = new main.Msg()
-      })
-    }
+    new globalThis.Sys({ log: true, wsUrl: import.meta.env.VITE_SERVER_BASEURL }).then(async (main: any) => {
+      // globalThis.Neutralino = await main.api.neutralino()
+      globalThis.main = main
+      globalThis.native = main.native
+      globalThis.msg = new main.Msg()
+    })
   }
 })
 </script>
