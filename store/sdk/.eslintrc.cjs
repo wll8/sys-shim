@@ -9,7 +9,7 @@ module.exports = {
   ],
   parserOptions: {
     sourceType: `module`,
-    ecmaVersion: 2021, // es 语法
+    ecmaVersion: 2022, // es 语法
   },
   ignorePatterns: [`dist`, `win-api/res`, `script/npm-pkg/browser`, `script/npm-pkg/node`],
   globals: {

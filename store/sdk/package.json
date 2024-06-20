@@ -63,6 +63,7 @@
     "dev": "run-p vite run.shim",
     "main:build": "npx download-cli https://github.com/wll8/sys-shim/releases/download/example/main.exe -o win-api/",
     "vite": "vite",
+    "test": "vitest --reporter=basic",
     "preview": "vite preview",
     "gen.npm": "node script/gen.npm.mjs",
     "gen.npm.push": "cross-env push=yes node script/gen.npm.mjs",
@@ -78,6 +79,7 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@vitejs/plugin-vue": "^4.5.0",
+    "@vitest/ui": "^1.6.0",
     "cross-env": "^7.0.3",
     "download-cli": "^1.1.1",
     "eslint": "8.57.0",
@@ -90,6 +92,7 @@
     "rpc-websockets": "^7.6.0",
     "sys-shim": "link:",
     "vite": "^5.0.0",
+    "vitest": "^1.6.0",
     "vue": "^3.3.8"
   },
   "dependencies": {
