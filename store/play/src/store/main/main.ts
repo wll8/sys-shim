@@ -11,6 +11,7 @@ interface IInitInfo {
 
 const initInfo: IInitInfo = {
   execInfo: {
+    type: 'node',
     env: {
       'node-sys.js': '0.0.1',
       'browser-sys.js': '0.0.1',
@@ -26,6 +27,7 @@ const useMainStore = defineStore('Main', {
   state: (): IMainState => ({
     execInfo: initInfo.execInfo,
   }),
+  persist: true,
   actions: {
     changeExecInfoAction(options: IExecInfoActionOptions) {
       const settingStore = useSettingStore()
@@ -38,6 +40,7 @@ const useMainStore = defineStore('Main', {
       // 设置代码
       const { type = 'node', code } = options
       const runCode = code[type]
+      execInfo.type = type
       execInfo.code = { [type]: runCode }
       // 设置到环境中
       this.execInfo = execInfo

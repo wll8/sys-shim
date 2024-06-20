@@ -6,6 +6,7 @@ export interface ICode {
 }
 
 export interface IExecInfo {
+  type: 'browser' | 'node' | 'native'
   env: {
     'node-sys.js'?: string
     'browser-sys.js'?: string

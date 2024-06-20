@@ -28,6 +28,7 @@
     "monaco-editor": "^0.48.0",
     "normalize.css": "^8.0.1",
     "pinia": "^2.1.7",
+    "pinia-plugin-persistedstate": "^3.2.1",
     "sass": "^1.71.0",
     "sys-shim": "0.0.1-14",
     "vite-plugin-monaco-editor": "^1.1.0",

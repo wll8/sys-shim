@@ -32,14 +32,18 @@ watch(() => runOption.code.native, () => {
 watch(() => runOption.code.node, () => {
   mainStore.changeExecInfoAction(runOption)
 })
+
 // 监听变化修改代码，代码重置时修改显示内容
 watch(() => mainStore.execInfo, () => {
   const execInfo = mainStore.execInfo
-  const type = Object.keys(execInfo.code)[0] as RunCodeType
+  const type = execInfo.type
   if (type !== runOption.type)
     runOption.type = type
   if (execInfo.code[type] !== runOption.code)
     runOption.code[type] = execInfo.code[type]
+}, {
+  immediate: true,
+  deep: true,
 })
 /**
  * 加载代码
@@ -51,7 +55,7 @@ function dataToExecInfo(data: string | string[]) {
     if (value && value.env) {
       mainStore.urlDataToExecInfoAction(value)
       // 得到渲染数据
-      const type = Object.keys(value.code)[0] as RunCodeType
+      const type = value.type as RunCodeType
       runOption.type = type
       runOption.code[type] = value.code[type]
     }

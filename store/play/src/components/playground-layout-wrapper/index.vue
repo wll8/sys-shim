@@ -74,6 +74,7 @@ function dragEnd() {
 }
 .wrapper-right {
   background-color: var(--bg);
+  min-width: 326px;
 }
 .scroll-area {
   width: 2px;
