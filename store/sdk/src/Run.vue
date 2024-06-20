@@ -2,6 +2,10 @@
   <div>
     <vue-monaco-editor
       @keydown.ctrl.e.prevent="runCode"
+      @keydown.ctrl.s.prevent="() => {}"
+      :options="{
+        tabSize: 2, // tab 缩进长度
+      }"
       class="editor"
       v-model:value="code"
     />
