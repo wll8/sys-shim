@@ -28,46 +28,46 @@ class CodeObj {
     // 注：线程中的代码运行完成后，线程会自动关闭的
     const template = removeLeft({
       thread: `
-        var arg = {...}
+        var args = {...}
         thread.create(function(...){
           import lib;
           var tid = thread.getId()
           var runid = "#{id}"
-          var arg = {...}
+          var args = {...}
           var res = null
           var err = false
           try {
             var code = /#{codeLine}
             var tid = thread.getId()
             var runid = "#{id}"
-            var arg = {...}
+            var args = {...}
             #{code}
             #{codeLine}/
             fn, err = loadcode(code)
-            res = {fn(table.unpack(arg))}
+            res = {fn(table.unpack(args))}
           }
           catch (e) {
             err = err || tostring(e);
           }
           var data = {type: err ? "err" : "return", err: err, res: res, tid: tid}
           thread.command.publish(runid, data)
-        }, table.unpack(arg))
+        }, table.unpack(args))
       `,
       main: `
         var tid = thread.getId()
         var runid = "#{id}"
-        var arg = {...}
+        var args = {...}
         var res = null
         var err = false
         try {
           var code = /#{codeLine}
           var tid = thread.getId()
           var runid = "#{id}"
-          var arg = {...}
+          var args = {...}
           #{code}
           #{codeLine}/
           fn, err = loadcode(code)
-          res = {fn(table.unpack(arg))}
+          res = {fn(table.unpack(args))}
         }
         catch (e) {
           err = err || tostring(e);
@@ -120,12 +120,12 @@ class Base {
                 // 如果是引用类型参数，则使用引用方式传递，否则使用字面量方式
                 if([`function`, `asyncfunction`].includes(type)) {
                   return removeLeft(`function(...){
-                    var arg = {...}
+                    var args = {...}
                     var argPath = "${argPath}"
                     var cmd = thread.command()
                     var id = "cb_arg_" ++ runid ++ "_" ++ tid ++ "_" ++ argPath
                     var res
-                    thread.command.publish(runid, {type: "cb-arg", res: arg, argPath: argPath, id: id, tid: tid});
+                    thread.command.publish(runid, {type: "cb-arg", res: args, argPath: argPath, id: id, tid: tid});
                     cmd[id] = function(...){
                       res = ...
                       win.quitMessage()
@@ -135,7 +135,7 @@ class Base {
                     return res
                   }`)
                 } else {
-                  return isReference ? `arg[${argListIndex + 1}][${itemIndex + 1}]` : JSON.stringify(item)
+                  return isReference ? `args[${argListIndex + 1}][${itemIndex + 1}]` : JSON.stringify(item)
                 }
               }).join(`, `)})`
             }
