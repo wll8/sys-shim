@@ -36,6 +36,7 @@ export function getCodeLine(inputStr) {
   return maxAsterisks
 }
 
+export const sleep = (time = 1e3) => new Promise(resolve => setTimeout(resolve, time))
 export function deepProxy({
   keys = [`then`, `catch`],
   cb = (records) => {

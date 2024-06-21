@@ -72,3 +72,11 @@ rem 发布 npm
 pnpm gen.npm.push
 
 ```
+
+## todo
+
+- [ ] feat: buffer 自动转换
+- [ ] fix: 应正确接收稀疏返回值
+  - 例如： `return {1, null, 3}` 
+- [ ] feat: 流式传输数据
+  - 例如： 实时向 native 保存下载的数据

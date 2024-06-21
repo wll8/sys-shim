@@ -1,7 +1,7 @@
 // / <reference path="../types/global.d.ts" />
 // / <reference path="../types/typings.d.ts" />
 
-const sleep = time => new Promise(resolve => setTimeout(resolve,time))
+import { sleep } from '@/util'
 import Run from '@/Run.vue'
 
 export default {
