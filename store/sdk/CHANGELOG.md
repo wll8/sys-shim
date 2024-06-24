@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.1-15](/compare/v0.0.1-14...v0.0.1-15) (2024-06-24)
+
+
+### Bug Fixes
+
+* The callback function should not be executed multiple times 71f6799
+
+
+### Features
+
+* Add some test cases a2e82ba
+* Improve compatibility #7 54da40c, closes #7
+* Optimize Editor e449393
+
 ## [0.0.1-14](/compare/v0.0.1-13...v0.0.1-14) (2024-06-05)
 
 
