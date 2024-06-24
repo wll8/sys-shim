@@ -85,7 +85,8 @@ async function getIcon(iconPath) {
 }
 
 function zip(cfg) {
-  const zipBin = `${pkgDir}/script/npm-pkg/lib/WinRAR.exe`
+  const archDir = process.arch === `x64` ? `x64` : `x32`
+  const zipBin = `${pkgDir}/script/npm-pkg/lib/winrar/${archDir}/WinRAR.exe`
   const icon = cfg.icon
   const out = cfg.out
   const input = cfg.input
@@ -133,7 +134,7 @@ function zip(cfg) {
    * -idv 显示详细输出
    */
   const outName = nameSuffix ? `${out}-${dayjs(Date.now()).format(`YYYY-MM-DD-HH-mm-ss`)}` : out
-  const cmd = `${zipBin} a -r -ep1 -y -ibck -sfx -iicon"${icon}" -z"${comment}" "${outName}" ${input}/*`
+  const cmd = `${zipBin} a -r -ep1 -y -ibck -sfx -iicon"${icon}" -z"${comment}" "${outName}" "${input}/*"`
   cp.execSync(cmd, {stdio: `inherit`})
 }
 
