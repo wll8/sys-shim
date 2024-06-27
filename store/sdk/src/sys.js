@@ -29,11 +29,12 @@ class CodeObj {
     const template = removeLeft({
       thread: `
         var args = {...}
-        thread.create(function(...){
+        var argsStr = web.json.stringify(args)
+        thread.create(function(argsStr){
           import lib;
           var tid = thread.getId()
           var runid = "#{id}"
-          var args = {...}
+          var args = web.json.parse(argsStr)
           var res = null
           var err = false
           try {
@@ -44,19 +45,21 @@ class CodeObj {
             #{code}
             #{codeLine}/
             fn, err = loadcode(code)
-            res = {fn(table.unpack(args))}
+            res = {fn(table.unpackArgs(args))}
           }
           catch (e) {
             err = err || tostring(e);
           }
-          var data = {type: err ? "err" : "return", err: err, res: res, tid: tid}
+          var resStr = web.json.stringify(res)
+          var data = {type: err ? "err" : "return", err: err, res: resStr, tid: tid}
           thread.command.publish(runid, data)
-        }, table.unpack(args))
+        }, argsStr)
       `,
       main: `
         var tid = thread.getId()
         var runid = "#{id}"
         var args = {...}
+        var argsStr = web.json.stringify(args)
         var res = null
         var err = false
         try {
@@ -67,12 +70,13 @@ class CodeObj {
           #{code}
           #{codeLine}/
           fn, err = loadcode(code)
-          res = {fn(table.unpack(args))}
+          res = {fn(table.unpackArgs(args))}
         }
         catch (e) {
           err = err || tostring(e);
         }
-        var data = {type: err ? "err" : "return", err: err, res: res, tid: tid}
+        var resStr = web.json.stringify(res)
+        var data = {type: err ? "err" : "return", err: err, res: resStr, tid: tid}
         global.G.rpcServer.publish(runid, data)
       `,
       raw: code,
@@ -121,11 +125,12 @@ class Base {
                 if([`function`, `asyncfunction`].includes(type)) {
                   return removeLeft(`function(...){
                     var args = {...}
+                    var argsStr = web.json.stringify(args)
                     var argPath = "${argPath}"
                     var cmd = thread.command()
                     var id = "cb_arg_" ++ runid ++ "_" ++ tid ++ "_" ++ argPath
                     var res
-                    thread.command.publish(runid, {type: "cb-arg", res: args, argPath: argPath, id: id, tid: tid});
+                    thread.command.publish(runid, {type: "cb-arg", res: argsStr, argPath: argPath, id: id, tid: tid});
                     cmd[id] = function(...){
                       res = ...
                       win.quitMessage()
@@ -287,6 +292,7 @@ class Sys extends Base {
           resRaw: [],
         }
         const onIdFn = async (data) => {
+          data.res  = JSON.parse(data.res)
           let {tid, type, err, res = []} = data
           if(type === `cb-arg`) {
             const { argPath, id: cbId } = data

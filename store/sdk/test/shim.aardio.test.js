@@ -68,6 +68,16 @@ await new Sys({ log: false, wsUrl: `ws://127.0.0.1:10005?token=tokentokentoken` 
       const [, min, max] = await native.table.range(obj)
       expect([min, max]).toStrictEqual([1, 5])
     })
+    test.todo(`传入稀疏数组 -- null 值在中间`, async () => {
+      const obj = [1, null, 3]
+      const [, ...res] = await native.table.unpack(obj)
+      expect(res).toStrictEqual(obj)
+    })
+    test(`传入稀疏数组 -- null 值在深层`, async () => {
+      const obj = [[[[[[1, null, 3, {arr: [null, null, null, {}, []]}]]]]]]
+      const [, ...res] = await native.table.unpack(obj)
+      expect(res).toStrictEqual(obj)
+    })
     test(`接收 buffer`, async () => {
       const [, buf1] = await native.string.loadBuffer(__filename)
       const nativeStr = Buffer.from(buf1.data).toString(`utf8`)
@@ -149,7 +159,7 @@ await new Sys({ log: false, wsUrl: `ws://127.0.0.1:10005?token=tokentokentoken` 
       const [, ...arg] = await ws.call(`run`, [`return 1,2,3`])
       expect(arg).toStrictEqual([1, 2, 3])
     })
-    test.todo(`接收片段中的返回值 null -- 在 null 后被切断`, async () => {
+    test(`接收片段中的返回值 null`, async () => {
       const [, ...arg] = await ws.call(`run`, [`return 1,null,3`])
       expect(arg).toStrictEqual([1, null, 3])
     })
