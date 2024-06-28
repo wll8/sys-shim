@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.0.1-16](/compare/v0.0.1-15...v0.0.1-16) (2024-06-28)
+
+
+### Bug Fixes
+
+* Space paths should not be an error 2d75dc1
+
+
+### Features
+
+* Improve json parameter compatibility #8 a3cc1aa, closes #8
+
 ## [0.0.1-15](/compare/v0.0.1-14...v0.0.1-15) (2024-06-24)
 
 
