@@ -134,7 +134,7 @@ function zip(cfg) {
    * -idv 显示详细输出
    */
   const outName = nameSuffix ? `${out}-${dayjs(Date.now()).format(`YYYY-MM-DD-HH-mm-ss`)}` : out
-  const cmd = `${zipBin} a -r -ep1 -y -ibck -sfx -iicon"${icon}" -z"${comment}" "${outName}" "${input}/*"`
+  const cmd = `"${zipBin}" a -r -ep1 -y -ibck -sfx -iicon"${icon}" -z"${comment}" "${outName}" "${input}/*"`
   cp.execSync(cmd, {stdio: `inherit`})
 }
 
