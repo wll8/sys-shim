@@ -28,7 +28,7 @@ new Promise(async () => {
   } else {
     await new Sys({
       log: true,
-      wsUrl: import.meta.env.VITE_SERVER_BASEURL,
+      wsUrl: import.meta.env.VITE_SERVER_BASEURL || undefined,
     }).then(fn).catch(err => {
       console.error(`sys-shim 初始化失败`)
     })
