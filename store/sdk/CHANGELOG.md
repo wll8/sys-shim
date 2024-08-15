@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.1-18](/compare/v0.0.1-17...v0.0.1-18) (2024-08-15)
+
+
+### Bug Fixes
+
+* Empty object error 9bfab97
+
 ## [0.0.1-17](/compare/v0.0.1-16...v0.0.1-17) (2024-08-15)
 
 
