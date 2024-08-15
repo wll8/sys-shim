@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.1-17](/compare/v0.0.1-16...v0.0.1-17) (2024-08-15)
+
+
+### Features
+
+* If the http port is occupied, use a new port (browser data will be lost) 130149b
+
 ## [0.0.1-16](/compare/v0.0.1-15...v0.0.1-16) (2024-06-28)
 
 
