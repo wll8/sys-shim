@@ -75,6 +75,17 @@ pnpm gen.npm.push
 
 ## todo
 
+- [ ] fix: 当端口变更后，localstorage 等信息可能丢失
+  - https://github.com/tauri-apps/tauri/issues/896
+  - https://github.com/tauri-apps/tauri/commit/0d63732b962e71b98430f8d7b34ea5b59a2e8bb4?diff=split&w=0
+  - https://github.com/tauri-apps/tauri/blob/9f75d06228fcb7036cf7a4e215abc7bc8d1a0a56/tooling/api/src/webview.ts#L613
+  - https://github.com/maemon4095/tauri-custom-protocol
+  - https://github.com/tauri-apps/tauri/issues/6330
+  - https://docs.rs/tauri/latest/tauri/struct.Builder.html#method.register_uri_scheme_protocol
+  - https://github.com/tauri-apps/tauri/issues/323
+  - https://github.com/tauri-apps/wry/pull/65/files#diff-72a48c45fe590fb0a06f7e3635f417381ea5199505b3e8f706a54ec39211d5e1R99
+  - https://www.electronjs.org/docs/latest/api/protocol#protocolregisterschemesasprivilegedcustomschemes
+  - https://github.com/MicrosoftEdge/WebView2Feedback/issues/73
 - [ ] feat: buffer 自动转换
 - [ ] fix: 应正确接收稀疏返回值
   - 例如： `return {1, null, 3}` 

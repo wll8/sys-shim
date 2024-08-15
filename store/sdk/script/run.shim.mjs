@@ -13,5 +13,5 @@ const execOpt = {
 }
 
 cp.exec(`main.exe a b c d=1 /e 3`, {...execOpt}, (err) => {
-  process.exit(err.code)
+  process.exit(err && err.code)
 })
