@@ -1,6 +1,10 @@
 <div align="center">
-    <a href="https://github.com/wll8/sys-shim/blob/pre/doc.md">
+    <a href="https://wll8.github.io/sys-shim-doc/">
         文档
+    </a>
+  &nbsp;|&nbsp;
+    <a href="https://github.com/wll8/sys-shim/blob/pre/doc.md">
+        配置
     </a>
   &nbsp;|&nbsp;
     <a href="https://github.com/wll8/sys-shim/releases/tag/example">
