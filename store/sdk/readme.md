@@ -75,6 +75,7 @@ pnpm gen.npm.push
 
 ## todo
 
+- [ ] chore: 添加非 upx 版
 - [ ] fix: 当端口变更后，localstorage 等信息可能丢失
   - https://github.com/tauri-apps/tauri/issues/896
   - https://github.com/tauri-apps/tauri/commit/0d63732b962e71b98430f8d7b34ea5b59a2e8bb4?diff=split&w=0
