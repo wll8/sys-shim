@@ -75,6 +75,7 @@ pnpm gen.npm.push
 
 ## todo
 
+- [ ] feat: 升级或实现 rpc-websockets
 - [ ] chore: 添加非 upx 版
 - [ ] fix: 当端口变更后，localstorage 等信息可能丢失
   - https://github.com/tauri-apps/tauri/issues/896
