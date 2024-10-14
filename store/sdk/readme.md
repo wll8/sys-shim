@@ -75,8 +75,18 @@ pnpm gen.npm.push
 
 ## todo
 
+- [ ] feat: 支持配置更多 http 服务项
+  - documentBase
+  - defalutDocument
 - [ ] feat: 升级或实现 rpc-websockets
 - [ ] chore: 添加非 upx 版
+- [ ] feat: 优化端口处理逻辑
+  - 程序启动时优先使用配置的 http/ws 端口
+  - 校验端口可用性，如果被占用则提供选项：
+    - 关闭占用端口的程序并尝试继续启动
+    - 使用新端口（重新初始化 location.origin ，例如 localStorage ）
+    - 停止继续启动
+  - 存储当前使用的 http/ws 端口并供下次使用
 - [ ] fix: 当端口变更后，localstorage 等信息可能丢失
   - https://github.com/tauri-apps/tauri/issues/896
   - https://github.com/tauri-apps/tauri/commit/0d63732b962e71b98430f8d7b34ea5b59a2e8bb4?diff=split&w=0
@@ -88,6 +98,13 @@ pnpm gen.npm.push
   - https://github.com/tauri-apps/wry/pull/65/files#diff-72a48c45fe590fb0a06f7e3635f417381ea5199505b3e8f706a54ec39211d5e1R99
   - https://www.electronjs.org/docs/latest/api/protocol#protocolregisterschemesasprivilegedcustomschemes
   - https://github.com/MicrosoftEdge/WebView2Feedback/issues/73
+  - 在 https 下运行非 https 连接的方式：
+    - https://groups.google.com/a/chromium.org/g/security-dev/c/EYqASMdFEI0
+    - https://stackoverflow.com/questions/41041511/google-chrome-allow-running-insecure-content-does-not-work
+    - 使用 `--unsafely-treat-insecure-origin-as-secure` 参数时，不能使用相同用户目录启动多个实例，允许仅允许某个一地址
+    - 使用 `--allow-running-insecure-content` 参数，可以实现多个实例，但不能指定仅允许某一地址，即可能遇到不安全的情况
+    - 所以单例模式下，应使用前者，默认使用单例模式
+
 - [ ] feat: buffer 自动转换
 - [ ] fix: 应正确接收稀疏返回值
   - 例如： `return {1, null, 3}` 
