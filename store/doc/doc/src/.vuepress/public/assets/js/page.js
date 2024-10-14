@@ -7,9 +7,8 @@ if(globalThis.Sys) {
     const title = 'sys-shim 文档'
     const icon = "https://www.hongqiye.com/favicon.ico"
     const obj = {hwnd, title, icon}
-
     console.log(obj)
-  
+
     await main.ws.call('run', [`
       var arg = ...
       win.form._forms[arg.hwnd].text = arg.title

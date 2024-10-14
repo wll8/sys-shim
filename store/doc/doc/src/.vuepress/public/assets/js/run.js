@@ -16,10 +16,10 @@ function runCode() {
       cursor: pointer;
       transition: opacity 0.4s;
       display: flex;
-      opacity: 0;
       align-items: center;
       justify-content: center;
       background-color: transparent;
+      opacity: 0;
     }
     .exec {
       right: 3.5em;
@@ -31,15 +31,32 @@ function runCode() {
       opacity: 1;
       background-color: #d8e9f6;
     }
+    .code-common-btn:hover .icon {
+      background: transparent;
+    }
     .code-common-btn .icon {
+      width: 1.8rem;
+      height: 1.8rem;
+      border-radius: 0.2rem;
+      background: #ecf4fa;
+      position: relative;
+    }
+    .code-common-btn .icon::after {
+      position: absolute;
+      content: "";
       width: 1.25rem;
       height: 1.25rem;
       background-size: 100% 100%;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      margin: auto;
     }
-    .exec-icon {
+    .exec-icon::after {
       background: url(/sys-shim-doc/assets/icon/run.svg);
     }
-    .share-icon {
+    .share-icon::after {
       background: url(/sys-shim-doc/assets/icon/share.svg);
     }
   `
@@ -50,7 +67,13 @@ function runCode() {
     styleEl.innerHTML = execBtnCss
     body.append(styleEl)
   }
-
+ 
+  const events  = []
+  function removeEvents(){
+    for(const item of events){
+      item.el.removeEventListener(item.eventName, item.fn)
+    }
+  }
   function addExecDiv(el){
     const execDiv = document.createElement("div")
     execDiv.innerHTML = `
@@ -63,8 +86,10 @@ function runCode() {
       `
     const execBtn =  execDiv.querySelector(".exec")
     const shareBtn = execDiv.querySelector(".share")
+  
+    const eventName = "click"
     // 执行代码
-    execBtn.addEventListener("click", function(){
+    function execCode(){
       if(!globalThis.Sys) {
         alert(`此功能需连接到 sys-shim`)
         return undefined
@@ -72,23 +97,32 @@ function runCode() {
       eval(`(async () => {
         ${el.innerText}
       })()`)
-    })
+    }
     // 分享代码
-    shareBtn.addEventListener("click", function(){
+    function shareCode(){
       console.log("生成分享链接", el.innerText)
-    })
+    }
+    // 执行代码点击
+    execBtn.addEventListener(eventName, execCode)
+    // 分享代码
+    shareBtn.addEventListener(eventName, shareCode)
+    // 添加到里面好移除事件
+    events.push({el: execBtn, eventName, fn: execCode})
+    events.push({el: execBtn, eventName, fn: execCode})
     el.appendChild(execDiv)
   }  
-
   createStyleEl()
   const list = document.querySelectorAll(`div.language-javascript`)
   list.forEach(item => addExecDiv(item))
+  return {
+    removeEvents
+  }
 }
 
 {
   const old = window.RenderedHack || new Function();
-  window.RenderedHack = () => {
+  window.RenderedHack = function () {
     old()
-    runCode()
+    return runCode().removeEvents
   }
 }
