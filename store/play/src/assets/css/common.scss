@@ -1,0 +1,48 @@
+:root {
+  // 定义css变量
+  --nav-header-bg: #fff;
+  // 背景色
+  --bg: #fff;
+  // 基础文字颜色
+  --base: #444;
+  // 高亮颜色
+  --highlight: #333;
+  // 导航按钮颜色
+  --nav-btn-color: #666;
+  // 卡片阴影颜色
+  --card-shadow: rgba(0, 0, 0, 0.15);
+  // 公共边框颜色
+  --border-color: #ddd;
+}
+.dark {
+  --bg: #1f1f1f;
+  --nav-header-bg: #1f1f1f;
+  --base: #ddd;
+  --highlight: #fff;
+  --nav-header-bg: #1f1f1f;
+  --border-color: #383838;
+
+  .nav-header {
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: none;
+  }
+}
+body {
+  color: var(--base);
+}
+.wrapper {
+  width: 1200px;
+  margin: 0 auto;
+
+}
+
+// 重置ul, li列表样式
+.reset-list-style {
+  ul {
+    list-style: none;
+  }
+  ul, li {
+    padding: 0;
+    margin: 0;
+  }
+}
