@@ -1,0 +1,108 @@
+{
+  "name": "sys-shim",
+  "private": false,
+  "type": "module",
+  "version": "0.0.1-19",
+  "main": "./script/npm-pkg/node/main.min.cjs",
+  "module": "./script/npm-pkg/node/main.min.mjs",
+  "browser": {
+    "./script/npm-pkg/node/main.min.cjs": "./script/npm-pkg/browser/main.umd.min.js",
+    "./script/npm-pkg/node/main.min.mjs": "./script/npm-pkg/browser/main.esm.min.js"
+  },
+  "bin": {
+    "sys-shim": "./script/npm-pkg/bin/index.mjs"
+  },
+  "files": [
+    "./src/proxy-deep.js",
+    "./src/util.js",
+    "./template",
+    "./script/npm-pkg/bin",
+    "./script/npm-pkg/lib",
+    "./script/npm-pkg/shim",
+    "./script/npm-pkg/test",
+    "./script/npm-pkg/node/main.min.cjs",
+    "./script/npm-pkg/node/main.min.mjs",
+    "./script/npm-pkg/browser/main.umd.min.js",
+    "./script/npm-pkg/browser/main.esm.min.js"
+  ],
+  "release-it": {
+    "git": {
+      "commitMessage": "chore(release): v${version}",
+      "push": false,
+      "commit": true,
+      "tag": true,
+      "requireCommits": true,
+      "requireCleanWorkingDir": true
+    },
+    "github": {
+      "release": false,
+      "draft": false
+    },
+    "npm": {
+      "publish": false,
+      "ignoreVersion": false
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular",
+        "infile": "CHANGELOG.md",
+        "header": "# Changelog"
+      }
+    },
+    "hooks": {
+      "after:init": "npm run gen.npm",
+      "before:release": "npm run gen.npm.push",
+      "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
+    }
+  },
+  "scripts": {
+    "release": "release-it prerelease -V --ci",
+    "sys-shim": "node ./script/npm-pkg/bin/index.mjs",
+    "lint": "eslint ./ --format unix",
+    "lint-fix": "eslint ./ --fix --format unix",
+    "dev": "run-p vite run.shim",
+    "main:build": "npx download-cli https://github.com/wll8/sys-shim/releases/download/example/main.exe -o win-api/",
+    "vite": "vite",
+    "test": "vitest",
+    "test:basic": "vitest --reporter=basic",
+    "preview": "vite preview",
+    "gen.npm": "node script/gen.npm.mjs",
+    "gen.npm.push": "cross-env push=yes node script/gen.npm.mjs",
+    "gen.res": "node script/gen.res.mjs",
+    "run.shim": "node script/run.shim.mjs",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@guolao/vue-monaco-editor": "^1.5.1",
+    "@release-it/conventional-changelog": "^8.0.1",
+    "@rollup/plugin-alias": "^5.1.0",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@vitejs/plugin-vue": "^4.5.0",
+    "@vitest/ui": "^1.6.0",
+    "cross-env": "^7.0.3",
+    "download-cli": "^1.1.1",
+    "eslint": "8.57.0",
+    "husky": "^9.0.11",
+    "mitt": "^3.0.1",
+    "node-fetch": "^3.3.2",
+    "npm-run-all": "^4.1.5",
+    "proxy-deep": "^3.1.1",
+    "release-it": "^17.2.1",
+    "rollup": "^4.17.2",
+    "rpc-websockets": "^7.6.0",
+    "sys-shim": "link:",
+    "vite": "^5.0.0",
+    "vitest": "^1.6.0",
+    "vue": "^3.3.8"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.11",
+    "download": "^8.0.0",
+    "filenamify": "^6.0.0",
+    "minimist": "^1.2.8",
+    "shelljs": "^0.8.5",
+    "shx": "^0.3.4"
+  }
+}
