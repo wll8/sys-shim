@@ -10,7 +10,6 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest",
-    "prepare": "husky",
     "commit": "cz"
   },
   "dependencies": {

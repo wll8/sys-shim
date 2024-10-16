@@ -69,8 +69,7 @@
     "gen.npm": "node script/gen.npm.mjs",
     "gen.npm.push": "cross-env push=yes node script/gen.npm.mjs",
     "gen.res": "node script/gen.res.mjs",
-    "run.shim": "node script/run.shim.mjs",
-    "prepare": "husky"
+    "run.shim": "node script/run.shim.mjs"
   },
   "devDependencies": {
     "@guolao/vue-monaco-editor": "^1.5.1",
