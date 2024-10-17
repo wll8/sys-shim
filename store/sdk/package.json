@@ -97,6 +97,7 @@
     "vue": "^3.3.8"
   },
   "dependencies": {
+    "sys-shim-bin": "workspace:*",
     "dayjs": "^1.11.11",
     "download": "^8.0.0",
     "filenamify": "^6.0.0",

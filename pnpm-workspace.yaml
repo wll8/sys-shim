@@ -1,2 +1,3 @@
 packages:
   - 'store/*'
+  - 'store/bin/script/'
