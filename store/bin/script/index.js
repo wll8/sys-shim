@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename)
 
 export function getPath() {
   if (process.platform === "win32") {
-    return path.join(`${__dirname}/main.exe`);
+    return path.join(`${__dirname}/dist/main.exe`);
   } else if (process.platform === "darwin") {
     return ``
   } else {
