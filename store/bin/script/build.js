@@ -15,6 +15,7 @@ const execOpt = {
 cp.execSync(`npx shx rm -rf dist`, {...execOpt})
 cp.execSync(`npx shx mkdir dist`, {...execOpt})
 cp.execSync(`npx rollup --config rollup.config.js`, {...execOpt})
+cp.execSync(`npx shx cp ../main.exe ./`, {...execOpt})
 cp.execSync(`npx shx cp ../main.exe dist/`, {...execOpt})
 cp.execSync(`npx shx cp ../readme.md ./`, {...execOpt})
 cp.execSync(`npm pack`, {...execOpt})

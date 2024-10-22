@@ -7,7 +7,9 @@ import { fileURLToPath } from 'node:url'
 import process from 'node:process'
 import minimist from 'minimist'
 import {fn as pack} from './pack.mjs'
+import { getPath } from 'sys-shim-bin'
 
+const binPath = getPath()
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -19,7 +21,7 @@ new Promise(async () => {
   if(argv0 === `pack`) {
     await pack(argv)
   } else {
-    cp.execSync(`${cwd}/main.exe`, {
+    cp.execSync(binPath, {
       cwd,
       stdio: `inherit`,
     })
