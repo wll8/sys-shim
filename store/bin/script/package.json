@@ -1,6 +1,6 @@
 {
   "name": "sys-shim-bin",
-  "version": "0.0.1",
+  "version": "0.0.2-1",
   "description": "把系统 api 封装为可执行程序，并提供服务供 webview 调用。",
   "types": "./index.d.ts",
   "type": "module",
