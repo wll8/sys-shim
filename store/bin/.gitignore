@@ -1,3 +1,5 @@
 main.exe
 res/browser
 res/node
+.build
+page.html

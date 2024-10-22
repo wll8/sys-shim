@@ -1,7 +1,7 @@
 {
   "name": "sys-shim-bin",
   "version": "0.0.1",
-  "description": "",
+  "description": "把系统 api 封装为可执行程序，并提供服务供 webview 调用。",
   "types": "./index.d.ts",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -22,8 +22,8 @@
     "build": "node build.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["webview"],
+  "author": "wll8",
   "license": "ISC",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.2.3",
