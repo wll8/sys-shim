@@ -33,7 +33,7 @@ const talbe = {
   },
   yes() {
     cp.execSync(`npx shx rm -f *.tgz`, {...execOpt, cwd: `${__dirname}/../`})
-    const fileName = cp.execSync(`npm pack`, {cwd: `${__dirname}/../`}).toString()
+    const fileName = cp.execSync(`pnpm pack`, {cwd: `${__dirname}/../`}).toString()
     cp.execSync(`npm publish ${fileName}`, {...execOpt, cwd: `${__dirname}/../`})
   },
 }
