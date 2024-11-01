@@ -2,8 +2,12 @@
 
 ## 开发
 
-```sh
+```bat
+:: 启动服务端
+npm run sys-shim
 
+:: 启动前端
+npx vite
 
 ```
 
