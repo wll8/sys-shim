@@ -169,8 +169,8 @@ importers:
         specifier: ^0.3.4
         version: 0.3.4
       sys-shim-bin:
-        specifier: workspace:*
-        version: link:../bin/script
+        specifier: 0.0.2-1
+        version: 0.0.2-1
     devDependencies:
       '@guolao/vue-monaco-editor':
         specifier: ^1.5.1
@@ -4596,6 +4596,10 @@ packages:
   synckit@0.9.2:
     resolution: {integrity: sha512-vrozgXDQwYO72vHjUb/HnFbQx1exDjoKzqx23aXEg2a9VIg2TSFZ8FmeZpTjUCFMYw7mpX4BE2SFu8wI7asYsw==}
     engines: {node: ^14.18.0 || >=16.0.0}
+
+  sys-shim-bin@0.0.2-1:
+    resolution: {integrity: sha512-JeGhjy/31TjcvnJ1ntApO5wQ4qVdW1oRxpMdG1S3mmxNCpsMu7Zw+LHoTh454hrSaXYW5/C+BSl3xXhnUqZG0g==}
+    hasBin: true
 
   sys-shim@0.0.1-14:
     resolution: {integrity: sha512-LWsjBrnYDJt05sjtXdNTbKUjsGhHkbXC3rzPLv3ABt4uqAjZfFlS0DIQAZl9mPOCNNXvTKSfrc1rtamr8jCFFg==}
@@ -9977,6 +9981,8 @@ snapshots:
     dependencies:
       '@pkgr/core': 0.1.1
       tslib: 2.8.0
+
+  sys-shim-bin@0.0.2-1: {}
 
   sys-shim@0.0.1-14:
     dependencies:

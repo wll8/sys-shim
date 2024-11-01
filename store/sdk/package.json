@@ -97,12 +97,12 @@
     "vue": "^3.3.8"
   },
   "dependencies": {
-    "sys-shim-bin": "workspace:*",
     "dayjs": "^1.11.11",
     "download": "^8.0.0",
     "filenamify": "^6.0.0",
     "minimist": "^1.2.8",
     "shelljs": "^0.8.5",
-    "shx": "^0.3.4"
+    "shx": "^0.3.4",
+    "sys-shim-bin": "0.0.2-1"
   }
 }

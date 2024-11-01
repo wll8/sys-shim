@@ -20,4 +20,4 @@ pnpm build
 
 ## 如果没有编译环境
 
-如果没有编译环境可以直接下载已编译好的最新 main.exe 文件, 从 https://registry.npmmirror.com/sys-shim-bin/-/sys-shim-bin-0.0.2-1.tgz 链接下载并解压里面的 main.exe 到当前目录, 即可继续执行后续步骤.
+如果没有编译环境可以直接下载已编译好的最新 main.exe 文件, 从 https://registry.npmmirror.com/sys-shim-bin/-/sys-shim-bin-0.0.2-1.tgz 链接下载并解压里面的 dist 到 script/ 下.
