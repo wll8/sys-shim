@@ -141,6 +141,7 @@ function zip(cfg) {
   const outName = nameSuffix ? `${out}-${dayjs(Date.now()).format(`YYYY-MM-DD-HH-mm-ss`)}` : out
   const cmd = `"${zipBin}" a -r -ep1 -y -ibck -sfx -iicon"${icon}" -z"${comment}" "${outName}" "${input}/*"`
   cp.execSync(cmd, {stdio: `inherit`})
+  return outName
 }
 
 function getIndex(cfg) {
@@ -164,12 +165,17 @@ function genFile(cfg) {
   shelljs.cp(`-f`, `${pkgDir}/script/npm-pkg/shim/win/favicon.ico`, newCfg.input)
   shelljs.cp(`-f`, cfg.icon, `${newCfg.input}/favicon.ico`)
   determinePathType(cfg.input) !== `url` && fs.statSync(cfg.input).isDirectory() && shelljs.cp(`-fr`, `${cfg.input}/*`, newCfg.input)
+  let runConfig = {}
   if(fs.existsSync(`${cfg.input}/package.json`) === false) {
     const newStr = simpleTemplate(fs.readFileSync(`${newCfg.input}/package.json`, `utf8`), {
       page: getIndex(cfg),
     })
     fs.writeFileSync(`${newCfg.input}/package.json`, newStr)
+    runConfig = JSON.parse(newStr)
+  } else {
+    runConfig = require(`${cfg.input}/package.json`)
   }
+  console.log(`Runtime configuration:`, runConfig)
   return newCfg
 }
 
@@ -179,7 +185,7 @@ export async function fn(argv) {
   const {input, icon} = genFile(cfg)
   cfg.input = input
   cfg.icon = icon
-  console.log(cfg)
-  await zip(cfg)
-
+  console.log(`Program build parameters:`, cfg)
+  const name = await zip(cfg)
+  console.log(`Build results:`, [`${name}.exe`])
 }
