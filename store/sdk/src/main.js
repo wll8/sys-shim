@@ -3,7 +3,6 @@ import App from './App.vue'
 
 globalThis.Sys = await {
   dev: async () => await import(`./browser.js`).then(m => m.default),
-  prod: async () => await import(`sys-shim`).then(m => m.default),
   none: async () => globalThis.Sys,
 }[import.meta.env.VITE_USE_PROD_SYS_SHIM]()
 

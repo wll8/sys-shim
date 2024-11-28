@@ -9,6 +9,8 @@ npm run sys-shim
 :: 启动前端
 npx vite
 
+:: debug sdk
+npm run sys-shim pack -- --input https://example.com/
 ```
 
 ## 使用
@@ -23,4 +25,14 @@ new Sys({
 }).then(shim => {
   shim.native.process(`notepad`) // 调用系统记事本
 })
+```
+
+## 发布
+
+``` bat
+:: 生成 sdk 到 /store/bin/res
+npm run gen.res
+
+:: 生成 npm 包
+npm run gen.npm.pack
 ```

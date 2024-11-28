@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const pkgDir = path.join(__dirname, `../`)
 const binDir = path.join(__dirname, `../../bin/`)
-const {push = `no`} = process.env
+const {pack = `no`} = process.env
 
 const execOpt = {
   cwd: __dirname,
@@ -34,10 +34,10 @@ const talbe = {
   yes() {
     cp.execSync(`npx shx rm -f *.tgz`, {...execOpt, cwd: `${__dirname}/../`})
     const fileName = cp.execSync(`pnpm pack`, {cwd: `${__dirname}/../`}).toString()
-    cp.execSync(`npm publish ${fileName}`, {...execOpt, cwd: `${__dirname}/../`})
+    console.log(`已生成文件 ${fileName}`)
   },
 }
 
-const fn = talbe[push]
+const fn = talbe[pack]
 
 fn()
