@@ -7,6 +7,7 @@ import os from 'node:os'
 import filenamify from 'filenamify'
 import download from 'download'
 import shelljs from 'shelljs'
+import iconv from 'iconv-lite'
 import {
   simpleTemplate,
 } from '../../../src/util.js'
@@ -116,7 +117,8 @@ function zip(cfg) {
       Update=U
       Shortcut=D, main, , "sys-shim app", "${cfg.out}", favicon.ico
     `.split(`\n`).map(item => item.trim()).join(`\n`).trim()
-    fs.writeFileSync(file, text)
+    const gbkText = iconv.encode(text, `gbk`)
+    fs.writeFileSync(file, gbkText)
     return file
   })()
 

@@ -67,7 +67,7 @@
     "test:basic": "vitest --reporter=basic",
     "preview": "vite preview",
     "gen.npm": "node script/gen.npm.mjs",
-    "gen.npm.push": "cross-env push=yes node script/gen.npm.mjs",
+    "gen.npm.pack": "cross-env pack=yes node script/gen.npm.mjs",
     "gen.res": "node script/gen.res.mjs",
     "run.shim": "node script/run.shim.mjs"
   },
@@ -91,7 +91,6 @@
     "release-it": "^17.2.1",
     "rollup": "^4.17.2",
     "rpc-websockets": "^7.6.0",
-    "sys-shim": "link:",
     "vite": "^5.0.0",
     "vitest": "^1.6.0",
     "vue": "^3.3.8"
@@ -100,6 +99,7 @@
     "dayjs": "^1.11.11",
     "download": "^8.0.0",
     "filenamify": "^6.0.0",
+    "iconv-lite": "^0.6.3",
     "minimist": "^1.2.8",
     "shelljs": "^0.8.5",
     "shx": "^0.3.4",
