@@ -94,7 +94,7 @@ function zip(cfg) {
   const icon = cfg.icon
   const out = cfg.out
   const input = cfg.input
-  const unzip = cfg.unzip
+  const unzip = (cfg.unzip || ``).replace(/\//g, `\\`)
   const nameSuffix = cfg.nameSuffix
 
   /**
