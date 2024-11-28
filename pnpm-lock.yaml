@@ -172,8 +172,8 @@ importers:
         specifier: ^0.3.4
         version: 0.3.4
       sys-shim-bin:
-        specifier: 0.0.2-1
-        version: 0.0.2-1
+        specifier: 0.0.2-2
+        version: 0.0.2-2
     devDependencies:
       '@guolao/vue-monaco-editor':
         specifier: ^1.5.1
@@ -4601,8 +4601,8 @@ packages:
     resolution: {integrity: sha512-vrozgXDQwYO72vHjUb/HnFbQx1exDjoKzqx23aXEg2a9VIg2TSFZ8FmeZpTjUCFMYw7mpX4BE2SFu8wI7asYsw==}
     engines: {node: ^14.18.0 || >=16.0.0}
 
-  sys-shim-bin@0.0.2-1:
-    resolution: {integrity: sha512-JeGhjy/31TjcvnJ1ntApO5wQ4qVdW1oRxpMdG1S3mmxNCpsMu7Zw+LHoTh454hrSaXYW5/C+BSl3xXhnUqZG0g==}
+  sys-shim-bin@0.0.2-2:
+    resolution: {integrity: sha512-CmGi5/GcUm1MFkz2oJofgv43j7Ho7cuC16SeN/G72k3Sh3TyfNODnXgy21u1HxUOCZgJ8tZPAi1+2hZqxQ9imw==}
     hasBin: true
 
   sys-shim@0.0.1-14:
@@ -9990,7 +9990,7 @@ snapshots:
       '@pkgr/core': 0.1.1
       tslib: 2.8.0
 
-  sys-shim-bin@0.0.2-1: {}
+  sys-shim-bin@0.0.2-2: {}
 
   sys-shim@0.0.1-14:
     dependencies:
