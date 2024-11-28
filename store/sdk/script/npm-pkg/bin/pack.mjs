@@ -173,7 +173,7 @@ function genFile(cfg) {
     fs.writeFileSync(`${newCfg.input}/package.json`, newStr)
     runConfig = JSON.parse(newStr)
   } else {
-    runConfig = require(`${cfg.input}/package.json`)
+    runConfig = JSON.parse(fs.readFileSync(`${cfg.input}/package.json`, `utf8`))
   }
   console.log(`Runtime configuration:`, runConfig)
   return newCfg
