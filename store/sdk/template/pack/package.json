@@ -1,4 +1,8 @@
 {
   "browserArguments": "--disable-web-security --allow-running-insecure-content",
+  "form": {
+    "right": 1300,
+    "bottom": 800
+  },
   "page": "#{page}"
 }
