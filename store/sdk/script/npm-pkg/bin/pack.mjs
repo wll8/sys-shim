@@ -11,6 +11,9 @@ import {
   simpleTemplate,
 } from '../../../src/util.js'
 import process from 'node:process'
+import { getPath } from 'sys-shim-bin'
+
+const binPath = getPath()
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -106,7 +109,7 @@ function zip(cfg) {
   const comment = (() => {
     const file = `${os.tmpdir()}/comment.txt`
     const text = `
-      Path=${path.normalize(unzip)}
+      Path=${unzip}
       Setup=main
       Silent=1
       Overwrite=1
@@ -155,7 +158,7 @@ function genFile(cfg) {
   shelljs.rm(`-fr`, newCfg.input)
   shelljs.mkdir(`-p`, newCfg.input)
   shelljs.cp(`-fr`, `${pkgDir}/template/pack/*`, newCfg.input)
-  shelljs.cp(`-f`, `${pkgDir}/script/npm-pkg/shim/win/main.exe`, newCfg.input)
+  shelljs.cp(`-f`, binPath, newCfg.input)
   shelljs.cp(`-f`, `${pkgDir}/script/npm-pkg/shim/win/favicon.ico`, newCfg.input)
   shelljs.cp(`-f`, cfg.icon, `${newCfg.input}/favicon.ico`)
   determinePathType(cfg.input) !== `url` && fs.statSync(cfg.input).isDirectory() && shelljs.cp(`-fr`, `${cfg.input}/*`, newCfg.input)
