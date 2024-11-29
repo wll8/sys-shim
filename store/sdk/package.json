@@ -2,7 +2,7 @@
   "name": "sys-shim",
   "private": false,
   "type": "module",
-  "version": "0.0.1-22",
+  "version": "0.0.1-23",
   "main": "./script/npm-pkg/node/main.min.cjs",
   "module": "./script/npm-pkg/node/main.min.mjs",
   "browser": {
@@ -103,6 +103,6 @@
     "minimist": "^1.2.8",
     "shelljs": "^0.8.5",
     "shx": "^0.3.4",
-    "sys-shim-bin": "0.0.2-3"
+    "sys-shim-bin": "0.0.2-4"
   }
 }
