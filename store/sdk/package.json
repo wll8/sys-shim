@@ -2,7 +2,7 @@
   "name": "sys-shim",
   "private": false,
   "type": "module",
-  "version": "0.0.1-21",
+  "version": "0.0.1-22",
   "main": "./script/npm-pkg/node/main.min.cjs",
   "module": "./script/npm-pkg/node/main.min.mjs",
   "browser": {
