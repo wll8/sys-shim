@@ -40,6 +40,7 @@ async function parseArgv(argv) {
   const cfg = {
     nameSuffix: true,
     input: ``,
+    binPath: ``,
     icon: ``,
     out: ``,
     unzip: ``,
@@ -161,7 +162,7 @@ function genFile(cfg) {
   shelljs.rm(`-fr`, newCfg.input)
   shelljs.mkdir(`-p`, newCfg.input)
   shelljs.cp(`-fr`, `${pkgDir}/template/pack/*`, newCfg.input)
-  shelljs.cp(`-f`, binPath, newCfg.input)
+  shelljs.cp(`-f`, cfg.binPath || binPath, newCfg.input)
   shelljs.cp(`-f`, `${pkgDir}/script/npm-pkg/shim/win/favicon.ico`, newCfg.input)
   shelljs.cp(`-f`, cfg.icon, `${newCfg.input}/favicon.ico`)
   determinePathType(cfg.input) !== `url` && fs.statSync(cfg.input).isDirectory() && shelljs.cp(`-fr`, `${cfg.input}/*`, newCfg.input)

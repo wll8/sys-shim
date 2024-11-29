@@ -9,7 +9,7 @@ npm run sys-shim
 :: 启动前端
 npx vite
 
-:: debug sdk
+:: 调试 cli
 npm run sys-shim pack -- --input https://example.com/
 ```
 
