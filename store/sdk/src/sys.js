@@ -294,6 +294,9 @@ class Sys extends Base {
         const onIdFn = async (data) => {
           data.res  = JSON.parse(data.res)
           let {tid, type, err, res = []} = data
+          if(err) {
+            res = []
+          }
           if(type === `cb-arg`) {
             const { argPath, id: cbId } = data
             const fn = argPath.split(`_`).reduce((acc, cur) => acc[cur], runOpt._argList)

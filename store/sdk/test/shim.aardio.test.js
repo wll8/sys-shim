@@ -224,4 +224,14 @@ await new Sys({ log: false, wsUrl: `ws://127.0.0.1:10005?token=tokentokentoken` 
       expect(time[1] - time[0]).lt(1e3 * 3)
     }, 1e3 * 60)
   })
+  describe(`获取错误`, () => {
+    test(`调用不存在的函数`, async () => {
+      const [err, res] = await native.win.msgboxErrErr()
+      expect(err).includes(`msgboxErrErr`)
+    })
+    test(`语法错误`, async () => {
+      const [err, res] = await ws.call(`run`, [`var "err" = "err"`])
+      expect(err).includes(`err`)
+    })
+  })
 })
