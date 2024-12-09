@@ -97,7 +97,7 @@ async function next(row) {
   const hwnd = await hook.openUrl({
     url: platformInfo.value.网址,
     preloadScript,
-    userDataDir: row.数据目录 || undefined,
+    userDataDir: row.数据目录 || `default`,
   })
   store.devicePlatformConfigIdByHwnd[row.id] = hwnd
   router.push({

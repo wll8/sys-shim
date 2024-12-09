@@ -25,7 +25,7 @@ const useHook = () => {
                 }, option)
                 var winform = win.form(text="sys-shim";right=1300;bottom=800;)
                 var hwnd = winform.hwnd
-                var wb = web.view(winform, optionRes.userDataDir, optionRes.browserArguments);
+                var wb = web.view(winform, fsys.path.full(optionRes.userDataDir, io.appData("live-control-robot")), optionRes.browserArguments);
                 winform.wb = wb
                 // 挂载到 window.ext 上的对象
                 winform.wb.external = web.json.stringify({
