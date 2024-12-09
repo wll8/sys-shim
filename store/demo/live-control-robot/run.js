@@ -40,6 +40,11 @@ new Promise(async () => {
       token: `tokentokentoken`,
       browserArguments: `--disable-web-security --allow-running-insecure-content`,
       originRegExp: `.*`,
+      form: {
+        right: `1000`,
+        border: `thin`,
+        bottom: `600`,
+      },
       socket: {
         port: 10005,
       },

@@ -4,7 +4,6 @@ import 'uno.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import axios from 'axios'
 import { createPersistedState } from 'pinia-plugin-persistedstate'
 
 import ElementPlus from 'element-plus'
@@ -17,12 +16,13 @@ import Sys from 'sys-shim'
 import App from './App.vue'
 import router from './router'
 import config from '@/config.js'
+import http from '@/http.js'
 
 const app = createApp(App)
 app.use(createPinia().use(createPersistedState()))
 app.use(router)
 app.use(ElementPlus)
-app.use(Avue, { axios })
+app.use(Avue, { axios: http })
 
 const fn = async (sys) => {
   console.log(`初始化完成`, sys)

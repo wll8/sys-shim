@@ -12,11 +12,11 @@ if (process.env.NODE_ENV !== `development`) {
 
 export default {
   development: {
-    baseApi: `http://http://127.0.0.1:7800/`,
+    baseApi: `http://127.0.0.1:7800/`,
     sysShimWs: import.meta.env.VITE_SERVER_BASEURL || undefined,
   },
   production: {
-    baseApi: `http://http://127.0.0.1:7800/`,
+    baseApi: `http://127.0.0.1:7800/`,
     sysShimWs: undefined,
   },
 }[process.env.NODE_ENV || `production`]

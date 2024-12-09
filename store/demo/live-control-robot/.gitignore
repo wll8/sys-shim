@@ -33,3 +33,4 @@ page.html
 *.tsbuildinfo
 
 /*.exe
+/public/upload

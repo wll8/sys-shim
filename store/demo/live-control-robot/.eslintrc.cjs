@@ -28,6 +28,7 @@ module.exports = {
     'no-unused-vars': `off`,
     'no-console': `off`,
     'no-async-promise-executor': `off`,
+    'vue/multi-word-component-names': `off`,
     'no-debugger': `off`,
   },
   globals: {

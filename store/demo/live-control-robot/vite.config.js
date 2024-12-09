@@ -22,7 +22,7 @@ export default defineConfig({
       // 使用Unocss
       presets: [presetUno(), presetAttributify(), presetIcons()],
     }),
-    VueDevTools(),
+    // VueDevTools(),
   ],
   css: {
     devSourcemap: true, // this one

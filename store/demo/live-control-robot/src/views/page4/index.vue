@@ -1,0 +1,198 @@
+<template>
+  <div class="page p20px">
+    <el-button icon="el-icon-back" @click="router.back()">返回</el-button>
+    <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+      <el-tab-pane label="智能客服" name="first">
+        <crud
+          v-model="devicePlatformConfig.action.智能客服.文字回复"
+          title="文字回复"
+          :option="{
+            column: [
+              { label: `关键词`, prop: `关键词` },
+              { label: `回复`, prop: `回复` },
+            ],
+          }"
+        />
+        <crud
+          mt10px
+          v-model="devicePlatformConfig.action.智能客服.语音回复"
+          title="语音回复(mp3,wav)"
+          :option="{
+            column: [
+              { label: `关键词`, prop: `关键词` },
+              {
+                label: `回复`,
+                prop: `回复`,
+                type: `upload`,
+                action: `/upload/file`,
+                dataType: `object`,
+                accept: `audio/mpeg, audio/wav`,
+                multiple: true,
+                render({ row }) {
+                  const list = row.回复.map((item) => item.label)
+                  return list.join(`, `)
+                },
+              },
+            ],
+          }"
+        />
+      </el-tab-pane>
+      <el-tab-pane label="场控助手" name="second">
+        <crud
+          v-model="devicePlatformConfig.action.场控助手.直播间发言"
+          title="直播间发言"
+          :option="{
+            column: [{ label: `话术`, prop: `话术` }],
+          }"
+        />
+        <crud
+          mt10px
+          v-model="devicePlatformConfig.action.场控助手.评论上墙"
+          title="评论上墙"
+          :option="{
+            column: [{ label: `话术`, prop: `话术` }],
+          }"
+        />
+      </el-tab-pane>
+      <el-tab-pane label="商品采集/讲解" name="third">商品采集</el-tab-pane>
+      <el-tab-pane label="常见问题" name="fourth">
+        <ol>
+          <li>挂贴片太快会提示频繁，建议120秒</li>
+          <li>用其他的浏览器去看数据,本工具不能离开中控台</li>
+        </ol>
+      </el-tab-pane>
+    </el-tabs>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, onMounted, watch } from 'vue'
+import { useStore } from '@/stores/index.js'
+import { storeToRefs } from 'pinia'
+import http from '@/http.js'
+import { getUserToken } from '@/util.js'
+import { useRouter } from 'vue-router'
+import merge from 'lodash.merge'
+import crud from './crud.vue'
+import debounce from 'lodash.debounce'
+
+const activeName = ref(`first`)
+
+const router = useRouter()
+
+const getBase = () => {
+  return {
+    action: {
+      智能客服: {
+        文字回复: {
+          频率: 1,
+          启用: false,
+          配置: [],
+        },
+        语音回复: {
+          频率: 1,
+          启用: false,
+          配置: [],
+        },
+      },
+      场控助手: {
+        直播间发言: {
+          频率: 1,
+          启用: false,
+          配置: [],
+        },
+        评论上墙: {
+          频率: 1,
+          启用: false,
+          配置: [],
+        },
+      },
+      商品助手: {
+        商品管理: {
+          卖点: {
+            最小序号: 1,
+            最大序号: 4,
+          },
+          删除: {
+            最小序号: 1,
+            最大序号: 4,
+          },
+        },
+        上下车: {
+          自动: false,
+          在线低于: 1,
+          在线高于: 4,
+          定时: false,
+          上车保持: 1,
+          过: 4,
+          生效: false,
+        },
+        弹窗过品: {
+          启用: false,
+          商品弹窗: false,
+          顺序开始: 1,
+          顺序结束: 4,
+          自动过品: false,
+          指定商品: `1 2 4 5`,
+        },
+      },
+    },
+  }
+}
+
+const update = debounce((data) => {
+  http.patch(`/devicePlatformConfig/${additional.devicePlatformConfigId}`, data)
+})
+
+const devicePlatformConfig = ref(getBase())
+
+const additional = {
+  ...router.currentRoute.value.query,
+}
+function getData() {
+  http.get(`/devicePlatformConfig/${additional.devicePlatformConfigId}`).then((res) => {
+    devicePlatformConfig.value = merge(getBase(), res)
+  })
+}
+getData()
+
+const option = ref({
+  column: [
+    { label: `关键词`, prop: `关键词` },
+    { label: `回复`, prop: `回复` },
+  ],
+})
+
+const handleClick = (tab, event) => {
+  console.log(tab, event)
+}
+
+async function rowSave(row, done, loading) {
+  devicePlatformConfig.value.action.智能客服.文字回复.配置.push(row)
+
+  done()
+}
+async function rowDel(row, index) {
+  devicePlatformConfig.value.action.智能客服.文字回复.配置.splice(index, 1)
+}
+async function rowUpdate(row, index, done, loading) {
+  devicePlatformConfig.value.action.智能客服.文字回复.配置[index] = row
+  done()
+}
+
+watch(
+  devicePlatformConfig,
+  (newVal, oldVal) => {
+    update(newVal)
+  },
+  {
+    deep: true,
+  },
+)
+</script>
+
+<style scoped lang="less">
+.page {
+  // background-color: #ccc;
+}
+</style>

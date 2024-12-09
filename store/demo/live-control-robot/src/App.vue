@@ -13,10 +13,18 @@ export default {
   watch: {},
 }
 </script>
-<style>
+<style lang="less">
 html,
 body {
   margin: 0;
   padding: 0;
 }
+// .avue-crud__left {
+//   display: flex;
+//   flex-direction: row-reverse;
+//   .el-button + .el-button {
+//     margin-right: 12px;
+//     margin-left: 0;
+//   }
+// }
 </style>
