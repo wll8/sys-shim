@@ -1,4 +1,5 @@
 import process from 'node:process'
+import child_process from 'node:child_process'
 import fs from 'node:fs'
 import { getPath } from 'sys-shim-bin'
 const sysShimBinPath = getPath()
@@ -51,11 +52,7 @@ new Promise(async () => {
     }
     fs.writeFileSync(`./package.json`, JSON.stringify(textJson, null, 2))
     await sleep()
-    const cp = new ProcessManager({
-      bin: sysShimBinPath,
-      autoReStart: false,
-    })
-    cp.on(`close`, () => {
+    child_process.exec(sysShimBinPath, (...arg) => {
       treeKill(process.pid, `SIGKILL`, (err) => {
         process.exit()
       })
