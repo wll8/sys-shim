@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node run.js",
     "build": "node run.build.js",
-    "build:fe": "vite build",
+    "build:fe": "node run.build.fe.js",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "prettier --write src/"

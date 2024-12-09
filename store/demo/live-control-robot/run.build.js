@@ -17,20 +17,24 @@ const exec = (cmd, arg) => {
   }
 }
 
-exec(`npx shx rm -rf dist`)
-exec(`npx vite build`)
-exec(`npx shx mkdir -p dist/server`)
-exec(`npx shx mkdir -p dist/lib`)
-exec(`npx ncc build server/run.cjs -m -o dist && npx shx mv dist/index.cjs dist/server/run.cjs`)
-exec(`npx shx cp -rf lib/* dist/lib/`)
+const isServer = false
 
 new Promise(async () => {
-  await compress({
-    inputPath: `dist/server/run.cjs`,
-    outPath: `dist/server/run.cjs`,
-    env: `node`,
-    lv: `highify`,
-  })
+  exec(`npx shx rm -rf dist`)
+  exec(`npx shx mkdir dist`)
+  if (isServer) {
+    exec(`npx shx mkdir -p dist/server`)
+    exec(`npx ncc build server/run.cjs -m -o dist && npx shx mv dist/index.cjs dist/server/run.cjs`)
+    await compress({
+      inputPath: `dist/server/run.cjs`,
+      outPath: `dist/server/run.cjs`,
+      env: `node`,
+      lv: `highify`,
+    })
+  }
+  exec(`npx shx mkdir -p dist/lib`)
+  exec(`npx shx cp -rf lib/* dist/lib/`)
+
   fs.writeFileSync(
     `./dist/package.json`,
     JSON.stringify(
@@ -41,7 +45,7 @@ new Promise(async () => {
           border: `thin`,
           bottom: `600`,
         },
-        page: `https://www.gzzzyd.com/rp/raw/net-fe/`,
+        page: `http://162.14.76.148:7800/live/#/`,
       },
       null,
       2,

@@ -38,7 +38,7 @@ new Promise(async () => {
     await fn(globalThis.sys)
   } else {
     await new Sys({
-      log: true,
+      log: false,
       wsUrl: config.sysShimWs,
     })
       .then(fn)
