@@ -111,3 +111,38 @@ export function isType(data, type = undefined) {
     .toLowerCase()
   return type ? dataType === type.toLowerCase() : dataType
 }
+
+/**
+ * 深层获取对象值
+ * @param {*} object
+ * @param {*} keys
+ * @param {*} defaultValue
+ * @returns
+ */
+export function deepGet(object, keys = [], defaultValue) {
+  // 深层获取对象值
+  let res = (
+    !Array.isArray(keys) ? keys.replace(/\[/g, `.`).replace(/\]/g, ``).split(`.`) : keys
+  ).reduce((o, k) => (o || {})[k], object)
+  return res !== undefined ? res : defaultValue
+}
+
+/**
+ * 拍平对象
+ * @param {*} value
+ * @param {*} currentKey
+ * @returns
+ */
+export function flatObj(value, currentKey) {
+  // 展开对象
+  let result = {}
+  Object.keys(value).forEach((key) => {
+    const tempKey = currentKey ? `${currentKey}.${key}` : key
+    if (typeof value[key] !== `object`) {
+      result[tempKey] = value[key]
+    } else {
+      result = { ...result, ...flatObj(value[key], tempKey) }
+    }
+  })
+  return result
+}

@@ -70,7 +70,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useStore } from '@/stores/index.js'
 import { storeToRefs } from 'pinia'
 import http from '@/http.js'
-import { getUserToken } from '@/util.js'
+import { flatObj, deepGet } from '@/util.js'
 import { useRouter } from 'vue-router'
 import merge from 'lodash.merge'
 import crud from './crud.vue'
@@ -140,11 +140,25 @@ const getBase = () => {
   }
 }
 
+const keyList = Object.keys(flatObj(getBase()))
+console.log(`keyList`, keyList)
+
 const update = debounce((data) => {
   http.patch(`/devicePlatformConfig/${additional.devicePlatformConfigId}`, data)
 })
 
 const devicePlatformConfig = ref(getBase())
+
+const keyByValueUpdate = debounce((key, newVal, oldVal) => {
+  const ws = globalThis.ws
+  const arg = [key, newVal, oldVal, devicePlatformConfig.value]
+  ws.call(`run`, [
+    `
+      thread.command.publish(...);
+      `,
+    ...arg,
+  ])
+})
 
 const additional = {
   ...router.currentRoute.value.query,
@@ -156,29 +170,23 @@ function getData() {
 }
 getData()
 
-const option = ref({
-  column: [
-    { label: `关键词`, prop: `关键词` },
-    { label: `回复`, prop: `回复` },
-  ],
-})
-
 const handleClick = (tab, event) => {
   console.log(tab, event)
 }
 
-async function rowSave(row, done, loading) {
-  devicePlatformConfig.value.action.智能客服.文字回复.配置.push(row)
-
-  done()
-}
-async function rowDel(row, index) {
-  devicePlatformConfig.value.action.智能客服.文字回复.配置.splice(index, 1)
-}
-async function rowUpdate(row, index, done, loading) {
-  devicePlatformConfig.value.action.智能客服.文字回复.配置[index] = row
-  done()
-}
+keyList.forEach((key) => {
+  watch(
+    () => {
+      return deepGet(devicePlatformConfig.value, key)
+    },
+    (newVal, oldVal) => {
+      keyByValueUpdate(key, newVal, oldVal)
+    },
+    {
+      immediate: true,
+    },
+  )
+})
 
 watch(
   devicePlatformConfig,

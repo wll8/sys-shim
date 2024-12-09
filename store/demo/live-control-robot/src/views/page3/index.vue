@@ -24,11 +24,15 @@ import { useStore } from '@/stores/index.js'
 import { storeToRefs } from 'pinia'
 import http from '@/http.js'
 import { getUserToken } from '@/util.js'
+import useHook from './hook.js'
 import { useRouter } from 'vue-router'
 const shim = globalThis.shim
 const native = globalThis.shim.native
 const ws = globalThis.shim.ws
 const router = useRouter()
+const hook = useHook()
+const store = useStore()
+const platformInfo = ref()
 
 const option = ref({
   column: [
@@ -56,6 +60,11 @@ const data = ref([])
 const additional = {
   ...router.currentRoute.value.query,
 }
+
+http.get(`/platform/${additional.platformId}`).then((res) => {
+  platformInfo.value = res
+})
+
 function getData() {
   http
     .get(`/devicePlatformConfig`, {
@@ -69,7 +78,28 @@ function getData() {
 }
 getData()
 
-function next(row) {
+async function next(row) {
+  let preloadScript = ``
+  try {
+    preloadScript = await http.get(row.脚本文件[0].value)
+  } catch (e) {
+    console.log(`e`, e)
+  }
+  console.log(`platformInfo`, platformInfo.value, row)
+
+  const [, form] = await globalThis.shim.nativeMain.win._form.getForm(
+    store.devicePlatformConfigIdByHwnd[row.id] || 0,
+  )
+  if (form) {
+    alert(`窗口已打开`)
+    return undefined
+  }
+  const hwnd = await hook.openUrl({
+    url: platformInfo.value.网址,
+    preloadScript,
+    userDataDir: row.数据目录 || undefined,
+  })
+  store.devicePlatformConfigIdByHwnd[row.id] = hwnd
   router.push({
     path: `/page4`,
     query: {

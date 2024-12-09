@@ -18,7 +18,7 @@
           <template #menu-left>
             <el-switch v-model="model.启用" size="large" mx20px />
             <span>回复频率(秒): </span>
-            <el-input v-model="model.频率" style="width: 70px"> </el-input>
+            <el-input v-model.number="model.频率" style="width: 70px"> </el-input>
           </template>
         </avue-crud>
       </el-card>
