@@ -8,6 +8,8 @@ import { createPersistedState } from 'pinia-plugin-persistedstate'
 
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+
 import Avue from '@smallwei/avue'
 import '@smallwei/avue/lib/index.css'
 
@@ -24,6 +26,10 @@ app.use(router)
 app.use(ElementPlus)
 app.use(Avue, { axios: http })
 
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
+
 const fn = async (sys) => {
   console.log(`初始化完成`, sys)
   globalThis.sys = sys
@@ -38,7 +44,7 @@ new Promise(async () => {
     await fn(globalThis.sys)
   } else {
     await new Sys({
-      log: false,
+      log: true,
       wsUrl: config.sysShimWs,
     })
       .then(fn)

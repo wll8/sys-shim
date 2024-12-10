@@ -1,6 +1,6 @@
 <template>
-  <div class="page p20px">
-    <el-button icon="el-icon-back" @click="router.back()">返回</el-button>
+  <div class="page">
+    <el-button icon="el-icon-back" @click="back">返回</el-button>
     <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
       <el-tab-pane label="智能客服" name="first">
         <crud
@@ -76,6 +76,7 @@ import merge from 'lodash.merge'
 import crud from './crud.vue'
 import debounce from 'lodash.debounce'
 
+const store = useStore()
 const activeName = ref(`first`)
 
 const router = useRouter()
@@ -170,6 +171,27 @@ function getData() {
 }
 getData()
 
+async function back() {
+  const hwnd = store.devicePlatformConfigIdByHwnd[devicePlatformConfig.value.id] || 0
+  const [, form] = await globalThis.shim.nativeMain.win._form.getForm(hwnd)
+  if (form) {
+    const ws = globalThis.ws
+    ws.call(
+      `run`,
+      [
+        `
+          win.close(global.G.winformSub.wbPage.hwndChrome)
+        `,
+      ],
+      {
+        runType: `main`,
+      },
+    )
+    globalThis.shim.nativeMain.win.close(hwnd)
+    router.back()
+  }
+}
+
 const handleClick = (tab, event) => {
   console.log(tab, event)
 }
@@ -201,6 +223,6 @@ watch(
 
 <style scoped lang="less">
 .page {
-  // background-color: #ccc;
+  padding-top: 20px;
 }
 </style>

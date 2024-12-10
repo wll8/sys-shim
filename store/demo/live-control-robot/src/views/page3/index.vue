@@ -1,5 +1,5 @@
 <template>
-  <div class="page p20px">
+  <div class="page">
     <h3 text-center>平台配置</h3>
     <avue-crud
       :data="data"

@@ -1,5 +1,5 @@
 <template>
-  <div class="page p20px">
+  <div class="page">
     <h3 text-center>主配置</h3>
     <avue-crud
       :data="data"
@@ -21,14 +21,15 @@ import { useStore } from '@/stores/index.js'
 import { storeToRefs } from 'pinia'
 import { getUserToken } from '@/util.js'
 import http from '@/http.js'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 const shim = globalThis.shim
 const native = globalThis.shim.native
 const ws = globalThis.shim.ws
 const router = useRouter()
-
+const route = useRoute()
 const data = ref([])
 
+console.log(`route`, route)
 function getData() {
   http.get(`/config`).then((res) => {
     data.value = res
@@ -37,9 +38,10 @@ function getData() {
 getData()
 
 const option = ref({
+  menuWidth: 200,
   column: [
     { label: `配置名称`, prop: `名称` },
-    { label: `卡密`, prop: `卡密` },
+    { label: `卡密`, prop: `卡密`, hide: true },
   ],
 })
 
@@ -75,8 +77,4 @@ async function rowUpdate(row, index, done, loading) {
 }
 </script>
 
-<style scoped lang="less">
-.page {
-  // background-color: #ccc;
-}
-</style>
+<style scoped lang="less"></style>

@@ -43,7 +43,6 @@ new Promise(async () => {
       originRegExp: `.*`,
       form: {
         right: `1000`,
-        border: `thin`,
         bottom: `600`,
       },
       socket: {

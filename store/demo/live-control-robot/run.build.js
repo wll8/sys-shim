@@ -42,7 +42,6 @@ new Promise(async () => {
         browserArguments: `--disable-web-security --allow-running-insecure-content`,
         form: {
           right: `1000`,
-          border: `thin`,
           bottom: `600`,
         },
         page: `http://162.14.76.148:7800/live/#/`,

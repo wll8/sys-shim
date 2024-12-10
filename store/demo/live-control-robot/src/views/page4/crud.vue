@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="com">
     <div>
       <el-card>
         <template #header>

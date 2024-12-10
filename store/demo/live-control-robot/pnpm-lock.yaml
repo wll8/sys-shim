@@ -12,8 +12,8 @@ importers:
         specifier: ^2.3.1
         version: 2.3.1(vue@3.4.27)
       '@smallwei/avue':
-        specifier: ^3.4.8
-        version: 3.5.6(element-plus@2.9.0(vue@3.4.27))(vue@3.4.27)
+        specifier: ^3.6.0
+        version: 3.6.0(element-plus@2.9.0(vue@3.4.27))(vue@3.4.27)
       alova:
         specifier: ^2.20.5
         version: 2.20.5
@@ -835,8 +835,8 @@ packages:
     resolution: {integrity: sha512-/aPsuoj/1Dw/kzhkgz+ES6TxG0zfTMGLwuK2ZG00k/iJzYHTLCE8mVU8EPqEOp/lmxPoq1C1C9RYToRKb2KEfg==}
     engines: {node: '>=10'}
 
-  '@smallwei/avue@3.5.6':
-    resolution: {integrity: sha512-A4B5kMF8QJVm4UOGH6kzAA0f8X4m/4smFM45kkA1wV5xLWFG9NYgVRAbM+lFVeY7lISEn+03c/hKISXE6FdeXg==}
+  '@smallwei/avue@3.6.0':
+    resolution: {integrity: sha512-3wJk/CZufoc3RZVcmx8qrL0/1kVWSnx/+/3G7QY7pbtGerp8Eu7659opZ6Ytg6/+JhEP/HJFIzvrxtpyvvsrmg==}
     peerDependencies:
       element-plus: '>=2.2.0'
       vue: '>=3.2.0'
@@ -4756,11 +4756,11 @@ snapshots:
   '@sindresorhus/is@2.1.1':
     optional: true
 
-  '@smallwei/avue@3.5.6(element-plus@2.9.0(vue@3.4.27))(vue@3.4.27)':
+  '@smallwei/avue@3.6.0(element-plus@2.9.0(vue@3.4.27))(vue@3.4.27)':
     dependencies:
       '@element-plus/icons-vue': 2.3.1(vue@3.4.27)
       countup.js: 1.9.3
-      dayjs: 1.11.12
+      dayjs: 1.11.13
       element-plus: 2.9.0(vue@3.4.27)
       lodash: 4.17.21
       vue: 3.4.27
