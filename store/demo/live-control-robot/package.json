@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
-    "@smallwei/avue": "^3.6.0",
+    "@smallwei/avue": "^3.4.8",
     "alova": "^2.20.5",
     "axios": "^0.21.1",
     "disable-devtool": "^0.3.8",
