@@ -161,7 +161,7 @@ module.exports = (util) => {
           action: {
             智能客服: {
               文字回复: {
-                频率: `@integer(1, 10)`,
+                频率: `@integer(1, 5)-@integer(6, 10)`,
                 启用: `@boolean`,
                 '配置|1-5': [
                   {
@@ -171,7 +171,7 @@ module.exports = (util) => {
                 ],
               },
               语音回复: {
-                频率: `@integer(1, 10)`,
+                频率: `@integer(1, 5)-@integer(6, 10)`,
                 启用: `@boolean`,
                 '配置|1-5': [
                   {
@@ -188,7 +188,7 @@ module.exports = (util) => {
             },
             场控助手: {
               直播间发言: {
-                频率: `@integer(1, 10)`,
+                频率: `@integer(1, 5)-@integer(6, 10)`,
                 启用: `@boolean`,
                 '配置|1-5': [
                   {
@@ -197,7 +197,7 @@ module.exports = (util) => {
                 ],
               },
               评论上墙: {
-                频率: `@integer(1, 10)`,
+                频率: `@integer(1, 5)-@integer(6, 10)`,
                 启用: `@boolean`,
                 '配置|1-5': [
                   {
