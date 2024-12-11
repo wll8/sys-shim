@@ -43,7 +43,7 @@ getData()
 
 const option = ref({
   column: [
-    { label: `名称`, prop: `名称` },
+    { label: `名称`, prop: `名称`, width: `150px` },
     {
       label: `logo`,
       prop: `封面`,
@@ -53,8 +53,9 @@ const option = ref({
       accept: `image/png, image/jpeg`,
       limit: 1,
       multiple: false,
+      width: `150px`,
     },
-    { label: `网址`, prop: `网址` },
+    { label: `网址`, prop: `网址`, hide: true },
     {
       label: `状态`,
       prop: `状态`,
