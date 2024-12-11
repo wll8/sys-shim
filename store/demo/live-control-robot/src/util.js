@@ -67,7 +67,7 @@ export function removeLeft(str) {
 }
 
 /**
- * 获取用户 id
+ * 获取用户 token
  */
 export async function getUserToken() {
   const store = useStore()
@@ -96,6 +96,15 @@ export async function getUserToken() {
   const originalString = JSON.stringify(data)
   const base64String = btoa(originalString)
   return base64String
+}
+
+/**
+ * 获取用户 id
+ */
+export async function getUserId() {
+  const store = useStore()
+  store.userId = store.userId || guid()
+  return store.userId
 }
 
 /**

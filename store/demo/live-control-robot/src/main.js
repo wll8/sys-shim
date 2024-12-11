@@ -4,7 +4,7 @@ import 'uno.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { createPersistedState } from 'pinia-plugin-persistedstate'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
@@ -19,9 +19,11 @@ import App from './App.vue'
 import router from './router'
 import config from '@/config.js'
 import http from '@/http.js'
+import { getUserId } from '@/util.js'
 
 const app = createApp(App)
-app.use(createPinia().use(createPersistedState()))
+const pinia = createPinia()
+app.use(pinia.use(piniaPluginPersistedstate))
 app.use(router)
 app.use(ElementPlus)
 app.use(Avue, { axios: http })
@@ -37,6 +39,7 @@ const fn = async (sys) => {
   globalThis.shim = sys
   globalThis.ws = sys.ws
   globalThis.native = sys.native
+  globalThis.userId = await getUserId()
 }
 
 new Promise(async () => {

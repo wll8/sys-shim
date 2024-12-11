@@ -49,7 +49,10 @@ async function start() {
   custom(winformInfo)
 
   function custom(winformInfo) {
-    const boxUrl = `http://162.14.76.148:7800/live/index.html#/page1`
+    const boxUrl =
+      process.env.NODE_ENV === `development`
+        ? `http://127.0.0.1:5173/index.html#/page1`
+        : `http://162.14.76.148:7800/live/index.html#/page1`
     const arg = {
       title: document.title,
       boxUrl,

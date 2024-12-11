@@ -5,12 +5,12 @@ import mockjs from 'mockjs'
 export const useStore = defineStore(
   `index`,
   () => {
-    const data = mockjs.mock({
+    const data = {
       // devicePlatformConfigId 句柄表
       devicePlatformConfigIdByHwnd: {},
       // 用户 id
-      userId: `@uuid`,
-    })
+      userId: ``,
+    }
     const dataRef = Object.entries(data).reduce((acc, [key, value]) => {
       acc[key] = ref(value)
       return acc

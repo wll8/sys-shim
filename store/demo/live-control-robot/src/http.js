@@ -10,7 +10,7 @@ const http = axios.create({
 // request拦截器
 http.interceptors.request.use(
   (options) => {
-    options.headers[`default-device-id`] = `1`
+    options.headers[`default-device-id`] = globalThis.userId
     return options
   },
   (error) => {
