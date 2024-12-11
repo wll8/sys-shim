@@ -26,6 +26,7 @@ const useHook = () => {
                   }, option)
                   var winform = win.form(text="sys-shim-app")
                   var wbPage = web.view(winform, fsys.path.full(optionRes.userDataDir, io.appData("live-control-robot")), optionRes.browserArguments);
+                  global.G.winformSub.wbPage = wbPage
                   winform.show()
                   wbPage = wbPage
                   var hwnd =wbPage.hwndChrome
