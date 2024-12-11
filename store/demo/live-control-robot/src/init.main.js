@@ -49,7 +49,7 @@ async function start() {
   custom(winformInfo)
 
   function custom(winformInfo) {
-    const boxUrl = `${location.origin}/index.html#/page1`
+    const boxUrl = `http://162.14.76.148:7800/live/index.html#/page1`
     const arg = {
       title: document.title,
       boxUrl,

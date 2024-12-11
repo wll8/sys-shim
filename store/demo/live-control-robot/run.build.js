@@ -1,4 +1,5 @@
 import cp from 'node:child_process'
+import process from 'node:process'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -16,15 +17,22 @@ const exec = (cmd, arg) => {
     console.log(String(error))
   }
 }
+const config = {
+  development: {
+    page: `http://127.0.0.1:5173/init.html`,
+    isObfuscate: false,
+  },
+  production: {
+    page: `http://162.14.76.148:7800/live/init.html`,
+    isObfuscate: false,
+  },
+}[process.env.NODE_ENV || `production`]
 
 // 是否打包 server
 const isServer = false
 
 // 是否打包 dist
-const isDist = true
-
-// 是否混淆 js
-const isObfuscate = true
+const isDist = false
 
 new Promise(async () => {
   if (isDist) {
@@ -56,7 +64,7 @@ new Promise(async () => {
           right: `1000`,
           bottom: `600`,
         },
-        page: `init.html`,
+        page: config.page,
       },
       null,
       2,

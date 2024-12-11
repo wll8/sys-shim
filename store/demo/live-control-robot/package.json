@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node run.js",
-    "build": "node run.build.js",
-    "build:fe": "node run.build.fe.js",
+    "dev": "cross-env NODE_ENV=development node run.js",
+    "build": "cross-env NODE_ENV=production node run.build.js",
+    "build:fe": "cross-env NODE_ENV=production node run.build.fe.js",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "prettier --write src/"
@@ -39,6 +39,7 @@
     "@vitejs/plugin-vue-jsx": "^3.1.0",
     "@vue/eslint-config-prettier": "^9.0.0",
     "@wll8/process-manager": "^1.0.4",
+    "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.23.0",
     "javascript-obfuscator": "^4.1.1",
