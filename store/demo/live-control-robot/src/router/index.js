@@ -5,7 +5,7 @@ const router = createRouter({
   routes: [
     {
       path: `/`,
-      component: () => import(`@/views/page0/index.vue`),
+      redirect: `/page1`,
     },
     {
       path: `/page1`,

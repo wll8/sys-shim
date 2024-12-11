@@ -27,6 +27,7 @@ new Promise(async () => {
   })
 
   async function runExe(url) {
+    url = `${url}/init.html`
     if (globalThis.runing) {
       return undefined
     }
@@ -41,6 +42,7 @@ new Promise(async () => {
       token: `tokentokentoken`,
       browserArguments: `--disable-web-security --allow-running-insecure-content`,
       originRegExp: `.*`,
+      pageShow: false,
       form: {
         right: `1000`,
         bottom: `600`,

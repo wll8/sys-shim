@@ -1,10 +1,32 @@
-<template>
-  <div class="page">loading...</div>
-</template>
+import { sleep } from '@/util.js'
 
-<script setup>
-const ws = globalThis.ws
+const fn = async (sys) => {
+  console.log(`初始化完成`, sys)
+  globalThis.sys = sys
+  globalThis.main = sys
+  globalThis.shim = sys
+  globalThis.ws = sys.ws
+  globalThis.native = sys.native
+  start()
+}
+
 new Promise(async () => {
+  await sleep(500)
+  if (globalThis.sys) {
+    await fn(globalThis.sys)
+  } else {
+    await new globalThis.Sys({
+      log: false,
+    })
+      .then(fn)
+      .catch((err) => {
+        console.error(`sys-shim 初始化失败`, err)
+      })
+  }
+})
+async function start() {
+  const ws = globalThis.ws
+
   console.log(111, window.sys.hwnd)
   const [, winformInfo] = await ws.call(
     `run`,
@@ -27,7 +49,7 @@ new Promise(async () => {
   custom(winformInfo)
 
   function custom(winformInfo) {
-    const boxUrl = location.origin + location.pathname + `#/page1`
+    const boxUrl = `${location.origin}/index.html#/page1`
     const arg = {
       title: document.title,
       boxUrl,
@@ -92,7 +114,7 @@ new Promise(async () => {
           if(arg.toExit) global.G.killAll()
         }
         global.G.winformSub.show();
-`,
+      `,
         arg,
       ],
       {
@@ -100,11 +122,4 @@ new Promise(async () => {
       },
     )
   }
-})
-</script>
-
-<style scoped lang="less">
-.page {
-  // background-color: #ccc;
 }
-</style>

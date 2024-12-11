@@ -1,4 +1,8 @@
 import { fileURLToPath, URL } from 'node:url'
+import path from 'node:path'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 import UnoCSS from 'unocss/vite'
 import { presetUno, presetAttributify, presetIcons } from 'unocss'
@@ -12,6 +16,12 @@ import VueDevTools from 'vite-plugin-vue-devtools'
 export default defineConfig({
   build: {
     outDir: `./dist/`,
+    rollupOptions: {
+      input: {
+        index: path.resolve(__dirname, `index.html`),
+        init: path.resolve(__dirname, `init.html`),
+      },
+    },
   },
   envDir: `./env`,
   base: `./`,

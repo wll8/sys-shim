@@ -17,10 +17,21 @@ const exec = (cmd, arg) => {
   }
 }
 
+// 是否打包 server
 const isServer = false
 
+// 是否打包 dist
+const isDist = true
+
+// 是否混淆 js
+const isObfuscate = true
+
 new Promise(async () => {
-  exec(`npx shx rm -rf dist`)
+  if (isDist) {
+    exec(`npm run build:fe`)
+  } else {
+    exec(`npx shx rm -rf dist`)
+  }
   exec(`npx shx mkdir dist`)
   if (isServer) {
     exec(`npx shx mkdir -p dist/server`)
@@ -40,11 +51,12 @@ new Promise(async () => {
     JSON.stringify(
       {
         browserArguments: `--disable-web-security --allow-running-insecure-content`,
+        pageShow: false,
         form: {
           right: `1000`,
           bottom: `600`,
         },
-        page: `http://162.14.76.148:7800/live/#/`,
+        page: `init.html`,
       },
       null,
       2,

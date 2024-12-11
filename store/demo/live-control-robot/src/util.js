@@ -146,3 +146,12 @@ export function flatObj(value, currentKey) {
   })
   return result
 }
+
+/**
+ * 异步等待 sleep
+ * @param {*} ms 毫秒
+ */
+export function sleep(ms = 1e3) {
+  // 异步 sleep
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
