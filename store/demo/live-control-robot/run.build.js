@@ -71,7 +71,7 @@ new Promise(async () => {
     ),
   )
 
-  exec(`npx sys-shim pack --input dist`)
+  exec(`npx sys-shim pack --input dist --out live-control-robot`)
 })
 
 /**
