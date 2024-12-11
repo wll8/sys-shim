@@ -220,7 +220,6 @@ function getData() {
   })
   http.get(`/platform/${additional.platformId}`).then((res) => {
     platformInfo.value = res
-    debugger
   })
 }
 getData()

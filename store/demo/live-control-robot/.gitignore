@@ -34,3 +34,5 @@ page.html
 
 /*.exe
 /public/upload
+/live-control-robot-*
+/*.out.md
