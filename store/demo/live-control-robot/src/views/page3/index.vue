@@ -37,20 +37,6 @@ const platformInfo = ref()
 const option = ref({
   column: [
     { label: `配置名称`, prop: `名称` },
-    {
-      label: `脚本文件`,
-      prop: `脚本文件`,
-      type: `upload`,
-      action: `/upload/file`,
-      dataType: `object`,
-      render({ row }) {
-        const list = row.脚本文件.map((item) => item.label)
-        return list.join(`, `)
-      },
-      accept: `text/javascript, application/javascript`,
-      limit: 1,
-      multiple: false,
-    },
     { label: `数据目录`, prop: `数据目录` },
   ],
 })
@@ -81,7 +67,7 @@ getData()
 async function next(row) {
   let preloadScript = ``
   try {
-    preloadScript = await http.get(row.脚本文件[0].value)
+    preloadScript = await http.get(platformInfo.value.脚本文件[0].value)
   } catch (e) {
     console.log(`e`, e)
   }

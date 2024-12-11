@@ -108,6 +108,12 @@ module.exports = (util) => {
           ],
           网址: `https://buyin.jinritemai.com/mpa/account/login`,
           状态: `可使用`,
+          脚本文件: [
+            {
+              label: `@ctitle().js`,
+              value: `@url().js`,
+            },
+          ],
           名称: `抖音`,
         },
         {
@@ -148,12 +154,6 @@ module.exports = (util) => {
             const max = 3
             return this.id % max || 3
           },
-          脚本文件: [
-            {
-              label: `@ctitle().js`,
-              value: `@url().js`,
-            },
-          ],
           数据目录() {
             return `data/${this.id}`
           },

@@ -57,6 +57,21 @@ const option = ref({
     },
     { label: `网址`, prop: `网址`, hide: true },
     {
+      label: `脚本文件`,
+      prop: `脚本文件`,
+      hide: true,
+      type: `upload`,
+      action: `/upload/file`,
+      dataType: `object`,
+      render({ row }) {
+        const list = row.脚本文件.map((item) => item.label)
+        return list.join(`, `)
+      },
+      accept: `text/javascript, application/javascript`,
+      limit: 1,
+      multiple: false,
+    },
+    {
       label: `状态`,
       prop: `状态`,
       type: `select`,
