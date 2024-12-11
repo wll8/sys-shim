@@ -1,6 +1,7 @@
 <template>
   <div class="page">
     <el-button icon="el-icon-back" @click="back">返回</el-button>
+    <el-button @click="reload">刷新页面（白屏修复）</el-button>
     <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
       <el-tab-pane label="智能客服" name="first">
         <crud
@@ -115,12 +116,14 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useStore } from '@/stores/index.js'
 import { storeToRefs } from 'pinia'
 import http from '@/http.js'
+import useHook from '@/views/page3/hook.js'
 import { flatObj, deepGet } from '@/util.js'
 import { useRouter } from 'vue-router'
 import merge from 'lodash.merge'
 import crud from './crud.vue'
 import debounce from 'lodash.debounce'
 
+const hook = useHook()
 const store = useStore()
 const activeName = ref(`first`)
 
@@ -174,7 +177,7 @@ const getBase = () => {
           生效: false,
         },
         弹窗过品: {
-          启用: false,
+          频率: `1-5`,
           商品弹窗: false,
           顺序开始: 1,
           顺序结束: 4,
@@ -209,14 +212,20 @@ const keyByValueUpdate = debounce((key, newVal, oldVal) => {
 const additional = {
   ...router.currentRoute.value.query,
 }
+
+const platformInfo = ref({})
 function getData() {
   http.get(`/devicePlatformConfig/${additional.devicePlatformConfigId}`).then((res) => {
     devicePlatformConfig.value = merge(getBase(), res)
   })
+  http.get(`/platform/${additional.platformId}`).then((res) => {
+    platformInfo.value = res
+    debugger
+  })
 }
 getData()
 
-async function back() {
+async function closePage() {
   let hwndOld = store.devicePlatformConfigIdByHwnd[additional.devicePlatformConfigId]
   ;[, hwndOld] = hwndOld ? await globalThis.shim.nativeMain.win._form.getForm(hwndOld) : []
   if (hwndOld) {
@@ -234,6 +243,26 @@ async function back() {
     )
     store.devicePlatformConfigIdByHwnd[additional.devicePlatformConfigId] = undefined
   }
+}
+
+async function reload() {
+  await closePage()
+  let preloadScript = ``
+  try {
+    preloadScript = await http.get(platformInfo.value.脚本文件[0].value)
+  } catch (e) {
+    console.log(`e`, e)
+  }
+  const hwnd = await hook.openUrl({
+    url: platformInfo.value.网址,
+    preloadScript,
+    userDataDir: devicePlatformConfig.value.数据目录 || `default`,
+  })
+  store.devicePlatformConfigIdByHwnd[devicePlatformConfig.value.id] = hwnd
+}
+
+async function back() {
+  await closePage()
   router.back()
 }
 
