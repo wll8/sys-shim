@@ -54,7 +54,7 @@
           }"
         />
       </el-tab-pane>
-      <el-tab-pane label="商品采集/讲解" name="third">商品采集</el-tab-pane>
+      <el-tab-pane label="商品讲解" name="third">商品采集</el-tab-pane>
       <el-tab-pane label="常见问题" name="fourth">
         <ol>
           <li>挂贴片太快会提示频繁，建议120秒</li>
