@@ -227,7 +227,7 @@ module.exports = (util) => {
                 生效: `@boolean`,
               },
               弹窗过品: {
-                启用: `@boolean`,
+                频率: `@integer(1, 5)-@integer(6, 10)`,
                 商品弹窗: `@boolean`,
                 顺序开始: `@integer(1, 5)`,
                 顺序结束: `@integer(1, 5)`,

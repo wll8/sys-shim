@@ -54,7 +54,52 @@
           }"
         />
       </el-tab-pane>
-      <el-tab-pane label="商品讲解" name="third">商品采集</el-tab-pane>
+      <el-tab-pane label="商品讲解" name="third">
+        <div>
+          <el-card>
+            <template #header>
+              <div class="card-header">
+                <span>弹窗过品</span>
+              </div>
+            </template>
+            <div>
+              <div>
+                <span>频率(秒): </span>
+                <el-input
+                  v-model="devicePlatformConfig.action.商品助手.弹窗过品.频率"
+                  style="width: 70px"
+                >
+                </el-input>
+              </div>
+              <div>
+                商品弹窗：<el-switch
+                  v-model="devicePlatformConfig.action.商品助手.弹窗过品.商品弹窗"
+                  size="large"
+                />
+                顺序商品&nbsp;<el-input
+                  v-model.number="devicePlatformConfig.action.商品助手.弹窗过品.顺序开始"
+                  style="width: 70px"
+                ></el-input>
+                到
+                <el-input
+                  v-model.number="devicePlatformConfig.action.商品助手.弹窗过品.顺序结束"
+                  style="width: 70px"
+                ></el-input>
+              </div>
+              <div>
+                自动过品：<el-switch
+                  v-model="devicePlatformConfig.action.商品助手.弹窗过品.自动过品"
+                  size="large"
+                />
+                指定商品&nbsp;<el-input
+                  v-model.number="devicePlatformConfig.action.商品助手.弹窗过品.指定商品"
+                  style="width: 200px"
+                ></el-input>
+              </div>
+            </div>
+          </el-card>
+        </div>
+      </el-tab-pane>
       <el-tab-pane label="常见问题" name="fourth">
         <ol>
           <li>挂贴片太快会提示频繁，建议120秒</li>
