@@ -217,9 +217,9 @@ function getData() {
 getData()
 
 async function back() {
-  const hwnd = store.devicePlatformConfigIdByHwnd[devicePlatformConfig.value.id] || 0
-  const [, form] = await globalThis.shim.nativeMain.win._form.getForm(hwnd)
-  if (form) {
+  let hwndOld = store.devicePlatformConfigIdByHwnd[additional.devicePlatformConfigId]
+  ;[, hwndOld] = hwndOld ? await globalThis.shim.nativeMain.win._form.getForm(hwndOld) : []
+  if (hwndOld) {
     const ws = globalThis.ws
     ws.call(
       `run`,
@@ -232,9 +232,9 @@ async function back() {
         runType: `main`,
       },
     )
-    globalThis.shim.nativeMain.win.close(hwnd)
-    router.back()
+    store.devicePlatformConfigIdByHwnd[additional.devicePlatformConfigId] = undefined
   }
+  router.back()
 }
 
 const handleClick = (tab, event) => {

@@ -73,10 +73,10 @@ async function next(row) {
   }
   console.log(`platformInfo`, platformInfo.value, row)
 
-  const [, form] = await globalThis.shim.nativeMain.win._form.getForm(
-    store.devicePlatformConfigIdByHwnd[row.id] || 0,
-  )
-  if (form) {
+  let hwndOld = store.devicePlatformConfigIdByHwnd[row.id]
+
+  ;[, hwndOld] = hwndOld ? await globalThis.shim.nativeMain.win._form.getForm(hwndOld) : []
+  if (hwndOld) {
     alert(`窗口已打开`)
     return undefined
   }
