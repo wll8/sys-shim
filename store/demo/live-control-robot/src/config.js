@@ -16,7 +16,7 @@ export default {
     sysShimWs: import.meta.env.VITE_SERVER_BASEURL || undefined,
   },
   production: {
-    baseApi: `http://162.14.76.148:7800/`,
+    baseApi: `http://127.0.0.1:7800/`,
     sysShimWs: undefined,
   },
 }[process.env.NODE_ENV || `production`]

@@ -23,7 +23,7 @@ const config = {
     isObfuscate: false,
   },
   production: {
-    page: `http://162.14.76.148:7800/live/init.html`,
+    page: `http://127.0.0.1:7800/live/init.html`,
     isObfuscate: false,
   },
 }[process.env.NODE_ENV || `production`]
@@ -38,7 +38,7 @@ new Promise(async () => {
   if (isDist) {
     exec(`npm run build:fe`)
   } else {
-    exec(`npx shx rm -rf dist`)
+    // ...exec(`npx shx rm -rf dist`)
   }
   exec(`npx shx mkdir dist`)
   if (isServer) {
