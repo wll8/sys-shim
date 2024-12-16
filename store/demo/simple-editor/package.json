@@ -19,11 +19,13 @@
     "luna-command-palette": "^0.1.0",
     "monaco-editor": "0.43.0",
     "sys-shim": "0.0.1-6",
+    "sys-shim-bin": "0.0.2-4",
+    "tree-kill": "^1.2.2",
     "vue": "^3.3.8"
   },
   "devDependencies": {
-    "@wll8/process-manager": "^1.0.2",
     "@vitejs/plugin-vue": "^4.5.0",
+    "@wll8/process-manager": "^1.0.2",
     "eslint": "8.57.0",
     "husky": "^9.0.11",
     "vite": "^5.0.0"
