@@ -27,7 +27,6 @@ new Promise(async () => {
   })
 
   async function runExe(url) {
-    url = `${url}/init.html`
     if (globalThis.runing) {
       return undefined
     }
