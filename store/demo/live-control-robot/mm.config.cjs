@@ -106,7 +106,7 @@ module.exports = (util) => {
               value: `@image().jpg`,
             },
           ],
-          网址: `https://buyin.jinritemai.com/mpa/account/login`,
+          网址: `https://example.com/`,
           状态: `可使用`,
           脚本文件: [
             {
@@ -114,21 +114,21 @@ module.exports = (util) => {
               value: `@url().js`,
             },
           ],
-          名称: `抖音`,
+          名称: `豆印`,
         },
         {
           id: 2,
           封面: undefined,
           网址: ``,
           状态: `开发中`,
-          名称: `快手`,
+          名称: `筷手`,
         },
         {
           id: 3,
           封面: undefined,
           网址: ``,
           状态: `开发中`,
-          名称: `腾讯`,
+          名称: `疼训`,
         },
         {
           id: 4,
