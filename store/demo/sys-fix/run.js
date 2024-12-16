@@ -26,8 +26,21 @@ new Promise(async () => {
 
     globalThis.runing = true
     const text = fs.readFileSync(`./package.json`, `utf8`)
-    const textJson = JSON.parse(text)
-    textJson.page = url
+    let textJson = JSON.parse(text)
+    textJson = {
+      ...textJson,
+      page: url,
+      token: `tokentokentoken`,
+      browserArguments: `--disable-web-security --allow-running-insecure-content`,
+      originRegExp: `.*`,
+      form: {
+        right: `1000`,
+        bottom: `600`,
+      },
+      socket: {
+        port: 10005,
+      },
+    }
     fs.writeFileSync(`./package.json`, JSON.stringify(textJson, null, 2))
     await sleep()
     const cp = new ProcessManager({
