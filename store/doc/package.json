@@ -9,5 +9,20 @@
   },
   "dependencies": {
     "@wll8/process-manager": "^1.0.2"
+  },
+  "page": "http://192.168.152.1:8081/sys-shim-doc/",
+  "token": "tokentokentoken",
+  "browserArguments": "--disable-web-security --allow-running-insecure-content",
+  "originRegExp": ".*",
+  "form": {
+    "right": "1000",
+    "bottom": "600"
+  },
+  "socket": {
+    "port": 10005
+  },
+  "devDependencies": {
+    "sys-shim-bin": "0.0.2-4",
+    "tree-kill": "^1.2.2"
   }
 }

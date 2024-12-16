@@ -17,6 +17,9 @@ importers:
       filenamify:
         specifier: ^6.0.0
         version: 6.0.0
+      iconv-lite:
+        specifier: ^0.6.3
+        version: 0.6.3
       minimist:
         specifier: ^1.2.8
         version: 1.2.8
@@ -26,6 +29,9 @@ importers:
       shx:
         specifier: ^0.3.4
         version: 0.3.4
+      sys-shim-bin:
+        specifier: 0.0.2-4
+        version: 0.0.2-4
     devDependencies:
       '@guolao/vue-monaco-editor':
         specifier: ^1.5.1
@@ -84,9 +90,6 @@ importers:
       rpc-websockets:
         specifier: ^7.6.0
         version: 7.9.0
-      sys-shim:
-        specifier: 'link:'
-        version: 'link:'
       vite:
         specifier: ^5.0.0
         version: 5.0.12(@types/node@20.11.16)(terser@5.27.0)
@@ -1758,6 +1761,10 @@ packages:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
     engines: {node: '>=0.10.0'}
 
+  iconv-lite@0.6.3:
+    resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
+    engines: {node: '>=0.10.0'}
+
   ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
 
@@ -3081,6 +3088,10 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
+  sys-shim-bin@0.0.2-4:
+    resolution: {integrity: sha512-zBMr8WvL2jxduFFxAb4gSEtu2W6srsftgbC565nkqrg9O8IoqRR9R3AJZ71E902LYV47laKGDb6BbEjt+hSa3Q==}
+    hasBin: true
+
   tar-stream@1.6.2:
     resolution: {integrity: sha512-rzS0heiNf8Xn7/mpdSVVSMAWAoy9bfb1WOTYC78Z0UQKeKa/CWS8FOq0lKGNa8DWKAn9gxjCvMLYc5PGXYlK2A==}
     engines: {node: '>= 0.8.0'}
@@ -3344,8 +3355,8 @@ packages:
       jsdom:
         optional: true
 
-  vue-demi@0.14.8:
-    resolution: {integrity: sha512-Uuqnk9YE9SsWeReYqK2alDI5YzciATE0r2SkA6iMAtuXvNTMNACJLJEXNXaEy94ECuBe4Sk6RzRU80kjdbIo1Q==}
+  vue-demi@0.14.10:
+    resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
     engines: {node: '>=12'}
     hasBin: true
     peerDependencies:
@@ -3591,7 +3602,7 @@ snapshots:
       '@monaco-editor/loader': 1.4.0(monaco-editor@0.48.0)
       monaco-editor: 0.48.0
       vue: 3.4.15
-      vue-demi: 0.14.8(vue@3.4.15)
+      vue-demi: 0.14.10(vue@3.4.15)
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
@@ -5344,6 +5355,10 @@ snapshots:
     dependencies:
       safer-buffer: 2.1.2
 
+  iconv-lite@0.6.3:
+    dependencies:
+      safer-buffer: 2.1.2
+
   ieee754@1.2.1: {}
 
   ignore@5.3.1: {}
@@ -6712,6 +6727,8 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
+  sys-shim-bin@0.0.2-4: {}
+
   tar-stream@1.6.2:
     dependencies:
       bl: 1.2.3
@@ -6987,7 +7004,7 @@ snapshots:
       - supports-color
       - terser
 
-  vue-demi@0.14.8(vue@3.4.15):
+  vue-demi@0.14.10(vue@3.4.15):
     dependencies:
       vue: 3.4.15
 

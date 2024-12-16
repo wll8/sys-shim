@@ -1,16 +1,41 @@
-lockfileVersion: '6.0'
+lockfileVersion: '9.0'
 
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-dependencies:
-  '@wll8/process-manager':
-    specifier: ^1.0.2
-    version: 1.0.2
+importers:
+
+  .:
+    dependencies:
+      '@wll8/process-manager':
+        specifier: ^1.0.2
+        version: 1.0.2
+    devDependencies:
+      sys-shim-bin:
+        specifier: 0.0.2-4
+        version: 0.0.2-4
+      tree-kill:
+        specifier: ^1.2.2
+        version: 1.2.2
 
 packages:
 
-  /@wll8/process-manager@1.0.2:
+  '@wll8/process-manager@1.0.2':
     resolution: {integrity: sha512-k5qOnzPFObhgumenY3RulWGhs1UBAzLv0oucVufQrMvUN9ovysQyGXq0O6KZhR7NFPfIXyloSXEyJOfGdZYeFQ==}
-    dev: false
+
+  sys-shim-bin@0.0.2-4:
+    resolution: {integrity: sha512-zBMr8WvL2jxduFFxAb4gSEtu2W6srsftgbC565nkqrg9O8IoqRR9R3AJZ71E902LYV47laKGDb6BbEjt+hSa3Q==}
+    hasBin: true
+
+  tree-kill@1.2.2:
+    resolution: {integrity: sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==}
+    hasBin: true
+
+snapshots:
+
+  '@wll8/process-manager@1.0.2': {}
+
+  sys-shim-bin@0.0.2-4: {}
+
+  tree-kill@1.2.2: {}

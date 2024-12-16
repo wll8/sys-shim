@@ -102,6 +102,12 @@ importers:
       husky:
         specifier: ^9.0.11
         version: 9.0.11
+      sys-shim-bin:
+        specifier: 0.0.2-4
+        version: 0.0.2-4
+      tree-kill:
+        specifier: ^1.2.2
+        version: 1.2.2
       typescript:
         specifier: ^5.2.2
         version: 5.3.3
@@ -3167,6 +3173,10 @@ packages:
     resolution: {integrity: sha512-Vhf+bUa//YSTYKseDiiEuQmhGCoIF3CVBhunm3r/DQnYiGT4JssmnKQc44BIyOZRK2pKjXXAgbhfmbeoC9CJpA==}
     engines: {node: '>=12.20'}
 
+  sys-shim-bin@0.0.2-4:
+    resolution: {integrity: sha512-zBMr8WvL2jxduFFxAb4gSEtu2W6srsftgbC565nkqrg9O8IoqRR9R3AJZ71E902LYV47laKGDb6BbEjt+hSa3Q==}
+    hasBin: true
+
   sys-shim@0.0.1-14:
     resolution: {integrity: sha512-LWsjBrnYDJt05sjtXdNTbKUjsGhHkbXC3rzPLv3ABt4uqAjZfFlS0DIQAZl9mPOCNNXvTKSfrc1rtamr8jCFFg==}
     hasBin: true
@@ -3229,6 +3239,10 @@ packages:
   totalist@3.0.1:
     resolution: {integrity: sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==}
     engines: {node: '>=6'}
+
+  tree-kill@1.2.2:
+    resolution: {integrity: sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==}
+    hasBin: true
 
   trim-newlines@3.0.1:
     resolution: {integrity: sha512-c1PTsA3tYrIsLGkJkzHF+w9F2EyxfXGo4UyJc4pFL++FMjnq0HJS69T3M7d//gKrFKwy429bouPescbjecU+Zw==}
@@ -6881,6 +6895,8 @@ snapshots:
     dependencies:
       tslib: 2.6.2
 
+  sys-shim-bin@0.0.2-4: {}
+
   sys-shim@0.0.1-14:
     dependencies:
       dayjs: 1.11.11
@@ -6937,6 +6953,8 @@ snapshots:
       eslint-visitor-keys: 3.4.3
 
   totalist@3.0.1: {}
+
+  tree-kill@1.2.2: {}
 
   trim-newlines@3.0.1: {}
 
