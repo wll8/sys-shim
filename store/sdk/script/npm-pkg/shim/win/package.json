@@ -1,7 +1,0 @@
-{
-  "token": "tokentokentoken",
-  "originRegExp": ".*",
-  "socket": {
-    "port": 10005
-  }
-}
