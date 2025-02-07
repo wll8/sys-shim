@@ -7,7 +7,7 @@ title: 您的第一个 sys-shim 应用
 
 这个方式适用于体验，无需任何开发环境。
 
-下载 [main.exe](https://github.com/wll8/sys-shim/releases/download/example/main.exe) 文件打开，会看到如下界面：
+下载 [main.exe](todo) 文件打开，会看到如下界面：
 
 这个界面是通过同目录下的 html 文件实现的。使用您喜欢的编辑器编辑 html 文件并保存，然后重新运行 main.exe 即可看到修改结果。
 
@@ -28,7 +28,7 @@ title: 您的第一个 sys-shim 应用
 
 ``` js
 // 在您的网页里添加一个按钮，点击时执行以下 js 代码
-window.shim.native.process.execute("calc")
+// todo
 ```
 
 **下一步 安装 sys-shim**
@@ -65,7 +65,7 @@ sys-shim pack --input https://example.com/index.html
     log: true,
     wsUrl: 'ws://127.0.0.1:10005?token=tokentokentoken',
   }).then(shim => {
-    shim.native.win.msgbox(`hello`, `title`) // 调用系统 api
+    // todo
   })
   ```
 

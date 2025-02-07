@@ -1,39 +1,43 @@
 <div align="center">
-  <a href="https://wll8.github.io/sys-shim-doc/">
-    文档
+  <a href="./store/doc/doc/src/README.md">
+    Documentation
   </a>
 &nbsp;|&nbsp;
-  <a href="https://github.com/wll8/sys-shim/releases/tag/example">
-    示例
+  <a href="./store/demo/">
+    Examples
   </a>
 </div>
 
 <br />
 
-简单的使用前端语言即可快速开发桌面程序，程序体积小于 1M。
+You can quickly develop desktop applications using simple front-end languages, with a program size of less than 1M.
 
-## 为什么
+## Features
 
-想开发一个简单的桌面程序，只使用前端语言开发，暂只考虑在 windows 上运行，希望开发体验像在浏览器中一样，然后程序的样子像是本地应用一样，调用本地文件、系统命令、后台运行、托盘菜单这些都没有问题。
+- No need to write in any language other than JavaScript; use JavaScript to call system APIs.
+- Super lightweight, less than 1M.
+- Super simple, develop and generate programs without installing complex development environments.
+- System interfaces are ready to use out of the box. For example, read and write local files, execute system commands, run in the background, tray menus, etc.
 
-调研了一些常见的方案，发现他们都不适合，所以就开发了此项目 。
+## Contribution
 
-
-## 贡献
-
-如果你想参与这个项目的开发，建议准备如下环境：
+If you want to participate in the development of this project, it's recommended to prepare the following environment:
 
 - node v18.19.0
 - vscode v1.94.2
 - pnpm v9
 
-目录结构说明：
+Directory structure description:
 
 <pre>
 <a href="./store/">store/</a>
-  <a href="./store/bin/">bin/</a> - 提供服务调用的二进制程序源码。
-  <a href="./store/demo/">demo/</a> - 一些使用示例。
-  <a href="./store/doc/">doc/</a> - 项目和使用文档源码。
-  <a href="./store/play/">play/</a> - 游乐场程序。
-  <a href="./store/sdk/">sdk/</a> - js api 源码。
+  <a href="./store/bin/">bin/</a> - Source code for binary programs that provide service calls.
+  <a href="./store/demo/">demo/</a> - Some usage examples.
+  <a href="./store/doc/">doc/</a> - Source code for project and usage documentation.
+  <a href="./store/play/">play/</a> - Playground program.
+  <a href="./store/sdk/">sdk/</a> - Source code for the JavaScript API.
 </pre>
+
+## Acknowledgments
+
+- [LuaRT](https://github.com/samyeyo/LuaRT)

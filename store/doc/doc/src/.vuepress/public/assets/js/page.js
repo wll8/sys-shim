@@ -9,11 +9,7 @@ if(globalThis.Sys) {
     const obj = {hwnd, title, icon}
     console.log(obj)
 
-    await main.ws.call('run', [`
-      var arg = ...
-      win.form._forms[arg.hwnd].text = arg.title
-      win.form._forms[arg.hwnd].setIcon(arg.icon)
-    `, obj])
+    await main.ws.call('run', [``, obj])
   })
 } else {
   console.group(

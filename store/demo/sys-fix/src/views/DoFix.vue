@@ -18,17 +18,6 @@ export default {
   },
   methods: {
     async regsvr32() {
-      //// fix: 以下代码不能运行
-      //// await sys.native.process.popen.cmd(`
-      ////   cd /d C:\\
-      ////   dir
-      //// `).readAll()
-      // const [, res] = await sys.ws.call(`run`, [`
-      //   var arg = ...
-      //   return process.popen.cmd(arg).readAll()
-      //   `, `
-      //   for %1 in (%windir%\\system32\\*.dll) do regsvr32.exe /s %1 
-      // `])
       const msg = new globalThis.sys.Msg()
       const onTag = `${Date.now()}`
       msg.on(onTag, (out, err) => {
@@ -36,14 +25,7 @@ export default {
         console.log(out)
       })
       const [, getSysDir] = await sys.native.fsys.getSysDir()
-      await sys.ws.call(`run`, [`
-        var prcs = process.popen.cmd(\`
-          for %1 in (${getSysDir}\\*.dll) do regsvr32.exe /s %1 
-        \`)
-        for( all,out,err in prcs.each() ){
-          thread.command.publish("${onTag}", out, err)
-        }
-      `])
+      await sys.ws.call(`run`, [``])
       this.log = ``
       msg.off(onTag)
       alert(`修复完成`)

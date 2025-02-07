@@ -4,7 +4,6 @@ class Api {
   }
   async getOSInfo () {
     // todo
-    // aar win.versionEx
     return {
       "description": `Microsoft Windows 10 专业版`,
       "name": `Windows NT`,

@@ -265,7 +265,7 @@ function style() {
   document.querySelector('head')?.insertAdjacentHTML('beforeend', styleCode)
 }
 
-export function aarHighlight(el, code) {
+export function luaHighlight(el, code) {
   style()
   el.innerHTML = highlightCode(code)
 }

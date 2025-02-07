@@ -68,7 +68,7 @@ export default {
     },
     // 验证 dll 是否已注册，很慢
     async checkErr(dll) {
-      const [, dumpbin] = await sys.ws.call(`run`, [`return process.popen("reg query HKCR\\CLSID /s /f ${dll}").readAll()`])
+      const [, dumpbin] = await sys.ws.call(`run`, [``])
       return dumpbin.includes(`0 匹配`)
     },
   },

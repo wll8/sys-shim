@@ -28,30 +28,7 @@ export default {
   name: 'Run',
   data() {
     return {
-      code: removeLeft(`
-        var winform = win.form(text="使用说明";right=800;bottom=469;bgcolor=16777215)
-        winform.add()
-
-        var wb = web.view(winform);
-
-        wb.html = /**
-        <!doctype html>
-        <html>
-        <pre>
-        基于 sys-shim 开发的简易编辑器，<a href="https://github.com/wll8/sys-shim">点击查看源码</a>。
-
-        - 按 ctrl+p 打开命令面板
-        - 按 f12 打开控制台查看日志
-        - 按 ctrl+e 运行原生代码
-          - 你也可以复制 IDE 中的示例至此查看运行情况，例如 范例程序/7) Web 界面/1) web.view/1.view.aardio
-
-        </pre>
-
-        </html>
-        **/
-        winform.show();
-        win.loopMessage();
-      `),
+      code: removeLeft(``),
     }
   },
   async created() {
@@ -83,7 +60,7 @@ export default {
           title: '打开文件',
           shortcut: 'Ctrl+O',
           async handler(e) {
-             const [, res] = await native.fsys.dlg.open("aardio 代码文件|*.aardio", "选择 aardio 代码文件")
+             const [, res] = await native.fsys.dlg.open("代码文件|*.*", "选择代码文件")
              if(res) {
               ; [, vm.code] = await native.string.load(res)
              }

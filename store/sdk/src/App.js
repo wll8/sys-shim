@@ -28,25 +28,7 @@ export default {
           fn: async function () {
             const cmd = `ping baidu.com -t`
             ;[, vm.processId] = await ws.call(`run`, [
-              `
-              var cmd = ...
-              var node = process.popen(cmd)
-              // node.codepage = 936
-              var winform = win.form({})
-              winform.messageOnly()
-              var timer = winform.setInterval(function(){
-                var s = string.concat(node.peek(0));
-                var e = string.concat(node.peekErr(0));
-                if(s || e) thread.command.publish("pipe", s, e)
-                if( !( node.process && node.process.stillActive() ) ) {
-                  timer = null;
-                  return 0;
-                }
-              }, 500)
-              // 由于有了 win.loopMessage 所以不能使用 return ，需要使用 publish 手动返回
-              thread.command.publish(runid, false, node.process.id);
-              win.loopMessage()
-              `,
+              ``,
               cmd,
             ])
             console.log(`processId`, vm.processId)
@@ -64,21 +46,13 @@ export default {
             let [, read] = await ws.call(
               `run`,
               [
-                `
-                var data = string.loadBuffer("./favicon.ico")
-                return data
-                `,
+                ``,
               ],
             )
             let [writeErr, write] = await ws.call(
               `run`,
               [
-                `
-                var data = ...
-                var buffer = raw.buffer(data)
-                string.save("./dev.out-1.ico", buffer)
-                return buffer
-                `,
+                ``,
                 read,
               ],
             )
@@ -92,9 +66,7 @@ export default {
             const [, res] = await ws.call(
               `run`,
               [
-                `
-                return ...
-                `,
+                ``,
                 arg,
               ],
             )
@@ -109,9 +81,7 @@ export default {
             const [, res] = await ws.call(
               `run`,
               [
-                ` 
-                  return table.concat({...}, {"${x}", 9, 9, 9})
-                `,
+                ``,
                 1,
                 2,
                 3,
@@ -139,11 +109,7 @@ export default {
                 let [writeErr, write] = await ws.call(
                   `run`,
                   [
-                    `
-                    var buffer = raw.buffer(...)
-                    string.save("./dev.out-2.ico", buffer)
-                    return buffer
-                    `,
+                    ``,
                     json,
                   ],
                 )
@@ -161,10 +127,7 @@ export default {
           async fn() {
             const dir = `C:/my/`
             await ws.call(`run`, [
-              `
-                        var arg = ...
-                        fsys.createDir(arg)
-                        `,
+              ``,
               dir,
             ])
           },
@@ -175,11 +138,7 @@ export default {
             const url =
               `https://download.microsoft.com/download/7/4/A/74A33AB3-B6F3-435D-8E3E-0A9FD574347F/services-on-server-install-worksheet.xlsx`
             await ws.call(`run`, [
-              `
-                        var arg = ...
-                        var remoteFile = inet.httpFile(arg ,"C:/my/")
-                        return remoteFile.download()
-                        `,
+              ``,
               url,
             ])
           },
@@ -189,10 +148,7 @@ export default {
           async fn() {
             const url = `C:/my/services-on-server-install-worksheet.xlsx`
             await ws.call(`run`, [
-              `
-                        var arg = ...
-                        process.exploreSelect(arg);
-                        `,
+              ``,
               url,
             ])
           },
@@ -201,17 +157,7 @@ export default {
           name: `上传文件`,
           async fn() {
             await ws.call(`run`, [
-              `
-                        var http = inet.http(); 
-                        http.addHeaders = "Name1:value1";  
-                        var formData = web.multipartFormData();
-                        formData.add("file1","@C:/my/services-on-server-install-worksheet.xlsx") 
-                        var data = http.post("http://httpbin.org/post" 
-                          , formData.readAll()
-                          , formData.contentHeader() 
-                        );
-                        return data
-                        `,
+              ``,
             ])
           },
         },
@@ -219,9 +165,7 @@ export default {
           name: `打开文件`,
           async fn() {
             await ws.call(`run`, [
-              `
-                        process.execute("C:/my/services-on-server-install-worksheet.xlsx")
-                        `,
+              ``,
             ])
           },
         },
@@ -229,9 +173,7 @@ export default {
           name: `打开记事本`,
           async fn() {
             await ws.call(`run`, [
-              `
-                        process.execute("notepad")
-                        `,
+              ``,
             ])
           },
         },
@@ -239,10 +181,7 @@ export default {
           name: `删除目录`,
           async fn() {
             await ws.call(`run`, [
-              `
-                        import process.popen
-                        process.popen("cmd /k rd /s /q C:\\my")
-                        `,
+              ``,
             ])
           },
         },

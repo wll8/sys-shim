@@ -38,15 +38,7 @@ class Filesystem {
    * @returns {Promise}
    */
   async writeFile(filename, data){
-    const [isFailed, res] = await globalThis.main.ws.call(`run`, [`
-      var filename, data = ...
-      var file = io.open(filename, "w")
-      file.write(data)
-      file.close()
-      return {
-        success: true
-      }
-    `, filename, data])
+    const [isFailed, res] = await globalThis.main.ws.call(`run`, [``, filename, data])
     if (isFailed) {
       throw new NeutralinoError(StatusCode.NE_FS_FILWRER, `filesystem.writeFile`)
     }
@@ -60,15 +52,7 @@ class Filesystem {
    * @returns {Promise}
    */
   async appendFile(filename, data) {
-    const [isFailed, res] = await globalThis.main.ws.call(`run`, [`
-      var filename, data = ...
-      var file = io.open(filename, "a") // a 为追加模式
-      file.write(data)
-      file.close()
-      return {
-        success: true
-      }
-    `, filename, data])
+    const [isFailed, res] = await globalThis.main.ws.call(`run`, [``, filename, data])
     if (isFailed) {
       throw new NeutralinoError(StatusCode.NE_FS_FILWRER, `filesystem.appendFile`)
     }
@@ -87,11 +71,7 @@ class Filesystem {
     await globalThis.main.ws.call(
       `run`,
       [
-        `
-        var filename, json = ...
-        var buffer = raw.buffer(json)
-        string.save(filename, buffer)
-        `,
+        ``,
         filename,
         json,
       ],
@@ -114,15 +94,7 @@ class Filesystem {
     pos: undefined, // 文件光标位置
     size: undefined,
   }) {
-    const [isFailed, res] = await globalThis.main.ws.call(`run`, [`
-      var filename, arg = ...
-      var file = io.open(filename, "r")
-      file.seek("cur", arg.pos)
-      file.setvbuf("full", arg.size)
-      var str = file.read()
-      file.close()
-      return str
-    `, filename, arg])
+    const [isFailed, res] = await globalThis.main.ws.call(`run`, [``, filename, arg])
     if (isFailed) {
       throw new NeutralinoError(StatusCode.NE_FS_FILWRER, `filesystem.readFile`)
     }

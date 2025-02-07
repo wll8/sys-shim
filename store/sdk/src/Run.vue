@@ -20,7 +20,7 @@ export default {
   name: 'Run',
   data() {
     return {
-      code: `win.msgbox(runid)`,
+      code: ``,
     }
   },
   created() {

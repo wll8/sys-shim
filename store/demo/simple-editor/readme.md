@@ -1,4 +1,4 @@
-基于 vite/vue3/vscode web 版的简单 aardio 代码编辑器，可用于运行一些 aardio 代码。
+基于 vite/vue3/vscode web 版的简单 luart 代码编辑器，可用于运行一些 luart 代码。
 
 <div align="center">
   <img src="./240513_144840.gif" />

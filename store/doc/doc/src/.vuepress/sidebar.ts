@@ -31,30 +31,6 @@ export default sidebar({
           collapsible: true,
           link: "overview",
         },
-        {
-          text: `fsys`,
-          collapsible: true,
-          prefix: "fsys/",
-          children: `structure`,
-        },
-        {
-          text: `sys`,
-          collapsible: true,
-          prefix: "sys/",
-          children: `structure`,
-        },
-        {
-          text: `win`,
-          collapsible: true,
-          prefix: "win/",
-          children: `structure`,
-        },
-        {
-          text: `inet`,
-          collapsible: true,
-          prefix: "inet/",
-          children: `structure`,
-        },
       ]
     },
     {

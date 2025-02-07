@@ -13,8 +13,8 @@ const curInt8Array = [...new Int8Array(fs.readFileSync(__filename))]
 const curStr = Buffer.from(curInt8Array).toString(`utf8`)
 
 /**
- * 测试原生 shim.aardio 提供的方法
- * 例如 shim.aardio.native
+ * 测试原生 shim.luart 提供的方法
+ * 例如 shim.luart.native
  */
 
 await new Sys({ log: false, wsUrl: `ws://127.0.0.1:10005?token=tokentokentoken` }).then(async shim => {
@@ -89,7 +89,7 @@ await new Sys({ log: false, wsUrl: `ws://127.0.0.1:10005?token=tokentokentoken` 
         data: curInt8Array,
       }
       const [, nativeStr] = await ws.call(`run`, [
-        `return raw.tostring(raw.buffer(...))`, json,
+        ``, json,
       ])
       expect(nativeStr).toStrictEqual(curStr)
     })
@@ -146,49 +146,35 @@ await new Sys({ log: false, wsUrl: `ws://127.0.0.1:10005?token=tokentokentoken` 
       msg.on(tag, (out, err) => {
         log.push(out || err)
       })
-      await ws.call(`run`, [`
-        var prcs = process.popen(...)
-        for( all,out,err in prcs.each() ){
-          thread.command.publish("${tag}", out, err)
-        }
-      `, cmd])
+      await ws.call(`run`, [``, cmd])
       msg.off(tag)
       expect(log.join(``)).toMatch(` = `)
     })
     test(`接收片段中的返回值`, async () => {
-      const [, ...arg] = await ws.call(`run`, [`return 1,2,3`])
+      const [, ...arg] = await ws.call(`run`, [``])
       expect(arg).toStrictEqual([1, 2, 3])
     })
     test(`接收片段中的返回值 null`, async () => {
-      const [, ...arg] = await ws.call(`run`, [`return 1,null,3`])
+      const [, ...arg] = await ws.call(`run`, [``])
       expect(arg).toStrictEqual([1, null, 3])
     })
     test(`向片段中传入数字`, async () => {
-      const [, ...arg] = await ws.call(`run`, [`return ...`, 1, 2, 3])
+      const [, ...arg] = await ws.call(`run`, [``, 1, 2, 3])
       expect(arg).toStrictEqual([1, 2, 3])
     })
     test(`向片段中传入字符串`, async () => {
-      const [, ...arg] = await ws.call(`run`, [`return ...`, `hello`])
+      const [, ...arg] = await ws.call(`run`, [``, `hello`])
       expect(arg).toStrictEqual([`hello`])
     })
     test(`向片段中传入 json 对象`, async () => {
       const obj = [`hello`, { msg: `hello` }]
-      const [, ...arg] = await ws.call(`run`, [`return ...`, obj, 1, 2])
+      const [, ...arg] = await ws.call(`run`, [``, obj, 1, 2])
       expect(arg).toStrictEqual([obj, 1, 2])
     })
     test(`向片段中传入 null 值`, async () => {
       const obj = [1, null, 3]
-      const [, ...arg] = await ws.call(`run`, [`
-        var args = {...}
-        return args[1] = 1, args[2] = null, args[3] = 3
-      `, ...obj])
+      const [, ...arg] = await ws.call(`run`, [``, ...obj])
       expect(arg).toStrictEqual([true, true, true])
-    })
-    test(`向片段中传入含有 null 的对象 -- aar 会自动过滤掉 null 值`, async () => {
-      const obj = { a: 1, b: null, c: 3 }
-      // 获取表的成员数量
-      const [, ...arg] = await ws.call(`run`, [`return table.count(...)`, obj])
-      expect(arg).toStrictEqual([2])
     })
   })
   describe(`主线程和子线程`, () => {
@@ -230,7 +216,7 @@ await new Sys({ log: false, wsUrl: `ws://127.0.0.1:10005?token=tokentokentoken` 
       expect(err).includes(`msgboxErrErr`)
     })
     test(`语法错误`, async () => {
-      const [err, res] = await ws.call(`run`, [`var "err" = "err"`])
+      const [err, res] = await ws.call(`run`, [``])
       expect(err).includes(`err`)
     })
   })

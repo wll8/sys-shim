@@ -19,10 +19,7 @@ function toggle() {
     globalThis.ws.call(
       `run`,
       [
-        `
-      global.G.winformSub.box.width = 60
-      global.G.winformSub.box.height = 60
-    `,
+        ``,
       ],
       {
         runType: `main`,
@@ -32,10 +29,7 @@ function toggle() {
     globalThis.ws.call(
       `run`,
       [
-        `
-      global.G.winformSub.box.width = 900
-      global.G.winformSub.box.height = 600
-    `,
+        ``,
       ],
       {
         runType: `main`,

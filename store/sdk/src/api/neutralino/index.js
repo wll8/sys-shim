@@ -14,7 +14,7 @@ async function init() {
     NL_PORT: (await this.app.getConfig()).socket.port, // 7380
     NL_MODE: `// todo`, // "window"
     NL_VERSION: await (async () => {
-      const [, res] = await this.base.ws.call(`run`, [`return fsys.version.getInfo( io._exepath )`])
+      const [, res] = await this.base.ws.call(`run`, [``])
       return [
         res.productVersion.build, // 主版本号
         res.productVersion.major, // 副版本号
@@ -26,7 +26,7 @@ async function init() {
     NL_CWD: (await this.base.native.fsys.getCurDir())[1], // "D:/git2/neutralinojs-demo"
     NL_PATH: (await this.base.native.io.fullpath(`~`))[1], // "."
     NL_ARGS: await (async () => {
-      const [, res] = await this.base.ws.call(`run`, [`return table.concat({io._exepath}, _ARGV)`])
+      const [, res] = await this.base.ws.call(`run`, [``])
       return res
     })(),
     NL_PID: (await this.base.native.process.getId())[1], // 30944

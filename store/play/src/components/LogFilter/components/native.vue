@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { aarHighlight } from '@/utils/aarHighlighter.js'
+import { luaHighlight } from '@/utils/luaHighlighter.js'
 
 const props = defineProps({
   codeText: {
@@ -13,7 +13,7 @@ const coderef = ref()
 nextTick(() => {
   if (!coderef.value)
     return
-  aarHighlight(coderef.value, props.codeText)
+  luaHighlight(coderef.value, props.codeText)
 })
 </script>
 

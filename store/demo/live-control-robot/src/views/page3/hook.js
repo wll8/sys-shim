@@ -16,43 +16,7 @@ const useHook = () => {
           ws.call(
             `run`,
             [
-              `
-                var code = /**
-                  var , option = ...
-                  var optionRes = table.assignDeep({
-                    preloadScript = "";
-                    userDataDir = null;
-                    browserArguments = null;
-                  }, option)
-                  var winform = win.form(text="sys-shim-app")
-                  var wbPage = web.view(winform, fsys.path.full(optionRes.userDataDir, io.appData("live-control-robot")), optionRes.browserArguments);
-                  global.G.winformSub.wbPage = wbPage
-                  winform.show()
-                  wbPage = wbPage
-                  var hwnd =wbPage.hwndChrome
-                  // 挂载到 window.ext 上的对象
-                  wbPage.external = web.json.stringify({
-                    token = global.G.token;
-                    wsUrl = global.G.wsUrl;
-                    hwnd = hwnd;
-                  })
-                  // 页面每次刷新都会运行
-                  var old = wbPage.preloadScript
-                  wbPage.preloadScript = function(js) {
-                    js = '\n\n' + js + '\n\n'
-                    call(old, owner, js)
-                  }
-                  wbPage.preloadScript(\`(() => {
-                    window._ext = chrome.webview.hostObjects.external
-                    delete window.aardio
-                  })()\`)
-                  wbPage.preloadScript(string.load(global.G.appDataPath + "/res/browser/main.umd.min.js"))
-                  wbPage.preloadScript(optionRes.preloadScript)
-                  wbPage.go(optionRes.url)
-                  thread.command.publish("${tag}", hwnd)
-                **/
-                global.G.winformSub.page.loadForm(code, ...)
-              `,
+              ``,
               {
                 preloadScript: [jsTextPre, preloadScript || jsTextDemo].join(`\n;`),
                 url,

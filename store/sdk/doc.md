@@ -266,17 +266,14 @@ sys 的参数:
 ```js
 // 退出所有进程
 {
-  ws.call(`run`, [`G.killAll()`]);
+  ws.call(`run`, [``]);
 }
 
 {
   // 创建目录
   const dir = `C:/my/`;
   await ws.call(`run`, [
-    `
-var arg = ...
-fsys.createDir(arg)
-`,
+    ``,
     dir,
   ]);
 }
@@ -286,11 +283,7 @@ fsys.createDir(arg)
   const url =
     "https://download.microsoft.com/download/7/4/A/74A33AB3-B6F3-435D-8E3E-0A9FD574347F/services-on-server-install-worksheet.xlsx";
   vm.res = await ws.call(`run`, [
-    `
-var arg = ...
-var remoteFile = inet.httpFile(arg ,"C:/my/")
-return remoteFile.download()
-`,
+    ``,
     url,
   ]);
 }
@@ -298,18 +291,14 @@ return remoteFile.download()
 {
   // 打开记事本
   vm.res = await ws.call(`run`, [
-    `
-process.execute("notepad")
-`,
+    ``,
   ]);
 }
 
 {
   // 运行命令行
   vm.res = await ws.call(`run`, [
-    `
-process.popen("cmd /k rd /s /q C:\\my")
-`,
+    ``,
     url,
   ]);
 }
@@ -367,10 +356,7 @@ view.form.show(); // 显示窗口
 ```js
 let tray = await new window.main.Tray();
 ws.call(`run`, [
-  `
-  var arg = ...
-  win.form._forms[arg.hwnd].tray.icon = G.getIcon(arg.icon)
-`,
+  ``,
   {
     icon: `https://www.hongqiye.com/favicon.ico`, // 设置托盘图标
     hwnd: await tray.form.hwnd.then, // 托盘句柄
@@ -394,7 +380,7 @@ tray.on(`_WM_LBUTTONUP`, async () => {
 
 // 监听托盘右键菜单
 tray.on(`_WM_RBUTTONUP`, async () => {
-  ws.call(`run`, [`G.killAll()`]);
+  ws.call(`run`, [``]);
 });
 ```
 

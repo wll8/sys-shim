@@ -7,7 +7,7 @@ sys-shim 目前是一个基于 windows 平台的轻量桌面应用开发框架�
 无需改造现有 web 系统的架构，通过 js 即可调用系统的 api，例如使用以下语句打开计算器：
 
 ``` js
-await native.process.execute("calc")
+// todo
 ```
 
 ## 为什么开发 sys-shim？

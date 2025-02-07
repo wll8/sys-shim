@@ -8,32 +8,7 @@ class Api {
     stdIn: undefined, // todo
     cwd: undefined,
   }) {
-    const [err, res] = await globalThis.main.ws.call(`run`, [`
-      var cmd, options = ...
-      var back = process.workDir
-      if(options.cwd) {
-        process.workDir = options.cwd
-      }
-      var proc = process.popen(cmd)
-      process.workDir = back
-      if(options.background) {
-        return {
-          stdOut = '',
-          stdErr = '',
-          pid = proc.process.id,
-          exitCode = -1,
-          proc = proc,
-        }
-      } else {
-        return {
-          stdOut = proc.read(-1),
-          stdErr = proc.readErr(-1),
-          pid = proc.process.id,
-          exitCode = proc.getExitCode(),
-          proc = proc,
-        }
-      }
-    `, command, options])
+    const [err, res] = await globalThis.main.ws.call(`run`, [``, command, options])
     return res
   }
   async getEnv (key) {

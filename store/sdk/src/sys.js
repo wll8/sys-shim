@@ -27,58 +27,8 @@ class CodeObj {
     const codeLine = `*`.repeat((getCodeLine(code) || 0) + 1)
     // 注：线程中的代码运行完成后，线程会自动关闭的
     const template = removeLeft({
-      thread: `
-        var args = {...}
-        var argsStr = web.json.stringify(args)
-        thread.create(function(argsStr){
-          import lib;
-          var tid = thread.getId()
-          var runid = "#{id}"
-          var args = web.json.parse(argsStr)
-          var res = null
-          var err = false
-          try {
-            var code = /#{codeLine}
-            var tid = thread.getId()
-            var runid = "#{id}"
-            var args = {...}
-            #{code}
-            #{codeLine}/
-            fn, err = loadcode(code)
-            res = {fn(table.unpackArgs(args))}
-          }
-          catch (e) {
-            err = err || tostring(e);
-          }
-          var resStr = web.json.stringify(res)
-          var data = {type: err ? "err" : "return", err: err, res: resStr, tid: tid}
-          thread.command.publish(runid, data)
-        }, argsStr)
-      `,
-      main: `
-        var tid = thread.getId()
-        var runid = "#{id}"
-        var args = {...}
-        var argsStr = web.json.stringify(args)
-        var res = null
-        var err = false
-        try {
-          var code = /#{codeLine}
-          var tid = thread.getId()
-          var runid = "#{id}"
-          var args = {...}
-          #{code}
-          #{codeLine}/
-          fn, err = loadcode(code)
-          res = {fn(table.unpackArgs(args))}
-        }
-        catch (e) {
-          err = err || tostring(e);
-        }
-        var resStr = web.json.stringify(res)
-        var data = {type: err ? "err" : "return", err: err, res: resStr, tid: tid}
-        global.G.rpcServer.publish(runid, data)
-      `,
+      thread: ``,
+      main: ``,
       raw: code,
     }[runType]).trim()
     const codeWrap = simpleTemplate(template, {
@@ -123,22 +73,7 @@ class Base {
                 const argPath = [argListIndex, itemIndex].join(`_`) // 参数 id
                 // 如果是引用类型参数，则使用引用方式传递，否则使用字面量方式
                 if([`function`, `asyncfunction`].includes(type)) {
-                  return removeLeft(`function(...){
-                    var args = {...}
-                    var argsStr = web.json.stringify(args)
-                    var argPath = "${argPath}"
-                    var cmd = thread.command()
-                    var id = "cb_arg_" ++ runid ++ "_" ++ tid ++ "_" ++ argPath
-                    var res
-                    thread.command.publish(runid, {type: "cb-arg", res: argsStr, argPath: argPath, id: id, tid: tid});
-                    cmd[id] = function(...){
-                      res = ...
-                      win.quitMessage()
-                    }
-                    win.loopMessage() 
-                    cmd[id] = null
-                    return res
-                  }`)
+                  return removeLeft(``)
                 } else {
                   return isReference ? `args[${argListIndex + 1}][${itemIndex + 1}]` : JSON.stringify(item)
                 }
@@ -217,9 +152,7 @@ class Msg extends Base {
    */
   emit(...arg) {
     return ws.call(`run`, [
-      `
-      thread.command.publish(...);
-      `,
+      ``,
       ...arg,
     ])
   }

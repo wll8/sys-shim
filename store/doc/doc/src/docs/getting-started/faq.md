@@ -10,51 +10,28 @@ sys-shim 使用 WebSocket 与 main.exe 进行交互，有以下几个环节：
 - websocket 通信环节
 - main.exe 代码加载和执行环节
 
-对于单个同步调用，例如调用 main.exe 中的方法进行数组裁剪，在 `Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz` 上调用以下代码 10 次，平均每次耗时在 50ms 左右。
+对于单个同步调用，例如调用 main.exe 中的方法进行数组裁剪，在 `Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz` 上调用以下代码 10 次，平均每次耗时在 todo  左右。
 
 ``` js
-console.time()
-console.log(await native.table.unpack([1,2,Date.now()], 2))
-console.timeEnd() // 44.8 ms
+// todo
 ```
 
-实际上像裁剪数组这类需要处理数据的操作，直接使用 js 现有的方法即可，只有调用系统 api 时，才应使用 sys-shim 的方法，例如使用以下代码获取 cpu 商标，用于也在 50ms 左右：
+实际上像裁剪数组这类需要处理数据的操作，直接使用 js 现有的方法即可，只有调用系统 api 时，才应使用 sys-shim 的方法，例如使用以下代码获取 cpu 商标，用于也在 todo 左右：
 
 ``` js
-console.time()
-console.log(await native.sys.cpu.getBrand())
-console.timeEnd() // 49.2 ms
+// todo
 ```
 
 即使遇到耗时的操作利用 js 的 async 语法有效避免，例如：
 
 ``` js
-console.time()
-await main.native.sleep(5000).then(() => console.log('同步运行完成了'))
-console.timeEnd() // 5054.5 ms
-
-console.time()
-main.native.sleep(5000).then(() => console.log('异步运行完成了'))
-console.timeEnd() // 0.6 ms
+// todo
 ```
 
 效率较低的场景是需要与操作系统进行极其频繁且同步交互的场景，例如在遍历目录时，在每个回调函数里根据根据函数返回值决定是否继续遍历：
 
 ``` js
-let num = 0
-let list = []
-console.time()
-await native.fsys.enum( `C:/`, `*.*`, async function (dir, filename, fullpath, findData) {
-    num = num + 1
-    list.push(fullpath || dir)
-    if(num >= 10) {
-      return false
-    }
-  },
-  false,
-)
-console.timeEnd() // 527.7 ms
-console.log({num, list})
+// todo
 ```
 
 上面代码的逻辑是，遍历数量等于 10 时停止遍历。由于每次遍历，都要经过完整的 main.exe/js 通信过程，所以 10 个文件就耗时 500ms 左右，也就是一秒才能遍历 20 个文件。对于要求快速扫描目录文件的场景来说，效率很低。
@@ -64,24 +41,7 @@ console.log({num, list})
 例如使用原生语言遍历 5000 个文件，耗时为 300ms 左右：
 
 ``` js
-console.time()
-let [, num, cur] = await main.ws.call(`run`, [`
-  var num = 0
-  var cur = null
-  var size = ...
-  fsys.enum("C:/", "*.*", function (dir, filename, fullpath, findData) {
-    num = num + 1
-    cur = fullpath || dir
-    if(num >= size) {
-      return false
-    }
-  },
-  true
-  )
-  return num, cur
-`, 5000])
-console.timeEnd() // 334.5 ms
-console.log({num, cur})
+// todo
 ```
 
 ## 安全
