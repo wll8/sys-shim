@@ -6,8 +6,6 @@
 ## 开发
 
 ```bat
-:: 使用 ide 编译出 main.exe
-
 :: 进入 script 目录
 cd script
 
@@ -17,3 +15,26 @@ pnpm i
 :: 生成 npm 包
 pnpm build
 ```
+
+## 使用
+
+命令行：
+
+``` bat
+:: 运行原始 bin 文件
+sys-shim-bin
+```
+
+API：
+
+``` js
+const { getPath }  = require("sys-shim-bin");
+
+```
+
+**getPath** -- 获取可执行文件路径。
+
+
+## 鸣谢
+
+- [neutralinojs](https://neutralino.js.org/)

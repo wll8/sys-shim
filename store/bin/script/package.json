@@ -1,6 +1,8 @@
 {
   "name": "sys-shim-bin",
-  "version": "0.0.2-1",
+  "version": "0.0.2-5",
+  "binVersion": "5.6.0",
+  "exeName": "neutralino-win_x64.exe",
   "description": "把系统 api 封装为可执行程序，并提供服务供 webview 调用。",
   "types": "./index.d.ts",
   "type": "module",
@@ -22,10 +24,13 @@
     "build": "node build.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["webview"],
+  "keywords": [
+    "webview"
+  ],
   "author": "wll8",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
+    "7zip-bin": "^5.2.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "rollup": "^4.17.2",
     "shx": "^0.3.4"
